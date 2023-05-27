@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DependencyValidationManager">
+    <scope name="Laravel Scope" pattern="!file:server.php&amp;&amp;!file:README.md&amp;&amp;!file:phpunit.xml&amp;&amp;!file:artisan&amp;&amp;!file:.styleci.yml&amp;&amp;!file:.gitattributes&amp;&amp;!file:.env.example&amp;&amp;!file:.editorconfig&amp;&amp;!file:tests/*&amp;&amp;!file:routes/api.php&amp;&amp;!file:routes/channels.php&amp;&amp;!file:routes/console.php&amp;&amp;!file:public/web.config&amp;&amp;!file:public/robots.txt&amp;&amp;!file:public/index.php&amp;&amp;!file:public/favicon.ico&amp;&amp;!file:database/seeders/*&amp;&amp;!file:config/*&amp;&amp;!file:bootstrap/*&amp;&amp;!file:.idea/*&amp;&amp;!file:vendor/*" />
+    <scope name="App" pattern="file:app//*||file:config//*||file:routes//*||file:app||file:config||file:routes||file:src//*||file:src " />
+    <scope name="Resources" pattern="file:resources//*||file:resources " />
+    <scope name="Database" pattern="file:database//*||file:database " />
+  </component>
+</project>
