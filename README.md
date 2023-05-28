@@ -513,7 +513,8 @@ The Str.random method generates a random string of the specified length. This fu
 Str.random(40);
 ```
 
-Str.remove()
+#### Str.remove()
+
 The Str.remove method removes the given value or array of values from the string:
 
 ```js
