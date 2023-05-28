@@ -519,9 +519,9 @@ The Str.remove method removes the given value or array of values from the string
 
 ```js
 Str.remove('e', 'Peter Piper picked a peck of pickled peppers.');
-```
 
 // Ptr Pipr pickd a pck of pickld ppprs.
+```
 
 You may also pass false as a third argument to the remove method to ignore case when removing strings.
 
@@ -549,9 +549,9 @@ The Str.replaceArray method replaces a given value in the string sequentially us
 
 ```js
 Str.replaceArray('?', ['8:30', '9:00'], 'The event will take place between ? and ?');
-```
 
 // The event will take place between 8:30 and 9:00
+```
 
 #### Str.replaceFirst()
 
