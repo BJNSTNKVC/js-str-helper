@@ -1,6 +1,6 @@
 {
   "name": "@bjnstnkvc/str",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "JavaScript equivalent of Laravel Str helper.",
   "main": "./lib/Str.js",
   "type": "module",
