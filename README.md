@@ -1776,6 +1776,25 @@ Str.of('a nice title uses the correct case').title();
 // A Nice Title Uses The Correct Case
 ```
 
+#### toHtmlString
+
+The toHtmlString method converts the string instance to an instance of HTMLElement, which may be displayed in HTML:
+
+```js
+Str.of('<input type="text" placeholder="Hello">').toHtmlString();
+
+<input type="text" placeholder="Hello">
+```
+
+If no valid HTML is provided to the method, the method returns an instance of `String`:
+
+
+```js
+Str.of('<input type="text" placeholder="Hello">').toHtmlString();
+
+// Hello
+```
+
 #### trim
 
 The trim method trims the given string:
