@@ -531,9 +531,9 @@ The Str.replace method replaces a given string within the string:
 
 ```js
 Str.replace('9.x', '10.x', 'Laravel 10.x');
-```
 
 // Laravel 9.x
+```
 
 The replace method also accepts a caseSensitive argument. By default, the replace method is case sensitive:
 
@@ -1537,7 +1537,6 @@ Str.of('macOS 13.x').replace('macOS', 'iOS', false);
 The replaceArray method replaces a given value in the string sequentially using an array:
 
 ```js
-
 Str.of('The event will take place between ? and ?').replaceArray('?', ['8:30', '9:00']);
 
 // The event will take place between 8:30 and 9:00
