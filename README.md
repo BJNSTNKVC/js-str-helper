@@ -507,7 +507,7 @@ Str.pluralStudly('VerifiedHuman', 1);
 
 #### Str.random()
 
-The Str.random method generates a random string of the specified length. This function uses PHP's random_bytes function:
+The Str.random method generates a random string of the specified length:
 
 ```js
 Str.random(40);
@@ -524,6 +524,12 @@ Str.remove('e', 'Peter Piper picked a peck of pickled peppers.');
 ```
 
 You may also pass false as a third argument to the remove method to ignore case when removing strings.
+
+```js
+Str.remove('E', 'Peter Piper picked a peck of pickled peppers.', false);
+
+// Ptr Pipr pickd a pck of pickld ppprs.
+```
 
 #### Str.replace()
 
