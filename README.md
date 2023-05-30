@@ -8,8 +8,6 @@ You can install the package via npm:
 
     npm install @bjnstnkvc/str
 
-## Usage
-
 Once the package has been installed, you can import it
 using [import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import) declaration:
 
@@ -988,7 +986,7 @@ Str.of('This is my name').containsAll(['my', 'name']);
 
 #### dirname
 
-The dirname method returns the parent directory portion of the given string:
+The dirname method retur the parent directory portion of the given string:
 
 ```js
 Str.of('/foo/bar/baz').dirname();
@@ -1749,9 +1747,9 @@ closure:
 
 ```js
 Str.of('Laravel')
-    .append(' Framework')
-    .tap((string) => string.dump('String after append: ' + string))
-    .upper();
+   .append(' Framework')
+   .tap((string) => string.dump())
+   .upper();
 
 // LARAVEL FRAMEWORK
 ```
@@ -1788,9 +1786,8 @@ Str.of('<input type="text" placeholder="Hello">').toHtmlString();
 
 If no valid HTML is provided to the method, the method returns an instance of `String`:
 
-
 ```js
-Str.of('<input type="text" placeholder="Hello">').toHtmlString();
+Str.of('Hello').toHtmlString();
 
 // Hello
 ```
@@ -2032,4 +2029,171 @@ appended to the truncated string:
 Str.of('Perfectly balanced, as all things should be.').words(3, ' >>>');
 
 // Perfectly balanced, as >>>
+```
+
+### Miscellaneous
+
+#### dd
+
+The dd method dumps the given string and end execution of the script:
+
+```js
+Str.of('Laravel').dd();
+
+// Laravel
+```
+
+If you do not want to halt the execution of your script, use the `dump` function instead.
+
+#### dump
+
+The dump method dumps the given string to the console:
+
+```js
+Str.of('Laravel').dump();
+
+// Laravel
+```
+
+#### toString
+
+Get the raw string value.
+
+```js
+Str.of('Laravel').toString();
+
+// Laravel
+```
+
+#### toInteger
+
+The toInteger method returns the underlying string value as an integer.
+
+```js
+Str.of('1').toInteger();
+
+// 1
+```
+
+```js
+Str.of('Laravel').toInteger();
+
+// 0
+```
+
+In case the underlying string value is not a number, method will return 0.
+
+#### toFloat
+
+The toFloat method returns underlying string value as a float.
+
+```js
+Str.of('1.5').toInteger();
+
+// 1.5
+```
+
+```js
+Str.of('Laravel').toInteger();
+
+// 0
+```
+
+In case the underlying string value is not a number, method will return 0.
+
+#### toBoolean
+
+The toBoolean method returns underlying string value as a boolean.
+
+```js
+Str.of('true').toBoolean();
+
+// true
+```
+
+```js
+Str.of('Laravel').toBoolean();
+
+// false
+```
+
+The toBoolean method returns true when value is "1", "true", "on", and "yes". Otherwise, returns false.
+
+#### toDate
+
+Get the underlying string value as a formatted Date string.
+
+```js
+Str.of('13 September 2023, 12:00 PM').toDate();
+
+// 9/13/2023, 12:00:00
+```
+
+You may provide a string as a second and/or third argument to the function in order to format the date and set the
+Timezone respectively:
+
+```js
+Str.of('13 September 2023, 12:00 PM').toDate('Y-m-d H:i:s', 'Europe/London');
+
+// 2023-09-13 11:00:00
+```
+
+```js
+Str.of('13 September 2023, 12:00 PM').toDate('Y-m-d H:i:s', 'America/Toronto');
+
+// 2023-09-13 06:00:00
+```
+
+Table of all format options and their examples can be found below:
+
+| Format character | Description                                                                                                                                                                                                                         | Example                                 |
+|------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------|
+| d                | Day of the month, 2 digits with leading zeros.                                                                                                                                                                                      | 01 to 31                                |
+| D                | A textual representation of a day, three letters.                                                                                                                                                                                   | Mon through Sun                         |
+| j                | Day of the month without leading zeros.                                                                                                                                                                                             | 1 to 31                                 |
+| l                | A full textual representation of the day of the week.                                                                                                                                                                               | Sunday through Saturday                 |
+| N                | ISO 8601 numeric representation of the day of the week.                                                                                                                                                                             | 1 (for Monday) through 7 (for Sunday)   |
+| S                | English ordinal suffix for the day of the month, 2 characters.                                                                                                                                                                      | st, nd, rd or th                        |
+| w                | Numeric representation of the day of the week.                                                                                                                                                                                      | 0 (for Sunday) through 6 (for Saturday) |
+| z                | Numeric representation of the day of the week.                                                                                                                                                                                      | The day of the year (starting from 0)   |
+| W                | ISO 8601 week number of year, weeks starting on Monday.                                                                                                                                                                             | 42 (the 42nd week in the year)          |
+| F                | A full textual representation of a month, such as January or March.                                                                                                                                                                 | January through December                |
+| m                | Numeric representation of a month, with leading zeros.                                                                                                                                                                              | 01 through 12                           |
+| M                | A short textual representation of a month, three letters.                                                                                                                                                                           | Jan through Dec                         |
+| n                | Numeric representation of a month, without leading zeros.                                                                                                                                                                           | 1 through 12                            |
+| t                | Number of days in the given month.                                                                                                                                                                                                  | 28 through 31                           |
+| L                | Whether it's a leap year.                                                                                                                                                                                                           | 1 if it is a leap year, 0 otherwise     |
+| o                | ISO 8601 week-numbering year. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead.                                                                 | 1999 or 2003                            |
+| X                | An expanded full numeric representation of a year, at least 4 digits, with for years BCE, and + for years CE.                                                                                                                       | -0055, +0787, +1999, +10191             |
+| x                | An expanded full numeric representation if required, or a standard full numeral representation if possible (like Y). At least four digits. Years BCE are prefixed with a -. Years beyond (and including) 10000 are prefixed by a +. | -0055, 0787, 1999, +10191               |
+| Y                | A full numeric representation of a year, at least 4 digits, with for years BCE.                                                                                                                                                     | -0055, 0787, 1999, 2003, 10191          |
+| y                | A two-digit representation of a year.                                                                                                                                                                                               | 99 or 03                                |
+| a                | Lowercase Ante meridiem and Post meridiem.                                                                                                                                                                                          | am or pm                                |
+| A                | Uppercase Ante meridiem and Post meridiem.                                                                                                                                                                                          | AM or PM                                |
+| B                | Swatch Internet time.                                                                                                                                                                                                               | 000 through 999                         |
+| g                | 12-hour format of an hour without leading zeros.                                                                                                                                                                                    | 1 through 12                            |
+| G                | 24-hour format of an hour without leading zeros.                                                                                                                                                                                    | 0 through 23                            |
+| h                | 12-hour format of an hour with leading zeros.                                                                                                                                                                                       | 01 through 12                           |
+| H                | 24-hour format of an hour with leading zeros.                                                                                                                                                                                       | 00 through 23                           |
+| i                | Minutes with leading zeros.                                                                                                                                                                                                         | 00 to 59                                |
+| s                | Seconds with leading zeros.                                                                                                                                                                                                         | 00 to 59                                |
+| u                | Microseconds.                                                                                                                                                                                                                       | 654321                                  |
+| v                | Milliseconds.                                                                                                                                                                                                                       | 654                                     |
+| e                | Timezone identifier.                                                                                                                                                                                                                | UTC, GMT, Atlantic/Azores               |
+| I                | Whether or not the date is in daylight saving time.                                                                                                                                                                                 | 1 if Daylight Saving Time, 0 otherwise  |
+| O                | Difference to Greenwich time (GMT) without colon between hours and minutes.                                                                                                                                                         | +0200                                   |
+| P                | Difference to Greenwich time (GMT) with colon between hours and minutes                                                                                                                                                             | +02:00                                  |
+| p                | The same as P, but returns Z instead of +00:00.                                                                                                                                                                                     | +02:00                                  |
+| T                | Timezone abbreviation, if known; otherwise the GMT offset.                                                                                                                                                                          | EST, MDT, +05                           |
+| Z                | Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.                                                                                                  | -43200 through 50400                    |
+| c                | ISO 8601 date.                                                                                                                                                                                                                      | 2004-02-12T15:19:21+00:00               |
+| r                | Seconds since the Unix Epoch.                                                                                                                                                                                                       | January 1 1970 00:00:00 GMT             |
+| U                | RFC 2822/RFC 5322 formatted date.                                                                                                                                                                                                   | Thu, 21 Dec 2000 16:01:07 +0200         |
+
+Providing incorrect Date/Time string will result in an error:
+
+```js
+Str.of('Laravel').toDate();
+
+// Invalid Date
 ```
