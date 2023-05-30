@@ -2088,13 +2088,13 @@ In case the underlying string value is not a number, method will return 0.
 The toFloat method returns underlying string value as a float.
 
 ```js
-Str.of('1.5').toInteger();
+Str.of('1.5').toFloat();
 
 // 1.5
 ```
 
 ```js
-Str.of('Laravel').toInteger();
+Str.of('Laravel').toFloat();
 
 // 0
 ```
