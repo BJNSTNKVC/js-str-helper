@@ -1,8 +1,9 @@
 {
   "name": "@bjnstnkvc/str",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "JavaScript equivalent of Laravel Str helper.",
-  "main": "./lib/Str.js",
+  "main": "lib/main.js",
+  "source": "src/main.ts",
   "directories": {
     "lib": "lib"
   },
@@ -22,5 +23,9 @@
   "bugs": {
     "url": "https://github.com/BJNSTNKVC/js-str-helper/issues"
   },
-  "homepage": "https://github.com/BJNSTNKVC/js-str-helper#readme"
+  "homepage": "https://github.com/BJNSTNKVC/js-str-helper#readme",
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "typescript": "^5.3.3"
+  }
 }
