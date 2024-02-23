@@ -1,4 +1,5 @@
 type CharacterType = string | string[] | null;
+
 type HtmlStringType = HTMLElement | Node | string;
 
 class Str {
@@ -152,6 +153,18 @@ class Str {
 	}
 
 	/**
+	 * Get the character at the specified index.
+	 *
+	 * @param { string } subject
+	 * @param { number } index
+	 *
+	 * @return { string | false }
+	 */
+	static charAt(subject: string, index: number): string | false {
+		return subject.charAt(index);
+	}
+
+	/**
 	 * Determine if a given string contains a given substring.
 	 *
 	 * @param { string } haystack
@@ -293,6 +306,27 @@ class Str {
 	}
 
 	/**
+	 * Unwrap the string with the given strings.
+	 *
+	 * @param { string } value
+	 * @param { string } before
+	 * @param { string | null } after
+	 *
+	 * @return { string }
+	 */
+	static unwrap(value: string, before: string, after: string | null = null): string {
+		if (this.startsWith(value, before)) {
+			value = this.substr(value, this.length(before));
+		}
+
+		if (this.endsWith(value, after ?? before)) {
+			value = this.substr(value, 0, -this.length((after as string)));
+		}
+
+		return value;
+	}
+
+	/**
 	 * Determine if a given string matches a given pattern.
 	 *
 	 * @param { string | array } pattern
@@ -350,6 +384,22 @@ class Str {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Determine if a given value is a valid URL.
+	 *
+	 * @param { string } value
+	 * @param { string[] } protocols
+	 *
+	 * @return { boolean }
+	 */
+	static isUrl(value: string, protocols: string[] = []): boolean {
+		const protocolPattern = protocols.length === 0 ? 'https?|ftp|file|mailto|tel|data|irc|magnet' : protocols.join('|');
+
+		const pattern: RegExp = new RegExp(`^(?:${protocolPattern}):\\/\\/(?:[\\w-]+(?:\\.[\\w-]+)+|localhost|\\d{1,3}(?:\\.\\d{1,3}){3})(?::\\d+)?(?:\\S*)?$`, 'i');
+
+		return pattern.test(value);
 	}
 
 	/**
@@ -815,6 +865,19 @@ class Str {
 	}
 
 	/**
+	 * Find the position of the first occurrence of a given substring in a string.
+	 *
+	 * @param { string } haystack
+	 * @param { string } needle
+	 * @param { number } offset
+	 *
+	 * @return { number }
+	 */
+	static position(haystack: string, needle: string, offset: number = 0): number {
+		return haystack.indexOf(needle, Math.max(offset, 0));
+	}
+
+	/**
 	 * Generate a more truly "random" alpha-numeric string.
 	 *
 	 * @param { number } length
@@ -834,6 +897,18 @@ class Str {
 	}
 
 	/**
+	 * Repeat the given string.
+	 *
+	 * @param { string } string
+	 * @param { number } times
+	 *
+	 * @return { string }
+	 */
+	static repeat(string: string, times: number = 1): string {
+		return string.repeat(times);
+	}
+
+	/**
 	 * Replace a given value in the string sequentially with an array.
 	 *
 	 * @param { string[] } replace
@@ -850,6 +925,28 @@ class Str {
 		segments.forEach((segment: string) => result += (replace.shift() ?? search) + segment);
 
 		return result;
+	}
+
+	/**
+	 * Convert the given value to a string or return the given fallback on failure.
+	 *
+	 * @param { * } value
+	 * @param { string } fallback
+	 *
+	 * @return { string }
+	 */
+	static toStringOr(value: any, fallback: string): string {
+		try {
+			let result: string = String(value);
+
+			if (result === 'undefined' || result === 'null') {
+				return fallback;
+			}
+
+			return result;
+		} catch (e) {
+			return fallback;
+		}
 	}
 
 	/**
@@ -902,6 +999,27 @@ class Str {
 	}
 
 	/**
+	 * Replace the first occurrence of the given value if it appears at the start of the string.
+	 *
+	 * @param { string } search
+	 * @param { string } replace
+	 * @param { string } subject
+	 *
+	 * @return { string }
+	 */
+	static replaceStart(search: string, replace: string, subject: string): string {
+		if (search === '') {
+			return subject;
+		}
+
+		if (this.startsWith(subject, search)) {
+			return this.replaceFirst(search, replace, subject);
+		}
+
+		return subject;
+	}
+
+	/**
 	 * Replace the last occurrence of a given value in the string.
 	 *
 	 * @param { string } search
@@ -922,6 +1040,50 @@ class Str {
 		}
 
 		return subject;
+	}
+
+	/**
+	 * Replace the last occurrence of a given value if it appears at the end of the string.
+	 *
+	 * @param { string } search
+	 * @param { string } replace
+	 * @param { string } subject
+	 *
+	 * @return { string
+	 */
+	static replaceEnd(search: string, replace: string, subject: string): string {
+		if (search === '') {
+			return subject;
+		}
+
+		if (this.endsWith(subject, search)) {
+			return this.replaceLast(search, replace, subject);
+		}
+
+		return subject;
+	}
+
+	/**
+	 * Replace the patterns matching the given regular expression.
+	 *
+	 * @param { string } pattern
+	 * @param { string | function } replace
+	 * @param { string } subject
+	 *
+	 * @return { this }
+	 */
+	static replaceMatches(pattern: string, replace: string | Function, subject: string) {
+		// @ts-ignore
+		const regExpBody: string  = /^\/(.*)\/\w*$/.exec(pattern)[1];
+		// @ts-ignore
+		const regExpFlags: string = /^\/.*\/(\w*)$/.exec(pattern)[1];
+		const regExp              = new RegExp(regExpBody, regExpFlags + (regExpFlags.indexOf('g') !== -1 ? '' : 'g'));
+
+		if (replace instanceof Function) {
+			subject = subject.replace(regExp, (matched) => matched);
+		}
+
+		return subject.replace(regExp, (replace as string));
 	}
 
 	/**
@@ -1009,6 +1171,54 @@ class Str {
 		let collapsed: string = this.replace(['-', '_', ' '], '_', parts.join('_'));
 
 		return collapsed.split('_').join(' ').trim();
+	}
+
+	/**
+	 * Convert the given string to APA-style title case.
+	 *
+	 * @see https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case
+	 *
+	 * @param { string } value
+	 *
+	 * @return { string }
+	 */
+	static apa(value: string) {
+		if (value === '') {
+			return value;
+		}
+
+		const minorWords: string[] = [
+			'and', 'as', 'but', 'for', 'if', 'nor', 'or', 'so', 'yet', 'a', 'an',
+			'the', 'at', 'by', 'for', 'in', 'of', 'off', 'on', 'per', 'to', 'up', 'via',
+		];
+
+		const endPunctuation: string[] = ['.', '!', '?', ':', '—', ','];
+
+		let words: string[] = value.split(/\s+/).filter(Boolean);
+
+		words[0] = (words[0] as string).charAt(0).toUpperCase() + (words[0] as string).slice(1).toLowerCase();
+
+		for (let i = 0; i < words.length; i++) {
+			let lowercaseWord: string = (words[i] as string).toLowerCase();
+
+			if (lowercaseWord.includes('-')) {
+				let hyphenatedWords: string[] = lowercaseWord.split('-');
+
+				hyphenatedWords = hyphenatedWords.map((part: string) =>
+					(minorWords.includes(part) && part.length <= 3) ? part : this.ucfirst(part)
+				);
+
+				words[i] = hyphenatedWords.join('-');
+			} else if (minorWords.includes(lowercaseWord) &&
+				lowercaseWord.length <= 3 &&
+				!(i === 0 || endPunctuation.includes((words[i - 1] as string).slice(-1)))) {
+				words[i] = lowercaseWord;
+			} else {
+				words[i] = this.ucfirst(lowercaseWord);
+			}
+		}
+
+		return words.join(' ');
 	}
 
 	/**
@@ -1312,6 +1522,44 @@ class Str {
 	}
 
 	/**
+	 * Take the first or last {limit} characters of a string.
+	 *
+	 * @param { string } string
+	 * @param { number } limit
+	 *
+	 * @return { string }
+	 */
+	static take(string: string, limit: number): string {
+		if (limit < 0) {
+			return this.substr(string, limit);
+		}
+
+		return this.substr(string, 0, limit);
+	}
+
+	/**
+	 * Convert the given string to Base64 encoding.
+	 *
+	 * @param { string } string
+	 *
+	 * @return { string }
+	 */
+	static toBase64(string: string): string {
+		return btoa(string);
+	}
+
+	/**
+	 * Decode the given Base64 encoded string.
+	 *
+	 * @param { string } string
+	 *
+	 * @return { string }
+	 */
+	static fromBase64(string: string): string {
+		return atob(string);
+	}
+
+	/**
 	 * Make a string's first character lowercase.
 	 *
 	 * @param { string } string
@@ -1353,6 +1601,23 @@ class Str {
 	 */
 	static wordCount(string: string): number {
 		return string.split(/\s+/).length;
+	}
+
+	/**
+	 * Wrap a string to a given number of characters.
+	 *
+	 * @param { string } string
+	 * @param { number } characters
+	 * @param { string } breakStr
+	 * @param { boolean } cutLongWords
+	 *
+	 * @returns { string }
+	 */
+	static wordWrap(string: string, characters: number = 75, breakStr: string = '\n', cutLongWords: boolean = false): string {
+		const breakWithSpace: string = cutLongWords ? breakStr + '\u00ad' : breakStr;
+		const regex: RegExp          = new RegExp(`.{1,${characters}}`, 'g');
+
+		return string.replace(regex, (substr: string) => substr.trim() + breakWithSpace);
 	}
 
 	/**
@@ -1454,11 +1719,14 @@ class Str {
 	}
 }
 
-const str = function (string: string) {
-	if (arguments.length === 0) {
-		return Str;
-	}
-
+/**
+ * Get a new Stringable object from the given string.
+ *
+ * @param { string } string
+ *
+ * @return Stringable
+ */
+const str = function (string: string): Stringable {
 	return Str.of(string);
 };
 
@@ -1555,6 +1823,17 @@ class Stringable {
 		}
 
 		return new Stringable(basename);
+	}
+
+	/**
+	 * Get the character at the specified index.
+	 *
+	 * @param { number } index
+	 *
+	 * @return { string | false }
+	 */
+	charAt(index: number) {
+		return Str.charAt(this.value, index);
 	}
 
 	/**
@@ -1814,6 +2093,15 @@ class Stringable {
 	}
 
 	/**
+	 * Determine if a given value is a valid URL.
+	 *
+	 * @return { boolean }
+	 */
+	isUrl(): boolean {
+		return Str.isUrl(this.value);
+	}
+
+	/**
 	 * Determine if a given string is a valid UUID.
 	 *
 	 * @return { boolean }
@@ -2028,6 +2316,18 @@ class Stringable {
 	}
 
 	/**
+	 * Find the multi-byte safe position of the first occurrence of the given substring.
+	 *
+	 * @param { string } needle
+	 * @param { number } offset
+	 *
+	 * @return { number | false }
+	 */
+	position(needle: string, offset: number = 0): number {
+		return Str.position(this.value, needle, offset);
+	}
+
+	/**
 	 * Prepend the given values to the string.
 	 *
 	 * @param { string | string[] } values
@@ -2057,6 +2357,17 @@ class Stringable {
 	 */
 	reverse(): Stringable {
 		return new Stringable(Str.reverse(this.value));
+	}
+
+	/**
+	 * Repeat the string.
+	 *
+	 * @param { number } times
+	 *
+	 * @return { this }
+	 */
+	repeat(times: number): Stringable {
+		return new Stringable(Str.repeat(this.value, times));
 	}
 
 	/**
@@ -2175,6 +2486,17 @@ class Stringable {
 	 */
 	headline(): Stringable {
 		return new Stringable(Str.headline(this.value));
+	}
+
+	/**
+	 * Convert the given string to APA-style title case.
+	 *
+	 * @see https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case
+	 *
+	 * @return { this}
+	 */
+	apa() {
+		return new Stringable(Str.apa(this.value));
 	}
 
 	/**
@@ -2619,6 +2941,19 @@ class Stringable {
 	}
 
 	/**
+	 * Wrap a string to a given number of characters.
+	 *
+	 * @param { number } characters
+	 * @param { string } breakStr
+	 * @param { boolean } cutLongWords
+	 *
+	 * @returns { this }
+	 */
+	wordWrap(characters: number = 75, breakStr: string = '\n', cutLongWords: boolean = false) {
+		return new Stringable(Str.wordWrap(this.value, characters, breakStr, cutLongWords));
+	}
+
+	/**
 	 * Wrap the string with the given strings.
 	 *
 	 * @param { string } before
@@ -2631,12 +2966,42 @@ class Stringable {
 	}
 
 	/**
+	 * Unwrap the string with the given strings.
+	 *
+	 * @param { string } before
+	 * @param { string | null } after
+	 *
+	 * @return { this }
+	 */
+	unwrap(before: string, after: string | null = null): Stringable {
+		return new Stringable(Str.unwrap(this.value, before, after));
+	}
+
+	/**
 	 * Convert the string into a `HtmlString` instance.
 	 *
 	 * @return { HTMLElement | Node | string }
 	 */
 	toHtmlString(): HtmlStringType {
 		return new HtmlString(this.value).toHtml();
+	}
+
+	/**
+	 * Convert the string to Base64 encoding.
+	 *
+	 * @return { this }
+	 */
+	toBase64(): Stringable {
+		return new Stringable(Str.toBase64(this.value));
+	}
+
+	/**
+	 * Decode the Base64 encoded string.
+	 *
+	 * @return { this }
+	 */
+	fromBase64(): Stringable {
+		return new Stringable(Str.fromBase64(this.value));
 	}
 
 	/**
