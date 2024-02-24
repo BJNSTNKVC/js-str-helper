@@ -265,16 +265,20 @@ class Str {
 		let start = (matches[1] as string).trimStart();
 		let end   = (matches[3] as string).trimEnd();
 
-		start = this.of(this.substr(start, Math.max((start.length - radius), 0)))
+		start = this.of(this.substr(start, Math.max((start.length - radius), 0), radius))
 			.ltrim()
 			// @ts-ignore
-			.unless((startWithRadius) => startWithRadius.exactly(start), (startWithRadius) => startWithRadius.prepend(omission))
+			.unless(
+				(startWithRadius: Stringable) => startWithRadius.exactly(start),
+				(startWithRadius: Stringable) => startWithRadius.prepend(omission))
 			.toString();
 
 		end = this.of(this.substr(end, 0, radius))
 			.rtrim()
 			// @ts-ignore
-			.unless((endWithRadius) => endWithRadius.exactly(end), (endWithRadius) => endWithRadius.append(omission))
+			.unless(
+				(endWithRadius: Stringable) => endWithRadius.exactly(end),
+				(endWithRadius: Stringable) => endWithRadius.append(omission))
 			.toString();
 
 		return (start + ' ' + matches[2] + end).replace(/\s+/g, ' ').trim();
@@ -316,11 +320,11 @@ class Str {
 	 */
 	static unwrap(value: string, before: string, after: string | null = null): string {
 		if (this.startsWith(value, before)) {
-			value = this.substr(value, this.length(before));
+			value = this.replaceFirst(before, '', value);
 		}
 
 		if (this.endsWith(value, after ?? before)) {
-			value = this.substr(value, 0, -this.length((after as string)));
+			value = this.replaceLast(after ?? before, '', value);
 		}
 
 		return value;
@@ -335,27 +339,23 @@ class Str {
 	 * @return { boolean }
 	 */
 	static is(pattern: string | string[], value: string): boolean {
-		let result: boolean = false;
+		let patterns: string[] = Array.isArray(pattern) ? pattern : [pattern];
 
-		if (!(pattern instanceof Array)) {
-			pattern = [pattern];
+		for (let pattern of patterns) {
+			if (pattern === value) {
+				return true;
+			}
+
+			pattern = pattern.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&').replace(/\\\*/g, '.*');
+
+			const regex: RegExp = new RegExp('^' + pattern + '$', 'u');
+
+			if (regex.test(value)) {
+				return true;
+			}
 		}
 
-		pattern.forEach((item: string) => {
-			if (item === value) {
-				result = true;
-			}
-
-			item = preg_quote(item, '#');
-
-			item = item.replace(/\\\*/g, '.*');
-
-			if (RegExp(value).exec(item)) {
-				result = true;
-			}
-		});
-
-		return result;
+		return false;
 	}
 
 	/**
@@ -625,13 +625,9 @@ class Str {
 
 		const regExp: RegExp = new RegExp(regExpBody, regExpFlags + (regExpFlags.indexOf('g') !== -1 ? '' : 'g'));
 
-		const matches: RegExpMatchArray[] = [...subject.matchAll(regExp)];
+		const matches : string[] | null = subject.match(regExp);
 
-		if (matches.length === 0) {
-			return [];
-		}
-
-		return matches.map((match: RegExpMatchArray) => (match[1] as string));
+		return matches ?? [];
 	}
 
 	/**
@@ -733,6 +729,7 @@ class Str {
 			'goose' : 'geese',
 			'sex'   : 'sexes',
 			'child' : 'children',
+			'human' : 'humans',
 			'man'   : 'men',
 			'tooth' : 'teeth',
 			'person': 'people',
@@ -746,6 +743,7 @@ class Str {
 		const uncountable: string[] = [
 			'sheep',
 			'fish',
+			'feedback',
 			'deer',
 			'moose',
 			'series',
@@ -871,10 +869,12 @@ class Str {
 	 * @param { string } needle
 	 * @param { number } offset
 	 *
-	 * @return { number }
+	 * @return { number | false }
 	 */
-	static position(haystack: string, needle: string, offset: number = 0): number {
-		return haystack.indexOf(needle, Math.max(offset, 0));
+	static position(haystack: string, needle: string, offset: number = 0): number | false {
+		const position : number = haystack.indexOf(needle, Math.max(offset, 0));
+
+		return position !== -1 ? position : false;
 	}
 
 	/**
@@ -991,7 +991,7 @@ class Str {
 
 		let position: number = subject.indexOf(search);
 
-		if (position !== 0) {
+		if (position !== undefined) {
 			return subject.replace(search, replace);
 		}
 
@@ -1096,11 +1096,7 @@ class Str {
 	 * @return { string }
 	 */
 	static remove(search: string, subject: string, caseSensitive: boolean = true): string {
-		subject = caseSensitive
-			? subject.replace(search, '')
-			: subject.replace(new RegExp(search, 'gi'), '');
-
-		return subject.replace(/\s+/g, ' ');
+		return subject.replace(new RegExp(search, caseSensitive ? 'g' : 'gi'), '');
 	}
 
 	/**
@@ -1462,11 +1458,11 @@ class Str {
 			return '';
 		}
 
-		if (length === 0) {
+		if (length === 0 || length === null) {
 			return string.substring(start);
 		}
 
-		return string.substring(start, start + (length as number));
+		return string.substring(start, start + length);
 	}
 
 	/**
@@ -1616,8 +1612,9 @@ class Str {
 	static wordWrap(string: string, characters: number = 75, breakStr: string = '\n', cutLongWords: boolean = false): string {
 		const breakWithSpace: string = cutLongWords ? breakStr + '\u00ad' : breakStr;
 		const regex: RegExp          = new RegExp(`.{1,${characters}}`, 'g');
+		let result: string           = string.replace(regex, (substr: string) => substr.trim() + breakWithSpace);
 
-		return string.replace(regex, (substr: string) => substr.trim() + breakWithSpace);
+		return this.replaceLast(breakStr, '', result);
 	}
 
 	/**
@@ -2125,7 +2122,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	isEmpty(): boolean {
-		return this.value === '';
+		return this.value.trim() === '';
 	}
 
 	/**
@@ -2316,14 +2313,14 @@ class Stringable {
 	}
 
 	/**
-	 * Find the multi-byte safe position of the first occurrence of the given substring.
+	 * Find the multibyte safe position of the first occurrence of the given substring.
 	 *
 	 * @param { string } needle
 	 * @param { number } offset
 	 *
 	 * @return { number | false }
 	 */
-	position(needle: string, offset: number = 0): number {
+	position(needle: string, offset: number = 0): number | false {
 		return Str.position(this.value, needle, offset);
 	}
 
@@ -2375,11 +2372,12 @@ class Stringable {
 	 *
 	 * @param { string | array } search
 	 * @param { string } replace
+	 * @param { boolean } caseSensitive
 	 *
 	 * @return { this }
 	 */
-	replace(search: string | string[], replace: string): Stringable {
-		return new Stringable(Str.replace(search, replace, this.value));
+	replace(search: string | string[], replace: string, caseSensitive: boolean = true): Stringable {
+		return new Stringable(Str.replace(search, replace, this.value, caseSensitive));
 	}
 
 	/**
@@ -2407,6 +2405,18 @@ class Stringable {
 	}
 
 	/**
+	 * Replace the first occurrence of the given value if it appears at the start of the string.
+	 *
+	 * @param { string } search
+	 * @param { string } replace
+	 *
+	 * @return { this }
+	 */
+	replaceStart(search: string, replace: string): Stringable {
+		return new Stringable(Str.replaceStart(search, replace, this.value));
+	}
+
+	/**
 	 * Replace the last occurrence of a given value in the string.
 	 *
 	 * @param { string } search
@@ -2416,6 +2426,18 @@ class Stringable {
 	 */
 	replaceLast(search: string, replace: string): Stringable {
 		return new Stringable(Str.replaceLast(search, replace, this.value));
+	}
+
+	/**
+	 * Replace the last occurrence of a given value if it appears at the end of the string.
+	 *
+	 * @param { string } search
+	 * @param { string } replace
+	 *
+	 * @return { this }
+	 */
+	replaceEnd(search: string, replace: string): Stringable {
+		return new Stringable(Str.replaceEnd(search, replace, this.value));
 	}
 
 	/**
@@ -3547,4 +3569,13 @@ function ucwords(string: string, separators: string = ' \t\r\n\f\v'): string {
 if (typeof exports != 'undefined') {
 	module.exports.Str = Str;
 	module.exports.str = str;
+}
+
+// Hack to test this code, global is not available in the browser.
+if (typeof global !== 'undefined') {
+	const _global: any = global;
+
+	_global.Str        = Str;
+	_global.Stringable = Stringable;
+	_global.str        = str;
 }
