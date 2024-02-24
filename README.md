@@ -45,11 +45,11 @@ Str.afterLast('App\\Http\\Controllers\\Controller', '\\');
 
 #### Str.apa()
 
-The `Str::apa` method converts the given string to title case following
+The `Str.apa` method converts the given string to title case following
 the [APA guidelines](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case):
 
 ```js
-Str::apa('Creating A Project');
+Str.apa('Creating A Project');
 
 // 'Creating a Project'
 ```
@@ -111,7 +111,7 @@ The `Str.camel` method converts the given string to `camelCase`:
 ```js
 Str.camel('foo_bar');
 
-// fooBar
+// 'fooBar'
 ```
 
 #### Str.charAt()
@@ -119,7 +119,7 @@ Str.camel('foo_bar');
 The `Str.charAt` method returns the character at the specified index. If the index is out of bounds, false is returned:
 
 ```js
-Str:charAt('This is my name.', 6);
+Str.charAt('This is my name.', 6);
 
 // 's'
 ```
@@ -353,7 +353,7 @@ The `Str.kebab` method converts the given string to kebab-case:
 ```js
 Str.kebab('fooBar');
 
-// foo-bar
+// 'foo-bar'
 ```
 
 #### Str.lcfirst()
@@ -671,7 +671,7 @@ The `Str.replaceStart` method replaces the first occurrence of the given value o
 the string:
 
 ```js
-Str::replaceStart('Hello', 'Laravel', 'Hello World');
+Str.replaceStart('Hello', 'Laravel', 'Hello World');
 
 // Laravel World
 
@@ -1580,7 +1580,7 @@ If you specify a matching group within the expression, method will return an arr
 ```js
 Str.of('bar fun bar fly').matchAll('/f(\\w*)/');
 
-// ['un', 'ly'];
+// ['fun', 'fly'];
 ```
 
 If no matches are found, an empty array will be returned.
