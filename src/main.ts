@@ -1994,13 +1994,9 @@ class Stringable {
      * @return { array }
      */
     explode(delimiter: string, limit: number = 0): string[] {
-        if (limit === 0) {
-            return [this._value];
-        }
+        let wordsArray: string[] = this._value.split(delimiter);
 
-        let wordsArray = this._value.split(delimiter);
-
-        const position = limit - 1 >= wordsArray.length
+        const position: number = limit - 1 >= wordsArray.length
             ? wordsArray.length - 1
             : limit - 1;
 
@@ -3097,7 +3093,7 @@ class Stringable {
         }
 
         if (format === null) {
-            return new Date().toLocaleDateString('en-us', {
+            return new Date(this._value).toLocaleDateString('en-us', {
                 year    : 'numeric',
                 month   : 'numeric',
                 day     : 'numeric',

@@ -1772,7 +1772,7 @@ Str.of('Framework').prepend('Laravel ');
 The `remove` method removes the given value or array of values from the string:
 
 ```js
-Str.of('Arkansas is quite beautiful!').remove('quite');
+Str.of('Arkansas is quite beautiful!').remove('quite ');
 
 // 'Arkansas is beautiful!'
 ```
