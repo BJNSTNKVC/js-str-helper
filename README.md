@@ -1015,14 +1015,6 @@ str('Taylor').append(' Otwell');
 // 'Taylor Otwell'
 ```
 
-If no argument is provided to the `str` function, the function returns an instance of `Str`:
-
-```js
-str().snake('FooBar');
-
-// 'foo_bar'
-```
-
 ### Fluent Strings
 
 Fluent strings provide a more fluent, object-oriented interface for working with string values, allowing you to chain
