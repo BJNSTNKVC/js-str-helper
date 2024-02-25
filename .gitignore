@@ -1,5 +1,4 @@
 /.idea
 /.vscode
-/tests
 node_modules
 package-lock.json
