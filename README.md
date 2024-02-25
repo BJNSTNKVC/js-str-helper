@@ -207,13 +207,13 @@ value:
 ```js
 Str.finish('this/string', '/');
 
-// this/string/
+// 'this/string/'
 ```
 
 ```js
 Str.finish('this/string/', '/');
 
-// this/string/
+// 'this/string/'
 ```
 
 #### Str.fromBase64()
@@ -223,7 +223,7 @@ The `Str.fromBase64` method converts the given string from Base64:
 ```js
 Str.fromBase64('TGFyYXZlbA==');
 
-// Laravel
+// 'Laravel'
 ```
 
 #### Str.headline()
@@ -235,13 +235,13 @@ with each word's first letter capitalized:
 ```js
 Str.headline('steve_jobs');
 
-// Steve Jobs
+// 'Steve Jobs'
 ```
 
 ```js
 Str.headline('EmailNotificationSent');
 
-// Email Notification Sent
+// 'Email Notification Sent'
 ```
 
 #### Str.is()
@@ -363,7 +363,7 @@ The `Str.lcfirst` method returns the given string with the first character lower
 ```js
 Str.lcfirst('Foo Bar');
 
-// foo Bar
+// 'foo Bar'
 ```
 
 #### Str.length()
@@ -383,7 +383,7 @@ The `Str.limit` method truncates the given string to the specified length:
 ```js
 Str.limit('The quick brown fox jumps over the lazy dog', 20);
 
-// The quick brown fox...
+// 'The quick brown fox...'
 ```
 
 You may pass a third argument to the method to change the string that will be appended to the end of the truncated
@@ -392,7 +392,7 @@ string:
 ```js
 Str.limit('The quick brown fox jumps over the lazy dog', 20, ' (...)');
 
-// The quick brown fox (...)
+// 'The quick brown fox (...)'
 ```
 
 #### Str.lower()
@@ -402,7 +402,7 @@ The `Str.lower` method converts the given string to lowercase:
 ```js
 Str.lower('LARAVEL');
 
-// laravel
+// 'laravel'
 ```
 
 #### Str.mask()
@@ -413,7 +413,7 @@ strings such as email addresses and phone numbers:
 ```js
 Str.mask('taylor@example.com', '*', 3);
 
-// tay***************
+// 'tay***************'
 ```
 
 If needed, you provide a negative number as the third argument to the mask method, which will instruct the method to
@@ -422,7 +422,7 @@ begin masking at the given distance from the end of the string:
 ```js
 Str.mask('taylor@example.com', '*', -15, 3);
 
-// tay***@example.com
+// 'tay***@example.com'
 ```
 
 #### Str.orderedUuid()
@@ -433,7 +433,7 @@ column. Each UUID that is generated using this method will be sorted after UUIDs
 ```js
 Str.orderedUuid();
 
-// 04fe4df5-7bae-45f4-8040-d0e4568f4054
+// '04fe4df5-7bae-45f4-8040-d0e4568f4054'
 ```
 
 #### Str.padBoth()
@@ -508,13 +508,13 @@ The `Str.plural` method converts a singular word string to its plural form.
 ```js
 Str.plural('car');
 
-// cars
+// 'cars'
 ```
 
 ```js
 Str.plural('child');
 
-// children
+// 'children'
 ```
 
 You may provide an integer as a second argument to the function to retrieve the singular or plural form of the string:
@@ -522,13 +522,13 @@ You may provide an integer as a second argument to the function to retrieve the 
 ```js
 Str.plural('child', 2);
 
-// children
+// 'children'
 ```
 
 ```js
 Str.plural('child', 1);
 
-// child
+// 'child'
 ```
 
 #### Str.pluralStudly()
@@ -538,13 +538,13 @@ The `Str.pluralStudly` method converts a singular word string formatted in studl
 ```js
 Str.pluralStudly('VerifiedHuman');
 
-// VerifiedHumans
+// 'VerifiedHumans'
 ```
 
 ```js
 Str.pluralStudly('UserFeedback');
 
-// UserFeedback
+// 'UserFeedback'
 ```
 
 You may provide an integer as a second argument to the function to retrieve the singular or plural form of the string:
@@ -552,13 +552,13 @@ You may provide an integer as a second argument to the function to retrieve the 
 ```js
 Str.pluralStudly('VerifiedHuman', 2);
 
-// VerifiedHumans
+// 'VerifiedHumans'
 ```
 
 ```js
 Str.pluralStudly('VerifiedHuman', 1);
 
-// VerifiedHuman
+// 'VerifiedHuman'
 ```
 
 #### Str.random()
@@ -576,7 +576,7 @@ The `Str.remove` method removes the given value or array of values from the stri
 ```js
 Str.remove('e', 'Peter Piper picked a peck of pickled peppers.');
 
-// Ptr Pipr pickd a pck of pickld ppprs.
+// 'Ptr Pipr pickd a pck of pickld ppprs.'
 ```
 
 You may also pass false as a third argument to the remove method to ignore case when removing strings.
@@ -584,7 +584,7 @@ You may also pass false as a third argument to the remove method to ignore case 
 ```js
 Str.remove('E', 'Peter Piper picked a peck of pickled peppers.', false);
 
-// Ptr Pipr pickd a pck of pickld ppprs.
+// 'Ptr Pipr pickd a pck of pickld ppprs.'
 ```
 
 #### Str.repeat()
@@ -594,7 +594,7 @@ The `Str.repeat`  method repeats the given string:
 ```js
 Str.repeat('a', 5);
 
-// aaaaa
+// 'aaaaa'
 ```
 
 #### Str.replace()
@@ -604,7 +604,7 @@ The `Str.replace` method replaces a given string within the string:
 ```js
 Str.replace('9.x', '10.x', 'Laravel 10.x');
 
-// Laravel 9.x
+// 'Laravel 9.x'
 ```
 
 The `replace` method also accepts a caseSensitive argument. By default, the replace method is case-sensitive:
@@ -612,7 +612,7 @@ The `replace` method also accepts a caseSensitive argument. By default, the repl
 ```js
 Str.replace('framework', 'Laravel', 'Framework 10.x', false);
 
-// Framework 10.x
+// 'Framework 10.x'
 ```
 
 #### Str.replaceArray()
@@ -622,7 +622,7 @@ The `Str.replaceArray` method replaces a given value in the string sequentially 
 ```js
 Str.replaceArray('?', ['8:30', '9:00'], 'The event will take place between ? and ?');
 
-// The event will take place between 8:30 and 9:00
+// 'The event will take place between 8:30 and 9:00'
 ```
 
 #### Str.replaceFirst()
@@ -632,7 +632,7 @@ The `Str.replaceFirst` method replaces the first occurrence of a given value in 
 ```js
 Str.replaceFirst('the', 'a', 'the quick brown fox jumps over the lazy dog');
 
-// a quick brown fox jumps over the lazy dog
+// 'a quick brown fox jumps over the lazy dog'
 ```
 
 #### Str.replaceLast()
@@ -642,7 +642,7 @@ The `Str.replaceLast` method replaces the last occurrence of a given value in a 
 ```js
 Str.replaceLast('the', 'a', 'the quick brown fox jumps over the lazy dog');
 
-// the quick brown fox jumps over a lazy dog
+// 'the quick brown fox jumps over a lazy dog'
 ```
 
 #### Str.replaceMatches()
@@ -673,11 +673,11 @@ the string:
 ```js
 Str.replaceStart('Hello', 'Laravel', 'Hello World');
 
-// Laravel World
+// 'Laravel World'
 
 Str.replaceStart('World', 'Laravel', 'Hello World');
 
-// Hello World
+// 'Hello World'
 ```
 
 #### Str.replaceEnd()
@@ -688,11 +688,11 @@ string:
 ```js
 Str.replaceEnd('World', 'Laravel', 'Hello World');
 
-// Hello Laravel
+// 'Hello Laravel'
 
 Str.replaceEnd('Hello', 'Laravel', 'Hello World');
 
-// Hello World
+// 'Hello World'
 ```
 
 #### Str.reverse()
@@ -702,7 +702,7 @@ The `Str.reverse` method reverses the given string:
 ```js
 Str.reverse('Hello World');
 
-// dlroW olleH
+// 'dlroW olleH'
 ```
 
 #### Str.singular()
@@ -712,13 +712,13 @@ The `Str.singular` method converts a string to its singular form.
 ```js
 Str.singular('cars');
 
-// car
+// 'car'
 ```
 
 ```js
 Str.singular('children');
 
-// child
+// 'child'
 ```
 
 #### Str.slug()
@@ -728,7 +728,7 @@ The `Str.slug` method generates a URL friendly "slug" from the given string:
 ```js
 Str.slug('Laravel 5 Framework', '-');
 
-// laravel-5-framework
+// 'laravel-5-framework'
 ```
 
 #### Str.snake()
@@ -738,13 +738,13 @@ The `Str.snake` method converts the given string to snake_case:
 ```js
 Str.snake('fooBar');
 
-// foo_bar
+// 'foo_bar'
 ```
 
 ```js
 Str.snake('fooBar', '-');
 
-// foo-bar
+// 'foo-bar'
 ```
 
 #### Str.squish()
@@ -755,7 +755,7 @@ words:
 ```js
 Str.squish('    laravel    framework    ');
 
-// laravel framework
+// 'laravel framework'
 ```
 
 #### Str.start()
@@ -766,13 +766,13 @@ value:
 ```js
 Str.start('this/string', '/');
 
-// /this/string
+// '/this/string'
 ```
 
 ```js
 Str.start('/this/string', '/');
 
-// /this/string
+// '/this/string'
 ```
 
 #### Str.startsWith()
@@ -801,7 +801,7 @@ The `Str.studly` method converts the given string to StudlyCase:
 ```js
 Str.studly('foo_bar');
 
-// FooBar
+// 'FooBar'
 ```
 
 #### Str.substr()
@@ -811,7 +811,7 @@ The `Str.substr` method returns the portion of string specified by the start and
 ```js
 Str.substr('The Laravel Framework', 4, 7);
 
-// Laravel
+// 'Laravel'
 ```
 
 #### Str.substrCount()
@@ -835,12 +835,12 @@ string:
 ```js
 Str.substrReplace('1300', ':', 2);
 
-// 13:
+// '13:'
 ```
 
 ```js
 Str.substrReplace('1300', ':', 2, 0);
-// 13:00
+// '13:00'
 ```
 
 #### Str.swap()
@@ -850,7 +850,7 @@ The `Str.swap` method replaces multiple values in the given string:
 ```js
 Str.swap({ 'Tacos': 'Burritos', 'great': 'fantastic' }, 'Tacos are great!');
 
-// Burritos are fantastic!
+// 'Burritos are fantastic!'
 ```
 
 #### Str.title()
@@ -860,7 +860,7 @@ The `Str.title` method converts the given string to Title Case:
 ```js
 Str.title('a nice title uses the correct case');
 
-// A Nice Title Uses The Correct Case
+// 'A Nice Title Uses The Correct Case'
 ```
 
 #### Str.toBase64()
@@ -870,7 +870,7 @@ The `Str.toBase64` method converts the given string to Base64:
 ```js
 Str.toBase64('Laravel');
 
-// TGFyYXZlbA==
+// 'TGFyYXZlbA=='
 ```
 
 #### Str.ucfirst()
@@ -880,7 +880,7 @@ The `Str.ucfirst` method returns the given string with the first character capit
 ```js
 Str.ucfirst('foo bar');
 
-// Foo bar
+// 'Foo bar'
 ```
 
 #### Str.ucsplit()
@@ -900,7 +900,7 @@ The `Str.upper` method converts the given string to uppercase:
 ```js
 Str.upper('laravel');
 
-// LARAVEL
+// 'LARAVEL'
 ```
 
 #### Str.ulid()
@@ -910,7 +910,7 @@ The `Str.ulid` method generates a ULID, which is a compact, time-ordered unique 
 ```js
 Str.ulid();
 
-// 01gd6r360bp37zj17nxb55yv40
+// '01gd6r360bp37zj17nxb55yv40'
 ```
 
 #### Str.unwrap()
@@ -920,13 +920,13 @@ The `Str.unwrap` method removes the specified strings from the beginning and end
 ```js
 Str.unwrap('-Laravel-', '-');
 
-// Laravel
+// 'Laravel'
 ```
 
 ```js
 Str.unwrap('{framework: "Laravel"}', '{', '}');
 
-// framework: "Laravel"
+// 'framework: "Laravel"'
 ```
 
 #### Str.uuid()
@@ -936,7 +936,7 @@ The `Str.uuid` method generates a UUID (version 4):
 ```js
 Str.uuid();
 
-// 39923a8e-d504-42b5-894f-55e79e6632dd 
+// '39923a8e-d504-42b5-894f-55e79e6632dd '
 ```
 
 #### Str.wordCount()
@@ -971,7 +971,7 @@ third argument to specify which string should be appended to the end of the trun
 ```js
 Str.words('Perfectly balanced, as all things should be.', 3, ' >>>');
 
-// Perfectly balanced, as >>>
+// 'Perfectly balanced, as >>>'
 ```
 
 #### Str.wrap()
@@ -981,13 +981,13 @@ The `Str.wrap` method wraps the given string with an additional string or a pair
 ```js
 Str.wrap('Laravel', '"');
 
-// "Laravel"
+// '"Laravel"'
 ```
 
 ```js
 Str.wrap('is', 'This ', ' Laravel!');
 
-// This is Laravel!
+// 'This is Laravel!'
 ```
 
 #### str()
@@ -1135,7 +1135,7 @@ The `camel` method converts the given string to camelCase:
 ```js
 Str.of('foo_bar').camel();
 
-// fooBar
+// 'fooBar'
 ```
 
 #### charAt
@@ -1155,7 +1155,7 @@ The `classBasename` method returns the class name of the given class with the cl
 ```js
 Str.of('Foo\\Bar\\Baz').classBasename();
 
-// Baz
+// 'Baz'
 ```
 
 #### contains
@@ -1278,13 +1278,13 @@ The `finish` method adds a single instance of the given value to a string if it 
 ```js
 Str.of('this/string').finish('/');
 
-// this/string/
+// 'this/string/'
 ```
 
 ```js
 Str.of('this/string/').finish('/');
 
-// this/string/
+// 'this/string/'
 ```
 
 #### fromBase64
@@ -1294,7 +1294,7 @@ The `fromBase64` method converts the given string from Base64:
 ```js
 Str.of('TGFyYXZlbA==').fromBase64();
 
-// Laravel
+// 'Laravel'
 ```
 
 #### headline
@@ -1305,13 +1305,13 @@ each word's first letter capitalized:
 ```js
 Str.of('taylor_otwell').headline();
 
-// Taylor Otwell
+// 'Taylor Otwell'
 ```
 
 ```js
 Str.of('EmailNotificationSent').headline();
 
-// Email Notification Sent
+// 'Email Notification Sent'
 ```
 
 #### is
@@ -1455,7 +1455,7 @@ The `kebab` method converts the given string to kebab-case:
 ```js
 Str.of('fooBar').kebab();
 
-// foo-bar
+// 'foo-bar'
 ```
 
 #### lcfirst
@@ -1465,7 +1465,7 @@ The `lcfirst` method returns the given string with the first character lowercase
 ```js
 Str.of('Foo Bar').lcfirst();
 
-// foo Bar
+// 'foo Bar'
 ```
 
 #### length
@@ -1485,7 +1485,7 @@ The `limit` method truncates the given string to the specified length:
 ```js
 Str.of('The quick brown fox jumps over the lazy dog').limit(20);
 
-// The quick brown fox...
+// 'The quick brown fox...'
 ```
 
 You may also pass a second argument to change the string that will be appended to the end of the truncated string:
@@ -1493,7 +1493,7 @@ You may also pass a second argument to change the string that will be appended t
 ```js
 Str.of('The quick brown fox jumps over the lazy dog').limit(20, ' (...)');
 
-// The quick brown fox (...)
+// 'The quick brown fox (...)'
 ```
 
 #### lower
@@ -1530,7 +1530,7 @@ such as email addresses and phone numbers:
 ```js
 Str.of('taylor@example.com').mask('*', 3);
 
-// tay***************
+// 'tay***************'
 ```
 
 If needed, you may provide negative numbers as the third or fourth argument to the mask method, which will instruct the
@@ -1539,13 +1539,13 @@ method to begin masking at the given distance from the end of the string:
 ```js
 Str.of('taylor@example.com').mask('*', -15, 3);
 
-// tay***@example.com
+// 'tay***@example.com'
 ```
 
 ```js
 Str.of('taylor@example.com').mask('*', 4, -4);
 
-// tayl**********.com
+// 'tayl**********.com'
 ```
 
 #### match
@@ -1580,7 +1580,7 @@ If you specify a matching group within the expression, method will return an arr
 ```js
 Str.of('bar fun bar fly').matchAll('/f(\\w*)/');
 
-// ['fun', 'fly'];
+// ['un', 'ly'];
 ```
 
 If no matches are found, an empty array will be returned.
@@ -1702,13 +1702,13 @@ The `plural` method converts a singular word string to its plural form.
 ```js
 Str.of('car').plural();
 
-// cars
+// 'cars'
 ```
 
 ```js
 Str.of('child').plural();
 
-// children
+// 'children'
 ```
 
 You may provide an integer as a second argument to the function to retrieve the singular or plural form of the string:
@@ -1716,13 +1716,13 @@ You may provide an integer as a second argument to the function to retrieve the 
 ```js
 Str.of('child').plural(2);
 
-// children
+// 'children'
 ```
 
 ```js
 Str.of('child').plural(1);
 
-// child
+// 'child'
 ```
 
 #### position
@@ -1746,13 +1746,13 @@ You may provide an integer as a second argument to the function to retrieve the 
 ```js
 Str.of('child').plural(2);
 
-// children
+// 'children'
 ```
 
 ```js
 Str.of('child').plural(1);
 
-// child
+// 'child'
 ```
 
 #### prepend
@@ -1762,7 +1762,7 @@ The `prepend` method prepends the given values onto the string:
 ```js
 Str.of('Framework').prepend('Laravel ');
 
-// Laravel Framework
+// 'Laravel Framework'
 ```
 
 #### remove
@@ -1772,7 +1772,7 @@ The `remove` method removes the given value or array of values from the string:
 ```js
 Str.of('Arkansas is quite beautiful!').remove('quite');
 
-// Arkansas is beautiful!
+// 'Arkansas is beautiful!'
 ```
 
 You may also pass false as a second parameter to ignore case when removing strings.
@@ -1784,7 +1784,7 @@ The `repeat` method repeats the given string:
 ```js
 Str.of('a').repeat(5);
 
-// aaaaa
+// 'aaaaa'
 ```
 
 #### replace
@@ -1794,7 +1794,7 @@ The `replace` method replaces a given string within the string:
 ```js
 Str.of('Laravel 9.x').replace('9.x', '10.x');
 
-// Laravel 10.x
+// 'Laravel 10.x'
 ```
 
 The `replace` method also accepts a `caseSensitive` argument. By default, the replace method is case-sensitive:
@@ -1810,7 +1810,7 @@ The `replaceArray` method replaces a given value in the string sequentially usin
 ```js
 Str.of('The event will take place between ? and ?').replaceArray('?', ['8:30', '9:00']);
 
-// The event will take place between 8:30 and 9:00
+// 'The event will take place between 8:30 and 9:00'
 ```
 
 #### replaceFirst
@@ -1820,7 +1820,7 @@ The `replaceFirst` method replaces the first occurrence of a given value in a st
 ```js
 Str.of('the quick brown fox jumps over the lazy dog').replaceFirst('the', 'a');
 
-// a quick brown fox jumps over the lazy dog
+// 'a quick brown fox jumps over the lazy dog'
 ```
 
 #### replaceLast
@@ -1830,7 +1830,7 @@ The `replaceLast` method replaces the last occurrence of a given value in a stri
 ```js
 Str.of('the quick brown fox jumps over the lazy dog').replaceLast('the', 'a');
 
-// the quick brown fox jumps over a lazy dog
+// 'the quick brown fox jumps over a lazy dog'
 ```
 
 #### replaceMatches
@@ -1859,13 +1859,13 @@ The `replaceStart` method replaces the first occurrence of the given value only 
 ```js
 Str.of('Hello World').replaceStart('Hello', 'Laravel');
 
-// Laravel World
+// 'Laravel World'
 ```
 
 ```js
 Str.of('Hello World').replaceStart('World', 'Laravel');
 
-// Hello World
+// 'Hello World'
 ```
 
 #### replaceEnd
@@ -1875,13 +1875,13 @@ The `replaceEnd` method replaces the last occurrence of the given value only if 
 ```js
 Str.of('Hello World').replaceEnd('World', 'Laravel');
 
-// Hello Laravel
+// 'Hello Laravel'
 ```
 
 ```js
 Str.of('Hello World').replaceEnd('Hello', 'Laravel');
 
-// Hello World
+// 'Hello World'
 ```
 
 #### rtrim
@@ -1907,13 +1907,13 @@ The `singular` method converts a string to its singular form.
 ```js
 Str.of('cars').singular();
 
-// car
+// 'car'
 ```
 
 ```js
 Str.of('children').singular();
 
-// child
+// 'child'
 ```
 
 #### slug
@@ -1923,7 +1923,7 @@ The `slug` method generates a URL friendly "slug" from the given string:
 ```js
 Str.of('Laravel Framework').slug('-');
 
-// laravel-framework
+// 'laravel-framework'
 ```
 
 #### snake
@@ -1933,7 +1933,7 @@ The `snake` method converts the given string to snake_case:
 ```js
 Str.of('fooBar').snake();
 
-// foo_bar
+// 'foo_bar'
 ```
 
 #### split
@@ -1953,7 +1953,7 @@ The `squish` method removes all extraneous white space from a string, including 
 ```js
 Str.of('    laravel    framework    ').squish();
 
-// laravel framework
+// 'laravel framework'
 ```
 
 #### start
@@ -1963,13 +1963,13 @@ The `start` method adds a single instance of the given value to a string if it d
 ```js
 Str.of('this/string').start('/');
 
-// /this/string
+// '/this/string'
 ```
 
 ```js
 Str.of('/this/string').start('/');
 
-// /this/string
+// '/this/string'
 ```
 
 #### startsWith
@@ -1989,7 +1989,7 @@ The `studly` method converts the given string to StudlyCase:
 ```js
 Str.of('foo_bar').studly();
 
-// FooBar
+// 'FooBar'
 ```
 
 #### substr
@@ -1999,13 +1999,13 @@ The `substr` method returns the portion of the string specified by the given sta
 ```js
 Str.of('Laravel Framework').substr(8);
 
-// Framework
+// 'Framework'
 ```
 
 ```js
 Str.of('Laravel Framework').substr(8, 5);
 
-// Frame
+// 'Frame'
 ```
 
 #### substrReplace
@@ -2018,13 +2018,13 @@ string:
 ```js
 Str.of('1300').substrReplace(':', 2);
 
-// 13:
+// '13:'
 ```
 
 ```js
 Str.of('The Framework').substrReplace(' Laravel', 3, 0);
 
-// The Laravel Framework
+// 'The Laravel Framework'
 ```
 
 #### swap
@@ -2034,7 +2034,7 @@ The `swap` method replaces multiple values in the string:
 ```js
 Str.of('Tacos are great!').swap({ 'Tacos': 'Burritos', 'great': 'fantastic' });
 
-// Burritos are fantastic!
+// 'Burritos are fantastic!'
 ```
 
 #### take
@@ -2043,7 +2043,7 @@ The `take` method returns a specified number of characters from the beginning of
 ```js
 Str.of('Build something amazing!').take(5);
 
-// Build
+// 'Build'
 ```
 
 #### tap
@@ -2058,7 +2058,7 @@ Str.of('Laravel')
     .tap((string) => string.dump())
     .upper();
 
-// LARAVEL FRAMEWORK
+// 'LARAVEL FRAMEWORK'
 ```
 
 #### test
@@ -2078,7 +2078,7 @@ The `title` method converts the given string to Title Case:
 ```js
 Str.of('a nice title uses the correct case').title();
 
-// A Nice Title Uses The Correct Case
+// 'A Nice Title Uses The Correct Case'
 ```
 
 #### toBase64
@@ -2087,7 +2087,7 @@ The `toBase64` method converts the given string to Base64:
 ```js
 Str.of('Laravel').toBase64();
 
-// TGFyYXZlbA==
+// 'TGFyYXZlbA=='
 ```
 
 #### toHtmlString
@@ -2100,12 +2100,12 @@ Str.of('<input type="text" placeholder="Hello">').toHtmlString();
 <input type="text" placeholder="Hello">
 ```
 
-If no valid HTML is provided to the method, the method returns an instance of `String`:
+If no valid HTML is provided to the method, the method returns an instance of `string`:
 
 ```js
 Str.of('Hello').toHtmlString();
 
-// Hello
+// 'Hello'
 ```
 
 #### trim
@@ -2131,7 +2131,7 @@ The `ucfirst` method returns the given string with the first character capitaliz
 ```js
 Str.of('foo bar').ucfirst();
 
-// Foo bar
+// 'Foo bar'
 ```
 
 #### ucsplit
@@ -2151,13 +2151,13 @@ The `unwrap` method removes the specified strings from the beginning and end of 
 ```js
 Str.of('-Laravel-').unwrap('-');
 
-// Laravel
+// 'Laravel'
 ```
 
 ```js
 Str.of('{framework: "Laravel"}').unwrap('{', '}');
 
-// framework: "Laravel"
+// 'framework: "Laravel"'
 ```
 
 #### upper
@@ -2167,7 +2167,7 @@ The `upper` method converts the given string to uppercase:
 ```js
 Str.of('laravel').upper();
 
-// LARAVEL
+// 'LARAVEL'
 ```
 
 #### when
@@ -2177,6 +2177,14 @@ instance:
 
 ```js
 Str.of('Taylor').when(true, (string) => string.append(' Otwell'));
+
+// 'Taylor Otwell'
+```
+
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('Taylor').when(true, (string: Stringable) => string.append(' Otwell'));
 
 // 'Taylor Otwell'
 ```
@@ -2195,6 +2203,14 @@ Str.of('tony stark').whenContains('tony', (string) => string.title());
 // 'Tony Stark'
 ```
 
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('tony stark').whenContains('tony', (string: Stringable) => string.title());
+
+// 'Tony Stark'
+```
+
 If necessary, you may pass another closure as the third parameter to the `when` method. This closure will execute if the
 string does not contain the given value.
 
@@ -2207,6 +2223,14 @@ Str.of('tony stark').whenContains(['tony', 'hulk'], (string) => string.title());
 // Tony Stark
 ```
 
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('tony stark').whenContains(['tony', 'hulk'], (string: Stringable) => string.title());
+
+// Tony Stark
+```
+
 #### whenContainsAll
 
 The `whenContainsAll` method invokes the given closure if the string contains all the given sub-strings. The closure
@@ -2214,6 +2238,14 @@ will receive the fluent string instance:
 
 ```js
 Str.of('tony stark').whenContainsAll(['tony', 'stark'], (string) => string.title());
+
+// 'Tony Stark'
+```
+
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('tony stark').whenContainsAll(['tony', 'stark'], (string: Stringable) => string.title());
 
 // 'Tony Stark'
 ```
@@ -2233,6 +2265,14 @@ Str.of('  ').whenEmpty((string) => string.trim().prepend('Laravel'));
 // 'Laravel'
 ```
 
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('  ').whenEmpty((string: Stringable) => string.trim().prepend('Laravel'));
+
+// 'Laravel'
+```
+
 #### whenNotEmpty
 
 The `whenNotEmpty` method invokes the given closure if the string is not empty. If the closure returns a value, that value
@@ -2241,6 +2281,14 @@ will be returned:
 
 ```js
 Str.of('Framework').whenNotEmpty((string) => string.prepend('Laravel '));
+
+// 'Laravel Framework'
+```
+
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('Framework').whenNotEmpty((string: Stringable) => string.prepend('Laravel '));
 
 // 'Laravel Framework'
 ```
@@ -2256,6 +2304,14 @@ Str.of('disney world').whenStartsWith('disney', (string) => string.title());
 // 'Disney World'
 ```
 
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('disney world').whenStartsWith('disney', (string: Stringable) => string.title());
+
+// 'Disney World'
+```
+
 #### whenEndsWith
 
 The `whenEndsWith` method invokes the given closure if the string ends with the given sub-string. The closure will receive
@@ -2263,6 +2319,14 @@ the fluent string instance:
 
 ```js
 Str.of('disney world').whenEndsWith('world', (string) => string.title());
+
+// 'Disney World'
+```
+
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('disney world').whenEndsWith('world', (string: Stringable) => string.title());
 
 // 'Disney World'
 ```
@@ -2278,6 +2342,14 @@ Str.of('laravel').whenExactly('laravel', (string) => string.title());
 // 'Laravel'
 ```
 
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('laravel').whenExactly('laravel', (string: Stringable) => string.title());
+
+// 'Laravel'
+```
+
 #### whenNotExactly
 
 The `whenNotExactly` method invokes the given closure if the string does not exactly match the given string. The closure
@@ -2285,6 +2357,14 @@ will receive the fluent string instance:
 
 ```js
 Str.of('framework').whenNotExactly('laravel', (string) => string.title());
+
+// 'Framework'
+```
+
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('framework').whenNotExactly('laravel', (string: Stringable) => string.title());
 
 // 'Framework'
 ```
@@ -2300,6 +2380,14 @@ Str.of('foo/bar').whenIs('foo/*', (string) => string.append('/baz'));
 // 'foo/bar/baz'
 ```
 
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('foo/bar').whenIs('foo/*', (string: Stringable) => string.append('/baz'));
+
+// 'foo/bar/baz'
+```
+
 #### whenIsAscii
 
 The `whenIsAscii` method invokes the given closure if the string is 7-bit ASCII. The closure will receive the fluent
@@ -2307,6 +2395,14 @@ string instance:
 
 ```js
 Str.of('laravel').whenIsAscii((string) => string.title());
+
+// 'Laravel'
+```
+
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('laravel').whenIsAscii((string: Stringable) => string.title());
 
 // 'Laravel'
 ```
@@ -2322,6 +2418,14 @@ Str.of('01gd6r360bp37zj17nxb55yv40').whenIsUlid((string) => string.substr(0, 8))
 // '01gd6r36'
 ```
 
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('01gd6r360bp37zj17nxb55yv40').whenIsUlid((string: Stringable) => string.substr(0, 8));
+
+// '01gd6r36'
+```
+
 #### whenIsUuid
 
 The `whenIsUuid` method invokes the given closure if the string is a valid UUID. The closure will receive the fluent
@@ -2333,6 +2437,14 @@ Str.of('a0a2a2d2-0b87-4a18-83f2-2529882be2de').whenIsUuid((string) => string.sub
 // 'a0a2a2d2'
 ```
 
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('a0a2a2d2-0b87-4a18-83f2-2529882be2de').whenIsUuid((string: Stringable) => string.substr(0, 8));
+
+// 'a0a2a2d2'
+```
+
 #### whenTest
 
 The `whenTest` method invokes the given closure if the string matches the given regular expression.
@@ -2340,6 +2452,14 @@ receive the fluent string instance:
 
 ```js
 Str.of('laravel framework').whenTest('/laravel/', (string) => string.title());
+
+// 'Laravel Framework'
+```
+
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('laravel framework').whenTest('/laravel/', (string: Stringable) => string.title());
 
 // 'Laravel Framework'
 ```
@@ -2362,7 +2482,7 @@ appended to the truncated string:
 ```js
 Str.of('Perfectly balanced, as all things should be.').words(3, ' >>>');
 
-// Perfectly balanced, as >>>
+// 'Perfectly balanced, as >>>'
 ```
 
 ### Miscellaneous
@@ -2374,7 +2494,7 @@ The `dd` method dumps the given string and end execution of the script:
 ```js
 Str.of('Laravel').dd();
 
-// Laravel
+// 'Laravel'
 ```
 
 If you do not want to halt the execution of your script, use the `dump` function instead.
@@ -2386,7 +2506,7 @@ The `dump` method dumps the given string to the console:
 ```js
 Str.of('Laravel').dump();
 
-// Laravel
+// 'Laravel'
 ```
 
 #### toString
@@ -2396,7 +2516,7 @@ Get the raw string value.
 ```js
 Str.of('Laravel').toString();
 
-// Laravel
+// 'Laravel'
 ```
 
 #### toInteger
@@ -2469,13 +2589,13 @@ Timezone respectively:
 ```js
 Str.of('13 September 2023, 12:00 PM').toDate('Y-m-d H:i:s', 'Europe/London');
 
-// 2023-09-13 11:00:00
+// '2023-09-13 11:00:00'
 ```
 
 ```js
 Str.of('13 September 2023, 12:00 PM').toDate('Y-m-d H:i:s', 'America/Toronto');
 
-// 2023-09-13 06:00:00
+// '2023-09-13 06:00:00'
 ```
 
 Table of all format options and their examples can be found below:
@@ -2529,5 +2649,5 @@ Providing incorrect Date/Time string will result in an error:
 ```js
 Str.of('Laravel').toDate();
 
-// Invalid Date
+// 'Invalid Date'
 ```
