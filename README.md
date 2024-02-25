@@ -4,16 +4,26 @@ JavaScript equivalent of [Laravel Str](https://laravel.com/docs/10.x/strings) he
 
 ## Installation & setup
 
+### NPM
+
 You can install the package via npm:
+
 ```bash
 npm install @bjnstnkvc/str
 ```
 
-Once the package has been installed, you can import it
-using [import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import) declaration:
+and then import it into your project
 
 ```js
 import { Str } from '@bjnstnkvc/str'
+```
+
+### CDN
+
+You can install the package via jsDelivr CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@bjnstnkvc/str/lib/main.min.js"></script>
 ```
 
 ## Usage
