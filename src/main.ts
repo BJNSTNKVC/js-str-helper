@@ -1720,17 +1720,6 @@ class Str {
 	}
 }
 
-/**
- * Get a new Stringable object from the given string.
- *
- * @param { string } string
- *
- * @return Stringable
- */
-const str = function (string: string): Stringable {
-	return Str.of(string);
-};
-
 class Stringable {
 	/**
 	 * The underlying string value.
@@ -1738,7 +1727,7 @@ class Stringable {
 	 * @private
 	 * @type { string }
 	 */
-	#value: string;
+	_value: string;
 
 	/**
 	 * Create a new instance of the class.
@@ -1746,7 +1735,7 @@ class Stringable {
 	 * @param { string } value
 	 */
 	constructor(value: string = '') {
-		this.#value = value;
+		this._value = value;
 	}
 
 	/**
@@ -1757,7 +1746,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	after(search: string): Stringable {
-		return new Stringable(Str.after(this.#value, search));
+		return new Stringable(Str.after(this._value, search));
 	}
 
 	/**
@@ -1768,7 +1757,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	afterLast(search: string): Stringable {
-		return new Stringable(Str.afterLast(this.#value, search));
+		return new Stringable(Str.afterLast(this._value, search));
 	}
 
 	/**
@@ -1779,7 +1768,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	append(...values: string[]): Stringable {
-		return new Stringable(this.#value + values.join(''));
+		return new Stringable(this._value + values.join(''));
 	}
 
 	/**
@@ -1799,7 +1788,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	ascii(): Stringable {
-		return new Stringable(Str.ascii(this.#value));
+		return new Stringable(Str.ascii(this._value));
 	}
 
 	/**
@@ -1810,14 +1799,14 @@ class Stringable {
 	 * @return { this }
 	 */
 	basename(suffix: string = ''): Stringable {
-		let basename: string = this.#value;
+		let basename: string = this._value;
 
-		if (this.#value.split('/')[0] !== this.#value) {
-			basename = (this.#value.split('/').pop() as string);
+		if (this._value.split('/')[0] !== this._value) {
+			basename = (this._value.split('/').pop() as string);
 		}
 
-		if (this.#value.split('\\')[0] !== this.#value) {
-			basename = (this.#value.split('\\').pop() as string);
+		if (this._value.split('\\')[0] !== this._value) {
+			basename = (this._value.split('\\').pop() as string);
 		}
 
 		if (suffix !== '') {
@@ -1835,7 +1824,7 @@ class Stringable {
 	 * @return { string | false }
 	 */
 	charAt(index: number) {
-		return Str.charAt(this.#value, index);
+		return Str.charAt(this._value, index);
 	}
 
 	/**
@@ -1855,7 +1844,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	before(search: string): Stringable {
-		return new Stringable(Str.before(this.#value, search));
+		return new Stringable(Str.before(this._value, search));
 	}
 
 	/**
@@ -1866,7 +1855,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	beforeLast(search: string): Stringable {
-		return new Stringable(Str.beforeLast(this.#value, search));
+		return new Stringable(Str.beforeLast(this._value, search));
 	}
 
 	/**
@@ -1878,7 +1867,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	between(from: string, to: string): Stringable {
-		return new Stringable(Str.between(this.#value, from, to));
+		return new Stringable(Str.between(this._value, from, to));
 	}
 
 	/**
@@ -1890,7 +1879,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	betweenFirst(from: string, to: string): Stringable {
-		return new Stringable(Str.betweenFirst(this.#value, from, to));
+		return new Stringable(Str.betweenFirst(this._value, from, to));
 	}
 
 	/**
@@ -1899,7 +1888,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	camel(): Stringable {
-		return new Stringable(Str.camel(this.#value));
+		return new Stringable(Str.camel(this._value));
 	}
 
 	/**
@@ -1911,7 +1900,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	contains(needles: string | string[], ignoreCase: boolean = false): boolean {
-		return Str.contains(this.#value, needles, ignoreCase);
+		return Str.contains(this._value, needles, ignoreCase);
 	}
 
 	/**
@@ -1923,7 +1912,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	containsAll(needles: string[], ignoreCase: boolean = false): boolean {
-		return Str.containsAll(this.#value, needles, ignoreCase);
+		return Str.containsAll(this._value, needles, ignoreCase);
 	}
 
 	/**
@@ -1934,20 +1923,20 @@ class Stringable {
 	 * @return { this }
 	 */
 	dirname(levels: number = 1): Stringable {
-		let dirname: string         = this.#value;
+		let dirname: string         = this._value;
 		let parts: string[]         = [];
 		let isValidDirname: boolean = false;
 		let hasValidLevels: boolean = false;
 
-		if (this.#value.split('/')[0] !== this.#value) {
-			parts          = this.#value.split('/');
+		if (this._value.split('/')[0] !== this._value) {
+			parts          = this._value.split('/');
 			dirname        = parts.slice(0, parts.length - levels).join('/');
 			isValidDirname = true;
 			hasValidLevels = parts.length <= levels + 1;
 		}
 
-		if (this.#value.split('\\')[0] !== this.#value) {
-			parts          = this.#value.split('\\');
+		if (this._value.split('\\')[0] !== this._value) {
+			parts          = this._value.split('\\');
 			dirname        = parts.slice(0, parts.length - levels).join('\\');
 			isValidDirname = true;
 			hasValidLevels = parts.length <= levels + 1;
@@ -1972,7 +1961,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	endsWith(needles: string | string[]): boolean {
-		return Str.endsWith(this.#value, needles);
+		return Str.endsWith(this._value, needles);
 	}
 
 	/**
@@ -1987,7 +1976,7 @@ class Stringable {
 			value = value.toString();
 		}
 
-		return this.#value === value;
+		return this._value === value;
 	}
 
 	/**
@@ -1999,7 +1988,7 @@ class Stringable {
 	 * @return { string | null }
 	 */
 	excerpt(phrase: string = '', options: object = {}): string | null {
-		return Str.excerpt(this.#value, phrase, options);
+		return Str.excerpt(this._value, phrase, options);
 	}
 
 	/**
@@ -2012,10 +2001,10 @@ class Stringable {
 	 */
 	explode(delimiter: string, limit: number = 0): string[] {
 		if (limit === 0) {
-			return [this.#value];
+			return [this._value];
 		}
 
-		let wordsArray = this.#value.split(delimiter);
+		let wordsArray = this._value.split(delimiter);
 
 		const position = limit - 1 >= wordsArray.length
 			? wordsArray.length - 1
@@ -2041,7 +2030,7 @@ class Stringable {
 		const regExpFlags: string = /^\/.*\/(\w*)$/.exec(pattern)[1];
 		const regExp: RegExp      = new RegExp(regExpBody, regExpFlags + (regExpFlags.indexOf('g') !== -1 ? '' : 'g'));
 
-		let segments: string[] = this.#value.split(regExp);
+		let segments: string[] = this._value.split(regExp);
 
 		if (limit !== -1) {
 			const position: number = limit - 1 >= segments.length
@@ -2062,7 +2051,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	finish(cap: string): Stringable {
-		return new Stringable(Str.finish(this.#value, cap));
+		return new Stringable(Str.finish(this._value, cap));
 	}
 
 	/**
@@ -2073,7 +2062,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	is(pattern: string | string[]): boolean {
-		return Str.is(pattern, this.#value);
+		return Str.is(pattern, this._value);
 	}
 
 	/**
@@ -2082,7 +2071,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	isAscii(): boolean {
-		return Str.isAscii(this.#value);
+		return Str.isAscii(this._value);
 	}
 
 	/**
@@ -2091,7 +2080,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	isJson(): boolean {
-		return Str.isJson(this.#value);
+		return Str.isJson(this._value);
 	}
 
 	/**
@@ -2100,7 +2089,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	isUrl(): boolean {
-		return Str.isUrl(this.#value);
+		return Str.isUrl(this._value);
 	}
 
 	/**
@@ -2109,7 +2098,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	isUuid(): boolean {
-		return Str.isUuid(this.#value);
+		return Str.isUuid(this._value);
 	}
 
 	/**
@@ -2118,7 +2107,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	isUlid(): boolean {
-		return Str.isUlid(this.#value);
+		return Str.isUlid(this._value);
 	}
 
 	/**
@@ -2127,7 +2116,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	isEmpty(): boolean {
-		return this.#value.trim() === '';
+		return this._value.trim() === '';
 	}
 
 	/**
@@ -2145,7 +2134,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	kebab(): Stringable {
-		return new Stringable(Str.kebab(this.#value));
+		return new Stringable(Str.kebab(this._value));
 	}
 
 	/**
@@ -2154,7 +2143,7 @@ class Stringable {
 	 * @return { number }
 	 */
 	length(): number {
-		return Str.length(this.#value);
+		return Str.length(this._value);
 	}
 
 	/**
@@ -2166,7 +2155,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	limit(limit: number = 100, end: string = '...'): Stringable {
-		return new Stringable(Str.limit(this.#value, limit, end));
+		return new Stringable(Str.limit(this._value, limit, end));
 	}
 
 	/**
@@ -2175,7 +2164,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	lower(): Stringable {
-		return new Stringable(Str.lower(this.#value));
+		return new Stringable(Str.lower(this._value));
 	}
 
 	/**
@@ -2188,7 +2177,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	mask(character: string, index: number, length: number | null = null): Stringable {
-		return new Stringable(Str.mask(this.#value, character, index, length));
+		return new Stringable(Str.mask(this._value, character, index, length));
 	}
 
 	/**
@@ -2199,7 +2188,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	match(pattern: string): Stringable {
-		return new Stringable(Str.match(pattern, this.#value));
+		return new Stringable(Str.match(pattern, this._value));
 	}
 
 	/**
@@ -2210,7 +2199,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	isMatch(...pattern: string[]): boolean {
-		return Str.isMatch(pattern, this.#value);
+		return Str.isMatch(pattern, this._value);
 	}
 
 	/**
@@ -2221,7 +2210,7 @@ class Stringable {
 	 * @return { array }
 	 */
 	matchAll(pattern: string): string[] {
-		return Str.matchAll(pattern, this.#value);
+		return Str.matchAll(pattern, this._value);
 	}
 
 	/**
@@ -2244,7 +2233,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	padBoth(length: number, pad: string = ' '): Stringable {
-		return new Stringable(Str.padBoth(this.#value, length, pad));
+		return new Stringable(Str.padBoth(this._value, length, pad));
 	}
 
 	/**
@@ -2256,7 +2245,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	padLeft(length: number, pad: string = ' '): Stringable {
-		return new Stringable(Str.padLeft(this.#value, length, pad));
+		return new Stringable(Str.padLeft(this._value, length, pad));
 	}
 
 	/**
@@ -2268,7 +2257,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	padRight(length: number, pad: string = ' '): Stringable {
-		return new Stringable(Str.padRight(this.#value, length, pad));
+		return new Stringable(Str.padRight(this._value, length, pad));
 	}
 
 	/**
@@ -2280,15 +2269,15 @@ class Stringable {
 	 */
 	pipe(callback: string | Function): Stringable {
 		// @ts-ignore
-		if (this.#value[callback] instanceof Function) {
+		if (this._value[callback] instanceof Function) {
 			// @ts-ignore
-			return new Stringable(this.#value[callback]());
+			return new Stringable(this._value[callback]());
 		}
 
 		// @ts-ignore
 		if (window[callback] instanceof Function) {
 			// @ts-ignore
-			return new Stringable(window[callback](this.#value));
+			return new Stringable(window[callback](this._value));
 		}
 
 		// @ts-ignore
@@ -2303,7 +2292,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	plural(count: number = 2): Stringable {
-		return new Stringable(Str.plural(this.#value, count));
+		return new Stringable(Str.plural(this._value, count));
 	}
 
 	/**
@@ -2314,7 +2303,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	pluralStudly(count: number = 2): Stringable {
-		return new Stringable(Str.pluralStudly(this.#value, count));
+		return new Stringable(Str.pluralStudly(this._value, count));
 	}
 
 	/**
@@ -2326,7 +2315,7 @@ class Stringable {
 	 * @return { number | false }
 	 */
 	position(needle: string, offset: number = 0): number | false {
-		return Str.position(this.#value, needle, offset);
+		return Str.position(this._value, needle, offset);
 	}
 
 	/**
@@ -2337,7 +2326,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	prepend(...values: string[]): Stringable {
-		return new Stringable(values.join('') + this.#value);
+		return new Stringable(values.join('') + this._value);
 	}
 
 	/**
@@ -2349,7 +2338,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	remove(search: string, caseSensitive: boolean = true): Stringable {
-		return new Stringable(Str.remove(search, this.#value, caseSensitive));
+		return new Stringable(Str.remove(search, this._value, caseSensitive));
 	}
 
 	/**
@@ -2358,7 +2347,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	reverse(): Stringable {
-		return new Stringable(Str.reverse(this.#value));
+		return new Stringable(Str.reverse(this._value));
 	}
 
 	/**
@@ -2369,7 +2358,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	repeat(times: number): Stringable {
-		return new Stringable(Str.repeat(this.#value, times));
+		return new Stringable(Str.repeat(this._value, times));
 	}
 
 	/**
@@ -2382,7 +2371,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	replace(search: string | string[], replace: string, caseSensitive: boolean = true): Stringable {
-		return new Stringable(Str.replace(search, replace, this.#value, caseSensitive));
+		return new Stringable(Str.replace(search, replace, this._value, caseSensitive));
 	}
 
 	/**
@@ -2394,7 +2383,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	replaceArray(search: string, replace: string[]): Stringable {
-		return new Stringable(Str.replaceArray(search, replace, this.#value));
+		return new Stringable(Str.replaceArray(search, replace, this._value));
 	}
 
 	/**
@@ -2406,7 +2395,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	replaceFirst(search: string, replace: string): Stringable {
-		return new Stringable(Str.replaceFirst(search, replace, this.#value));
+		return new Stringable(Str.replaceFirst(search, replace, this._value));
 	}
 
 	/**
@@ -2418,7 +2407,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	replaceStart(search: string, replace: string): Stringable {
-		return new Stringable(Str.replaceStart(search, replace, this.#value));
+		return new Stringable(Str.replaceStart(search, replace, this._value));
 	}
 
 	/**
@@ -2430,7 +2419,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	replaceLast(search: string, replace: string): Stringable {
-		return new Stringable(Str.replaceLast(search, replace, this.#value));
+		return new Stringable(Str.replaceLast(search, replace, this._value));
 	}
 
 	/**
@@ -2442,7 +2431,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	replaceEnd(search: string, replace: string): Stringable {
-		return new Stringable(Str.replaceEnd(search, replace, this.#value));
+		return new Stringable(Str.replaceEnd(search, replace, this._value));
 	}
 
 	/**
@@ -2462,10 +2451,10 @@ class Stringable {
 
 		if (replace instanceof Function) {
 			// @ts-ignore
-			this.#value.replace(regExp, (matched) => matched);
+			this._value.replace(regExp, (matched) => matched);
 		}
 
-		return new Stringable(this.#value.replace(regExp, (replace as string)));
+		return new Stringable(this._value.replace(regExp, (replace as string)));
 	}
 
 	/**
@@ -2474,7 +2463,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	squish(): Stringable {
-		return new Stringable(Str.squish(this.#value));
+		return new Stringable(Str.squish(this._value));
 	}
 
 	/**
@@ -2485,7 +2474,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	start(prefix: string): Stringable {
-		return new Stringable(Str.start(this.#value, prefix));
+		return new Stringable(Str.start(this._value, prefix));
 	}
 
 	/**
@@ -2494,7 +2483,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	upper(): Stringable {
-		return new Stringable(Str.upper(this.#value));
+		return new Stringable(Str.upper(this._value));
 	}
 
 	/**
@@ -2503,7 +2492,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	title(): Stringable {
-		return new Stringable(Str.title(this.#value));
+		return new Stringable(Str.title(this._value));
 	}
 
 	/**
@@ -2512,7 +2501,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	headline(): Stringable {
-		return new Stringable(Str.headline(this.#value));
+		return new Stringable(Str.headline(this._value));
 	}
 
 	/**
@@ -2523,7 +2512,7 @@ class Stringable {
 	 * @return { this}
 	 */
 	apa() {
-		return new Stringable(Str.apa(this.#value));
+		return new Stringable(Str.apa(this._value));
 	}
 
 	/**
@@ -2532,7 +2521,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	singular(): Stringable {
-		return new Stringable(Str.singular(this.#value));
+		return new Stringable(Str.singular(this._value));
 	}
 
 	/**
@@ -2544,7 +2533,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	slug(separator: string = '-', dictionary: { [key: string]: string } = { '@': 'at' }): Stringable {
-		return new Stringable(Str.slug(this.#value, separator, dictionary));
+		return new Stringable(Str.slug(this._value, separator, dictionary));
 	}
 
 	/**
@@ -2555,7 +2544,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	snake(delimiter: string = '_'): Stringable {
-		return new Stringable(Str.snake(this.#value, delimiter));
+		return new Stringable(Str.snake(this._value, delimiter));
 	}
 
 	/**
@@ -2566,7 +2555,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	startsWith(needles: string | string[]) {
-		return Str.startsWith(this.#value, needles);
+		return Str.startsWith(this._value, needles);
 	}
 
 	/**
@@ -2575,7 +2564,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	studly(): Stringable {
-		return new Stringable(Str.studly(this.#value));
+		return new Stringable(Str.studly(this._value));
 	}
 
 	/**
@@ -2587,7 +2576,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	substr(start: number, length: number | null = null): Stringable {
-		return new Stringable(Str.substr(this.#value, start, length));
+		return new Stringable(Str.substr(this._value, start, length));
 	}
 
 	/**
@@ -2600,7 +2589,7 @@ class Stringable {
 	 * @return { number }
 	 */
 	substrCount(needle: string, offset: number = 0, length: number | null = null): number {
-		return Str.substrCount(this.#value, needle, offset, length);
+		return Str.substrCount(this._value, needle, offset, length);
 	}
 
 	/**
@@ -2613,7 +2602,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	substrReplace(replace: string, offset: number = 0, length: number | null = null): Stringable {
-		return new Stringable(Str.substrReplace(this.#value, replace, offset, length));
+		return new Stringable(Str.substrReplace(this._value, replace, offset, length));
 	}
 
 	/**
@@ -2624,7 +2613,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	swap(map: { [key: string]: string }): Stringable {
-		return new Stringable(Str.swap(map, this.#value));
+		return new Stringable(Str.swap(map, this._value));
 	}
 
 	/**
@@ -2669,9 +2658,9 @@ class Stringable {
 
 		characters = characterArray.filter(char => char.match('[^A-Za-z0-9_]') !== null);
 
-		characters.forEach(term => this.#value = this.#value.replaceAll(term, ''));
+		characters.forEach(term => this._value = this._value.replaceAll(term, ''));
 
-		return new Stringable(this.#value.trim());
+		return new Stringable(this._value.trim());
 	}
 
 	/**
@@ -2688,9 +2677,9 @@ class Stringable {
 
 		characters = characterArray.filter(char => char.match('[^A-Za-z0-9_]') !== null);
 
-		characters.forEach(term => this.#value = Str.replaceFirst(term, '', this.#value));
+		characters.forEach(term => this._value = Str.replaceFirst(term, '', this._value));
 
-		return new Stringable(this.#value.trimStart());
+		return new Stringable(this._value.trimStart());
 	}
 
 	/**
@@ -2707,9 +2696,9 @@ class Stringable {
 
 		characters = characterArray.filter(char => char.match('[^A-Za-z0-9_]') !== null);
 
-		characters.forEach(term => this.#value = Str.replaceLast(term, '', this.#value));
+		characters.forEach(term => this._value = Str.replaceLast(term, '', this._value));
 
-		return new Stringable(this.#value.trimEnd());
+		return new Stringable(this._value.trimEnd());
 	}
 
 	/**
@@ -2718,7 +2707,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	lcfirst(): Stringable {
-		return new Stringable(Str.lcfirst(this.#value));
+		return new Stringable(Str.lcfirst(this._value));
 	}
 
 	/**
@@ -2727,7 +2716,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	ucfirst(): Stringable {
-		return new Stringable(Str.ucfirst(this.#value));
+		return new Stringable(Str.ucfirst(this._value));
 	}
 
 	/**
@@ -2736,7 +2725,7 @@ class Stringable {
 	 * @return { array }
 	 */
 	ucsplit(): string[] {
-		return Str.ucsplit(this.#value);
+		return Str.ucsplit(this._value);
 	}
 
 	/**
@@ -2955,7 +2944,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	words(words: number = 100, end: string = '...'): Stringable {
-		return new Stringable(Str.words(this.#value, words, end));
+		return new Stringable(Str.words(this._value, words, end));
 	}
 
 	/**
@@ -2964,7 +2953,7 @@ class Stringable {
 	 * @return { number }
 	 */
 	wordCount(): number {
-		return Str.wordCount(this.#value);
+		return Str.wordCount(this._value);
 	}
 
 	/**
@@ -2977,7 +2966,7 @@ class Stringable {
 	 * @returns { this }
 	 */
 	wordWrap(characters: number = 75, breakStr: string = '\n', cutLongWords: boolean = false) {
-		return new Stringable(Str.wordWrap(this.#value, characters, breakStr, cutLongWords));
+		return new Stringable(Str.wordWrap(this._value, characters, breakStr, cutLongWords));
 	}
 
 	/**
@@ -2989,7 +2978,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	wrap(before: string, after: string | null = null): Stringable {
-		return new Stringable(Str.wrap(this.#value, before, after));
+		return new Stringable(Str.wrap(this._value, before, after));
 	}
 
 	/**
@@ -3001,7 +2990,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	unwrap(before: string, after: string | null = null): Stringable {
-		return new Stringable(Str.unwrap(this.#value, before, after));
+		return new Stringable(Str.unwrap(this._value, before, after));
 	}
 
 	/**
@@ -3010,7 +2999,7 @@ class Stringable {
 	 * @return { HTMLElement | Node | string }
 	 */
 	toHtmlString(): HtmlStringType {
-		return new HtmlString(this.#value).toHtml();
+		return new HtmlString(this._value).toHtml();
 	}
 
 	/**
@@ -3019,7 +3008,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	toBase64(): Stringable {
-		return new Stringable(Str.toBase64(this.#value));
+		return new Stringable(Str.toBase64(this._value));
 	}
 
 	/**
@@ -3028,7 +3017,7 @@ class Stringable {
 	 * @return { this }
 	 */
 	fromBase64(): Stringable {
-		return new Stringable(Str.fromBase64(this.#value));
+		return new Stringable(Str.fromBase64(this._value));
 	}
 
 	/**
@@ -3037,7 +3026,7 @@ class Stringable {
 	 * @return { void }
 	 */
 	dump(): void {
-		console.log(this.#value);
+		console.log(this._value);
 	}
 
 	/**
@@ -3066,7 +3055,7 @@ class Stringable {
 	 * @return { string }
 	 */
 	toString(): string {
-		return this.#value;
+		return this._value;
 	}
 
 	/**
@@ -3075,7 +3064,7 @@ class Stringable {
 	 * @return { number }
 	 */
 	toInteger(): number {
-		return !isNaN(parseInt(this.#value)) ? parseInt(this.#value) : 0;
+		return !isNaN(parseInt(this._value)) ? parseInt(this._value) : 0;
 	}
 
 	/**
@@ -3084,7 +3073,7 @@ class Stringable {
 	 * @return { number }
 	 */
 	toFloat(): number {
-		return !isNaN(parseFloat(this.#value)) ? parseFloat(this.#value) : 0;
+		return !isNaN(parseFloat(this._value)) ? parseFloat(this._value) : 0;
 	}
 
 	/**
@@ -3095,7 +3084,7 @@ class Stringable {
 	 * @return { boolean }
 	 */
 	toBoolean(): boolean {
-		switch (this.#value) {
+		switch (this._value) {
 			case '1':
 			case 'true':
 			case 'on':
@@ -3113,7 +3102,7 @@ class Stringable {
 	 * @param { string | null } tz
 	 */
 	toDate(format: string | null = null, tz: string | null = null): string {
-		if (new Date(this.#value).toString() === 'Invalid Date') {
+		if (new Date(this._value).toString() === 'Invalid Date') {
 			return 'Invalid Date';
 		}
 
@@ -3133,7 +3122,7 @@ class Stringable {
 		let date: string            = '';
 		let days: string[]          = [];
 		let months: string[]        = [];
-		const now: Date             = new Date(new Date(this.#value).toLocaleString('en-US', { timeZone: tz ?? undefined }));
+		const now: Date             = new Date(new Date(this._value).toLocaleString('en-US', { timeZone: tz ?? undefined }));
 		const month: number         = now.getMonth();
 		const dayOfTheWeek: number  = now.getDay();
 		const dayOfTheMonth: number = now.getDate();
@@ -3454,7 +3443,7 @@ class Stringable {
 
 				// Seconds since the Unix Epoch (e.g., January 1, 1970 00:00:00 GMT)
 				case 'r': {
-					date += new Stringable(this.#value).toDate('D, d M Y H:i:s O', tz);
+					date += new Stringable(this._value).toDate('D, d M Y H:i:s O', tz);
 
 					break;
 				}
@@ -3553,6 +3542,17 @@ class HtmlString {
 		return html;
 	}
 }
+
+/**
+ * Get a new Stringable object from the given string.
+ *
+ * @param { string } string
+ *
+ * @return Stringable
+ */
+const str = function (string: string = ''): Stringable {
+	return Str.of(string);
+};
 
 /**
  * Quote regular expression characters.
