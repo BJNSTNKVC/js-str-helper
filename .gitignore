@@ -1,3 +1,4 @@
-.idea
-tests
+/.idea
+/.vscode
 node_modules
+package-lock.json

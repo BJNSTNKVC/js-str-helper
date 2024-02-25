@@ -1,13 +1,16 @@
 {
   "name": "@bjnstnkvc/str",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "JavaScript equivalent of Laravel Str helper.",
-  "main": "./lib/Str.js",
+  "main": "lib/main.js",
+  "source": "src/main.ts",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config jestconfig.json ./tests",
+    "build": "tsc",
+    "minify": "tsc && uglifyjs lib/main.js -c -m -o lib/main.min.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +25,13 @@
   "bugs": {
     "url": "https://github.com/BJNSTNKVC/js-str-helper/issues"
   },
-  "homepage": "https://github.com/BJNSTNKVC/js-str-helper#readme"
+  "homepage": "https://github.com/BJNSTNKVC/js-str-helper#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.19",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3",
+    "uglify-js": "^3.17.4"
+  }
 }
