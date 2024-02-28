@@ -1153,11 +1153,6 @@ describe('Fluent Strings', () => {
         });
     });
 
-//
-// 	test('The "value" method gets the underlying string value', () => {
-// 		expect(Str.of('Hello World').value()).toEqual('Hello World');
-// 	});
-//
     describe('dd', () => {
         test('dumps the given string and ends execution of the script', () => {
             const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -1177,6 +1172,12 @@ describe('Fluent Strings', () => {
             expect(consoleSpy).toHaveBeenCalledWith('Laravel');
 
             consoleSpy.mockRestore();
+        });
+    });
+
+    describe('value', () => {
+        test('gets the underlying string value', () => {
+            expect(Str.of('Hello World').value()).toEqual('Hello World');
         });
     });
 
@@ -1231,167 +1232,167 @@ describe('Fluent Strings', () => {
         });
 
         test('format \'d\' returns the day of the month, 2 digits with leading zeros', () => {
-            expect(Str.of('2024-02-29').toDate('d')).toEqual('29');
+            expect(Str.of('2024-02-29').toDate('d', 'CET')).toEqual('29');
         });
 
         test('format \'D\' returns a textual representation of a day, three letters', () => {
-            expect(Str.of('2024-02-29').toDate('D')).toEqual('Thr');
+            expect(Str.of('2024-02-29').toDate('D', 'CET')).toEqual('Thr');
         });
 
         test('format \'j\' returns the day of the month without leading zeros', () => {
-            expect(Str.of('2024-02-29').toDate('j')).toEqual('29');
+            expect(Str.of('2024-02-29').toDate('j', 'CET')).toEqual('29');
         });
 
         test('format \'l\' returns a full textual representation of the day of the week', () => {
-            expect(Str.of('2024-02-29').toDate('l')).toEqual('Thursday');
+            expect(Str.of('2024-02-29').toDate('l', 'CET')).toEqual('Thursday');
         });
 
         test('format \'N\' returns ISO 8601 numeric representation of the day of the week', () => {
-            expect(Str.of('2024-02-29').toDate('N')).toEqual('4');
+            expect(Str.of('2024-02-29').toDate('N', 'CET')).toEqual('4');
         });
 
         test('format \'S\' returns English ordinal suffix for the day of the month, 2 characters', () => {
-            expect(Str.of('2024-02-29').toDate('S')).toEqual('th');
+            expect(Str.of('2024-02-29').toDate('S', 'CET')).toEqual('th');
         });
 
         test('format \'w\' returns numeric representation of the day of the week', () => {
-            expect(Str.of('2024-02-29').toDate('w')).toEqual('4');
+            expect(Str.of('2024-02-29').toDate('w', 'CET')).toEqual('4');
         });
 
         test('format \'z\' returns numeric representation of the day of the week', () => {
-            expect(Str.of('2024-02-29').toDate('z')).toEqual('59');
+            expect(Str.of('2024-02-29').toDate('z', 'CET')).toEqual('59');
         });
 
         test('format \'W\' returns ISO 8601 week number of year, weeks starting on Monday', () => {
-            expect(Str.of('2024-02-29').toDate('W')).toEqual('09');
+            expect(Str.of('2024-02-29').toDate('W', 'CET')).toEqual('09');
         });
 
         test('format \'F\' returns a full textual representation of a month', () => {
-            expect(Str.of('2024-02-29').toDate('F')).toEqual('February');
+            expect(Str.of('2024-02-29').toDate('F', 'CET')).toEqual('February');
         });
 
         test('format \'m\' returns numeric representation of a month, with leading zeros', () => {
-            expect(Str.of('2024-02-29').toDate('m')).toEqual('02');
+            expect(Str.of('2024-02-29').toDate('m', 'CET')).toEqual('02');
         });
 
         test('format \'M\' returns a short textual representation of a month, three letters', () => {
-            expect(Str.of('2024-02-29').toDate('M')).toEqual('Feb');
+            expect(Str.of('2024-02-29').toDate('M', 'CET')).toEqual('Feb');
         });
 
         test('format \'n\' returns numeric representation of a month, without leading zeros', () => {
-            expect(Str.of('2024-02-29').toDate('n')).toEqual('2');
+            expect(Str.of('2024-02-29').toDate('n', 'CET')).toEqual('2');
         });
 
         test('format \'t\' returns number of days in the given month', () => {
-            expect(Str.of('2024-02-29').toDate('t')).toEqual('29');
+            expect(Str.of('2024-02-29').toDate('t', 'CET')).toEqual('29');
         });
 
         test('format \'L\'\' returns whether it"s a leap year', () => {
-            expect(Str.of('2024-02-29').toDate('L')).toEqual('1');
+            expect(Str.of('2024-02-29').toDate('L', 'CET')).toEqual('1');
         });
 
         test('format \'o\' returns ISO 8601 week-numbering year', () => {
-            expect(Str.of('2024-02-29').toDate('o')).toEqual('2024');
+            expect(Str.of('2024-02-29').toDate('o', 'CET')).toEqual('2024');
         });
 
         test('format \'X\' returns an expanded full numeric representation of a year', () => {
-            expect(Str.of('2024-02-29').toDate('X')).toEqual('+2024');
+            expect(Str.of('2024-02-29').toDate('X', 'CET')).toEqual('+2024');
         });
 
         test('format \'x\' returns an expanded full numeric representation if required', () => {
-            expect(Str.of('2024-02-29').toDate('x')).toEqual('2024');
+            expect(Str.of('2024-02-29').toDate('x', 'CET')).toEqual('2024');
         });
 
         test('format \'Y\' returns a full numeric representation of a year', () => {
-            expect(Str.of('2024-02-29').toDate('Y')).toEqual('2024');
+            expect(Str.of('2024-02-29').toDate('Y', 'CET')).toEqual('2024');
         });
 
         test('format \'y\' returns a two-digit representation of a year', () => {
-            expect(Str.of('2024-02-29').toDate('y')).toEqual('24');
+            expect(Str.of('2024-02-29').toDate('y', 'CET')).toEqual('24');
         });
 
         test('format \'a\' returns lowercase Ante meridiem and Post meridiem', () => {
-            expect(Str.of('2024-02-29 08:00:00').toDate('a')).toEqual('am');
+            expect(Str.of('2024-02-29 08:00:00').toDate('a', 'CET')).toEqual('am');
         });
 
         test('format \'A\' returns uppercase Ante meridiem and Post meridiem', () => {
-            expect(Str.of('2024-02-29 20:00:00').toDate('A')).toEqual('PM');
+            expect(Str.of('2024-02-29 20:00:00').toDate('A', 'CET')).toEqual('PM');
         });
 
         test('format \'B\' returns Swatch Internet time', () => {
-            expect(Str.of('2024-02-29 12:00:00').toDate('B')).toEqual('500');
+            expect(Str.of('2024-02-29 12:00:00').toDate('B', 'CET')).toEqual('500');
         });
 
         test('format \'g\' returns 12-hour format of an hour without leading zeros', () => {
-            expect(Str.of('2024-02-29 08:00:00').toDate('g')).toEqual('8');
+            expect(Str.of('2024-02-29 08:00:00').toDate('g', 'CET')).toEqual('8');
         });
 
         test('format \'G\' returns 24-hour format of an hour without leading zeros', () => {
-            expect(Str.of('2024-02-29 20:00:00').toDate('G')).toEqual('20');
+            expect(Str.of('2024-02-29 20:00:00').toDate('G', 'CET')).toEqual('20');
         });
 
         test('format \'h\' returns 12-hour format of an hour with leading zeros', () => {
-            expect(Str.of('2024-02-29 08:00:00').toDate('h')).toEqual('08');
+            expect(Str.of('2024-02-29 08:00:00').toDate('h', 'CET')).toEqual('08');
         });
 
         test('format \'H\' returns 24-hour format of an hour with leading zeros', () => {
-            expect(Str.of('2024-02-29 20:00:00').toDate('H')).toEqual('20');
+            expect(Str.of('2024-02-29 20:00:00').toDate('H', 'CET')).toEqual('20');
         });
 
         test('format \'i\' returns minutes with leading zeros', () => {
-            expect(Str.of('2024-02-29 08:09:00').toDate('i')).toEqual('09');
+            expect(Str.of('2024-02-29 08:09:00').toDate('i', 'CET')).toEqual('09');
         });
 
         test('format \'s\' returns seconds with leading zeros', () => {
-            expect(Str.of('2024-02-29 08:09:07').toDate('s')).toEqual('07');
+            expect(Str.of('2024-02-29 08:09:07').toDate('s', 'CET')).toEqual('07');
         });
 
         test('format \'u\' returns microseconds', () => {
-            expect(() => Str.of('2024-02-29 08:09:07.654321').toDate('u')).toThrow('Microseconds are not supported at the moment.'); // Disabled temporarily
+            expect(() => Str.of('2024-02-29 08:09:07.654321').toDate('u', 'CET')).toThrow('Microseconds are not supported at the moment.'); // Disabled temporarily
         });
 
         test('format \'v\' returns milliseconds', () => {
-            expect(() => Str.of('2024-02-29 08:09:07.654').toDate('v')).toThrow('Milliseconds are not supported at the moment.'); // Disabled temporarily
+            expect(Str.of('2024-02-29 08:09:07.654').toDate('v', 'CET')).toEqual('654')
         });
 
         test('format \'e\' returns timezone identifier', () => {
-            expect(Str.of('2024-02-29 08:09:07').toDate('e')).toMatch(/^(?:GMT|UTC|[A-Za-z\/_]+(?:[+\-][0-9]+)?)$/);
+            expect(Str.of('2024-02-29 08:09:07').toDate('e', 'CET')).toMatch(/^(?:GMT|UTC|[A-Za-z\/_]+(?:[+\-][0-9]+)?)$/);
         });
 
         test('format \'I\' returns whether or not the date is in daylight saving time', () => {
-            expect(Str.of('2024-02-29').toDate('I')).toMatch(/^[01]$/);
+            expect(Str.of('2024-02-29').toDate('I', 'CET')).toMatch(/^[01]$/);
         });
 
         test('format \'O\' returns difference to Greenwich time (GMT) without colon between hours and minutes', () => {
-            expect(Str.of('2024-02-29').toDate('O')).toMatch(/^[+\-]\d{4}$/);
+            expect(Str.of('2024-02-29').toDate('O', 'CET')).toMatch(/^[+\-]\d{4}$/);
         });
 
         test('format \'P\' returns difference to Greenwich time (GMT) with colon between hours and minutes', () => {
-            expect(Str.of('2024-02-29').toDate('P')).toMatch(/^[+\-]\d{2}:\d{2}$/);
+            expect(Str.of('2024-02-29').toDate('P', 'CET')).toMatch(/^[+\-]\d{2}:\d{2}$/);
         });
 
         test('format \'p\' returns the same as P, but returns Z instead of +00:00', () => {
-            expect(Str.of('2024-02-29').toDate('p')).toMatch(/^[+\-]\d{2}:\d{2}$/);
+            expect(Str.of('2024-02-29').toDate('p', 'CET')).toMatch(/^[+\-]\d{2}:\d{2}$/);
         });
 
         test('format \'T\' returns timezone abbreviation, if known; otherwise the GMT offset', () => {
-            expect(Str.of('2024-02-29').toDate('T')).toMatch(/^[A-Za-z]+|[+\-]\d{2}:\d{2}$/);
+            expect(Str.of('2024-02-29').toDate('T', 'CET')).toMatch(/^[A-Za-z]+|[+\-]\d{2}:\d{2}$/);
         });
 
         test('format \'Z\' returns timezone offset in seconds', () => {
-            expect(Str.of('2024-02-29').toDate('Z')).toMatch(/([+\-]?\d+)/);
+            expect(Str.of('2024-02-29').toDate('Z', 'CET')).toMatch(/([+\-]?\d+)/);
         });
 
         test('format \'c\' returns ISO 8601 date', () => {
-            expect(() => Str.of('2024-02-29 08:09:07').toDate('c')).toThrow('ISO 8601 date is not supported at the moment.'); // Disabled temporarily
+            expect(Str.of('2024-02-29 08:09:07').toDate('c', 'CET')).toEqual('2024-02-29T08:09:07+01:00');
         });
 
         test('format \'r\' returns seconds since the Unix Epoch', () => {
-            expect(Str.of('2024-02-29').toDate('r')).toEqual('Thr, 29 Feb 2024 01:00:00 +0100');
+            expect(Str.of('2024-02-29').toDate('r', 'CET')).toEqual('Thr, 29 Feb 2024 01:00:00 +0100');
         });
 
         test('format \'U\' returns RFC 2822/RFC 5322 formatted date', () => {
-            expect(Str.of('2024-02-29').toDate('U')).toMatch(/^-?\d+$/);
+            expect(Str.of('2024-02-29').toDate('U', 'CET')).toMatch(/^-?\d+$/);
         });
     });
 });

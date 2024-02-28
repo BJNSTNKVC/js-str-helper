@@ -3108,7 +3108,19 @@ class Stringable {
         let date: string            = '';
         let days: string[]          = [];
         let months: string[]        = [];
-        const now: Date             = new Date(new Date(this._value).toLocaleString('en-US', { timeZone: tz ?? undefined }));
+
+        const now: Date             = new Date(new Date(this._value).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            fractionalSecondDigits: 3,
+            hour12: false,
+            timeZone: tz ?? undefined,
+        }));
+
         const month: number         = now.getMonth();
         const dayOfTheWeek: number  = now.getDay();
         const dayOfTheMonth: number = now.getDate();
@@ -3116,7 +3128,6 @@ class Stringable {
         const hours: number         = now.getHours();
         const minutes: number       = now.getMinutes();
         const seconds: number       = now.getSeconds();
-        // @ts-ignore
         const milliseconds: number  = now.getMilliseconds();
 
         for (const element of format) {
@@ -3328,10 +3339,11 @@ class Stringable {
                     throw new Error('Microseconds are not supported at the moment.');
 
                 // Milliseconds. (e.g., 654)
-                case 'v':
-                    // date += Str.padLeft(milliseconds.toString(), 3, '0');
-                    throw new Error('Milliseconds are not supported at the moment.');
+                case 'v': {
+                    date += Str.padLeft(milliseconds.toString(), 3, '0');
 
+                    break;
+                }
                 // Timezone identifier (e.g., UTC, GMT, Atlantic/Azores)
                 case 'e': {
                     // @ts-ignore
@@ -3422,11 +3434,11 @@ class Stringable {
                 }
 
                 // ISO 8601 date (e.g., 2004-02-12T15:19:21+00:00)
-                case 'c':
-                    // date += now.toISOString();
+                case 'c': {
+                    date += `${this.toDate('Y-m-d', tz)}T${this.toDate('H:i:sP', tz)}`
 
-                    throw new Error('ISO 8601 date is not supported at the moment.');
-
+                    break;
+                }
                 // Seconds since the Unix Epoch (e.g., January 1, 1970 00:00:00 GMT)
                 case 'r': {
                     date += new Stringable(this._value).toDate('D, d M Y H:i:s O', tz);
