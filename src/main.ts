@@ -3196,7 +3196,7 @@ class Stringable {
                     let yearStart: Date    = new Date(Date.UTC(parsedDate.getUTCFullYear(), 0, 1));
                     let weekNumber: number = Math.ceil(((((parsedDate as unknown as number) - (yearStart as unknown as number)) / 86400000) + 1) / 7);
 
-                    date += Str.padLeft((weekNumber.toString()), 1, '0');
+                    date += Str.padLeft((weekNumber.toString()), 2, '0');
 
                     break;
                 }
