@@ -1004,7 +1004,7 @@ Str.wrap('is', 'This ', ' Laravel!');
 
 The `str` function returns a Stringable instance of the given string.
 ```js
-import { Str } from '@bjnstnkvc/str'
+import { str } from '@bjnstnkvc/str'
 ```
 
 This function is equivalent to the `Str.of` method.
