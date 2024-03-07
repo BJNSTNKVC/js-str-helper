@@ -1236,7 +1236,7 @@ describe('Fluent Strings', () => {
         });
 
         test('format \'D\' returns a textual representation of a day, three letters', () => {
-            expect(Str.of('2024-02-29').toDate('D', 'CET')).toEqual('Thr');
+            expect(Str.of('2024-02-29').toDate('D', 'CET')).toEqual('Thu');
         });
 
         test('format \'j\' returns the day of the month without leading zeros', () => {
@@ -1260,7 +1260,7 @@ describe('Fluent Strings', () => {
         });
 
         test('format \'z\' returns numeric representation of the day of the week', () => {
-            expect(Str.of('2024-02-29').toDate('z', 'CET')).toEqual('59');
+            expect(Str.of('2024-02-29').toDate('z', 'CET')).toEqual('60');
         });
 
         test('format \'W\' returns ISO 8601 week number of year, weeks starting on Monday', () => {
@@ -1348,7 +1348,7 @@ describe('Fluent Strings', () => {
         });
 
         test('format \'u\' returns microseconds', () => {
-            expect(() => Str.of('2024-02-29 08:09:07.654321').toDate('u', 'CET')).toThrow('Microseconds are not supported at the moment.'); // Disabled temporarily
+            expect(() => Str.of('2024-02-29 08:09:07.654321').toDate('u', 'CET')).toThrow('Microseconds are not supported.'); // Disabled temporarily
         });
 
         test('format \'v\' returns milliseconds', () => {
@@ -1388,7 +1388,7 @@ describe('Fluent Strings', () => {
         });
 
         test('format \'r\' returns seconds since the Unix Epoch', () => {
-            expect(Str.of('2024-02-29').toDate('r', 'CET')).toEqual('Thr, 29 Feb 2024 01:00:00 +0100');
+            expect(Str.of('2024-02-29').toDate('r', 'CET')).toEqual('Thu, 29 Feb 2024 01:00:00 +0100');
         });
 
         test('format \'U\' returns RFC 2822/RFC 5322 formatted date', () => {

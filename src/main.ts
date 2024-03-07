@@ -3105,20 +3105,18 @@ class Stringable {
             });
         }
 
-        let date: string            = '';
-        let days: string[]          = [];
-        let months: string[]        = [];
+        let date: string = '';
 
-        const now: Date             = new Date(new Date(this._value).toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
+        const now: Date = new Date(new Date(this._value).toLocaleString('en-US', {
+            year                  : 'numeric',
+            month                 : 'numeric',
+            day                   : 'numeric',
+            hour                  : 'numeric',
+            minute                : 'numeric',
+            second                : 'numeric',
             fractionalSecondDigits: 3,
-            hour12: false,
-            timeZone: tz ?? undefined,
+            hour12                : false,
+            timeZone              : tz ?? undefined,
         }));
 
         const month: number         = now.getMonth();
@@ -3130,7 +3128,9 @@ class Stringable {
         const seconds: number       = now.getSeconds();
         const milliseconds: number  = now.getMilliseconds();
 
-        for (const element of format) {
+        const elements: RegExpMatchArray | null = format.match(/\\?.|./g);
+
+        for (const element of elements!) {
             switch (element) {
                 // Day of the month, 2 digits with leading zeros (e.g., 01 to 31)
                 case 'd':
@@ -3140,8 +3140,7 @@ class Stringable {
 
                 // A textual representation of a day, three letters (e.g., Mon through Sun)
                 case 'D':
-                    days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'];
-                    date += days[dayOfTheWeek];
+                    date += now.toLocaleString('en-US', { weekday: 'short' });
 
                     break;
 
@@ -3153,14 +3152,13 @@ class Stringable {
 
                 // A full textual representation of the day of the week (e.g., Sunday through Saturday)
                 case 'l':
-                    days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                    date += days[dayOfTheWeek];
+                    date += now.toLocaleString('en-US', { weekday: 'long' });
 
                     break;
 
                 // ISO 8601 numeric representation of the day of the week (e.g., 1 (for Monday) through 7 (for Sunday))
                 case 'N':
-                    date += dayOfTheWeek;
+                    date += dayOfTheWeek !== 0 ? dayOfTheWeek : 0;
 
                     break;
 
@@ -3181,9 +3179,10 @@ class Stringable {
                 case 'z': {
                     let start: Date          = new Date(year, 0, 0);
                     let diff: number         = ((now as unknown as number) - (start as unknown as number)) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
-                    let day: number          = 1000 * 60 * 60 * 24;
+                    let day: number          = 86400000;
                     const currentDay: number = Math.floor(diff / day);
-                    date += currentDay - 1;
+
+                    date += currentDay;
 
                     break;
                 }
@@ -3191,32 +3190,33 @@ class Stringable {
                 case 'W': {
                     let parsedDate: Date = new Date(Date.UTC(year, month, dayOfTheMonth));
                     let weekDay: number  = parsedDate.getUTCDay() || 7;
+
                     parsedDate.setUTCDate(parsedDate.getUTCDate() + 4 - weekDay);
+
                     let yearStart: Date    = new Date(Date.UTC(parsedDate.getUTCFullYear(), 0, 1));
                     let weekNumber: number = Math.ceil(((((parsedDate as unknown as number) - (yearStart as unknown as number)) / 86400000) + 1) / 7);
 
-                    date += Str.padLeft((weekNumber as unknown as string), 1, '0');
+                    date += Str.padLeft((weekNumber.toString()), 1, '0');
 
                     break;
                 }
                 // A full textual representation of a month, such as January or March (e.g., January through December)
                 case 'F':
-                    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                    date += months[month];
+                    date += now.toLocaleString('en-US', { month: 'long' });
 
                     break;
 
                 // Numeric representation of a month, with leading zeros (e.g., 01 through 12)
                 case 'm': {
-                    const currentMonth = month + 1;
+                    const currentMonth: number = month + 1;
+
                     date += Str.padLeft(currentMonth.toString(), 2, '0');
 
                     break;
                 }
                 // A short textual representation of a month, three letters (e.g., Jan through Dec)
                 case 'M':
-                    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                    date += months[month];
+                    date += now.toLocaleString('en-US', { month: 'short' });
 
                     break;
 
@@ -3246,8 +3246,7 @@ class Stringable {
 
                     break;
 
-                // An expanded full numeric representation of a year,
-                // at least 4 digits, with - for years BCE, and + for years CE. (e.g., -0055, +0787, +1999, +10191)
+                // An expanded full numeric representation of a year, at least 4 digits, with - for years BCE, and + for years CE. (e.g., -0055, +0787, +1999, +10191)
                 case 'X':
                     date += year < 0 ? '-' + year : '+' + year;
 
@@ -3262,8 +3261,7 @@ class Stringable {
 
                     break;
 
-                // A full numeric representation of a year,
-                // at least 4 digits, with - for years BCE. (e.g., -0055, 0787, 1999, 2003, 10191)
+                // A full numeric representation of a year, at least 4 digits, with - for years BCE. (e.g., -0055, 0787, 1999, 2003, 10191)
                 case 'Y':
                     date += year;
 
@@ -3289,11 +3287,11 @@ class Stringable {
 
                 // Swatch Internet time (e.g., 000 through 999)
                 case 'B': {
-                    const utcHours   = now.getUTCHours();
-                    const utcMinutes = now.getUTCMinutes();
-                    const utcSeconds = now.getUTCSeconds();
+                    const hours: number   = now.getUTCHours();
+                    const minutes: number = now.getUTCMinutes();
+                    const seconds: number = now.getUTCSeconds();
 
-                    date += Math.floor((((utcHours + 1) % 24) + utcMinutes / 60 + utcSeconds / 3600) * 1000 / 24);
+                    date += Math.floor((((hours + 1) % 24) + minutes / 60 + seconds / 3600) * 1000 / 24);
 
                     break;
                 }
@@ -3335,8 +3333,7 @@ class Stringable {
 
                 // Microseconds. (e.g., 654321)
                 case 'u':
-                    // date += Str.padRight((milliseconds * 1000).toString(), 6, '0');
-                    throw new Error('Microseconds are not supported at the moment.');
+                    throw new Error('Microseconds are not supported.');
 
                 // Milliseconds. (e.g., 654)
                 case 'v': {
@@ -3344,15 +3341,10 @@ class Stringable {
 
                     break;
                 }
+
                 // Timezone identifier (e.g., UTC, GMT, Atlantic/Azores)
                 case 'e': {
-                    // @ts-ignore
-                    const timeZoneData = now.toLocaleDateString('en-us', { timeZoneName: 'shortOffset', timeZone: tz ?? undefined })
-                        .split(', ')
-                        .pop()
-                        .trim();
-
-                    date += timeZoneData;
+                    date += Intl.DateTimeFormat('en-us', { timeZone: tz ?? undefined }).resolvedOptions().timeZone;
 
                     break;
                 }
@@ -3368,10 +3360,9 @@ class Stringable {
                 }
                 // Difference to Greenwich time (GMT) without colon between hours and minutes (e.g., +0200)
                 case 'O': {
-                    // @ts-ignore
-                    const timeZoneData = now.toLocaleDateString('en-us', { timeZoneName: 'longOffset', timeZone: tz ?? undefined, })
+                    const timeZoneData: string = now.toLocaleDateString('en-us', { timeZoneName: 'longOffset', timeZone: tz ?? undefined, })
                         .split(', ')
-                        .pop()
+                        .pop()!
                         .trim();
 
                     date += timeZoneData.length !== 3 ? timeZoneData.substring(3).replace(':', '') : '+0000';
@@ -3381,10 +3372,9 @@ class Stringable {
 
                 // Difference to Greenwich time (GMT) with colon between hours and minutes (e.g., +02:00)
                 case 'P': {
-                    // @ts-ignore
-                    const timeZoneData = now.toLocaleDateString('en-us', { timeZoneName: 'longOffset', timeZone: tz ?? undefined, })
+                    const timeZoneData: string = now.toLocaleDateString('en-us', { timeZoneName: 'longOffset', timeZone: tz ?? undefined, })
                         .split(', ')
-                        .pop()
+                        .pop()!
                         .trim();
 
                     date += timeZoneData.length !== 3 ? timeZoneData.substring(3) : '+00:00';
@@ -3394,10 +3384,9 @@ class Stringable {
 
                 // The same as P, but returns Z instead of +00:00 (e.g., +02:00)
                 case 'p': {
-                    // @ts-ignore
-                    const timeZoneData = now.toLocaleDateString('en-us', { timeZoneName: 'longOffset', timeZone: tz ?? undefined, })
+                    const timeZoneData: string = now.toLocaleDateString('en-us', { timeZoneName: 'longOffset', timeZone: tz ?? undefined, })
                         .split(', ')
-                        .pop()
+                        .pop()!
                         .trim();
 
                     date += timeZoneData === 'GMT' ? 'Z' : timeZoneData.substring(3);
@@ -3407,13 +3396,12 @@ class Stringable {
 
                 // Timezone abbreviation, if known; otherwise the GMT offset (e.g., EST, MDT, +05)
                 case 'T': {
-                    // @ts-ignore
-                    const timeZoneData = now.toLocaleDateString('en-us', { timeZoneName: 'short', timeZone: tz ?? undefined, })
+                    const timeZoneData: string = now.toLocaleDateString('en-us', { timeZoneName: 'short', timeZone: tz ?? undefined, })
                         .split(', ')
-                        .pop()
+                        .pop()!
                         .trim();
 
-                    date += timeZoneData;
+                    date += tz ?? timeZoneData.replace('GMT', 'UTC').split(/[+-]/)[0];
 
                     break;
                 }
@@ -3422,31 +3410,37 @@ class Stringable {
                 // The offset for timezones west of UTC is always negative,
                 // and for those east of UTC is always positive. (e.g., -43200 through 50400)
                 case 'Z': {
-                    // @ts-ignore
-                    const timeZoneData = now.toLocaleDateString('en-us', { timeZoneName: 'short', timeZone: tz ?? undefined, })
-                        .split(', ')
-                        .pop()
-                        .trim();
+                    const timezone: string                = now.toLocaleDateString('en-us', { timeZoneName: 'longOffset', timeZone: tz ?? undefined });
+                    const symbol: RegExpMatchArray | null = timezone.match(/[+-]/);
+                    const data: string[]                  = timezone.split(/[+-]/);
 
-                    date += timeZoneData === 'GMT' ? 0 : parseInt(timeZoneData.substring(3)) * 3600;
+                    const sign: string   = symbol ? symbol.pop()! : '+';
+                    const offset: string = data.length === 2 ? (data[1] as string) : '0:00';
+
+                    const hours: number   = parseInt(offset.split(':')[0] as string);
+                    const minutes: number = parseInt(offset.split(':')[1] as string);
+
+                    const offsetInSeconds: number = hours * 3600 + minutes * 60;
+
+                    date += `${sign}${offsetInSeconds}`;
 
                     break;
                 }
 
                 // ISO 8601 date (e.g., 2004-02-12T15:19:21+00:00)
                 case 'c': {
-                    date += `${this.toDate('Y-m-d', tz)}T${this.toDate('H:i:sP', tz)}`
+                    date += `${this.toDate('Y-m-d\\TH:i:sP')}`;
 
                     break;
                 }
-                // Seconds since the Unix Epoch (e.g., January 1, 1970 00:00:00 GMT)
+                // RFC 2822/RFC 5322 formatted date (e.g., Thu, 21 Dec 2000 16:01:07 +0200)
                 case 'r': {
                     date += new Stringable(this._value).toDate('D, d M Y H:i:s O', tz);
 
                     break;
                 }
 
-                // RFC 2822/RFC 5322 formatted date (e.g., Thu, 21 Dec 2000 16:01:07 +0200)
+                // Seconds since the Unix Epoch (e.g., January 1, 1970 00:00:00 GMT)
                 case 'U': {
                     date += Math.floor(now.getTime() / 1000);
 
@@ -3454,7 +3448,7 @@ class Stringable {
                 }
 
                 default:
-                    date += element;
+                    date += element.length >= 2 && element.indexOf('\\') > -1 ? element.replace('\\', '') : element;
             }
         }
 
