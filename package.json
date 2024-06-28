@@ -1,6 +1,6 @@
 {
   "name": "@bjnstnkvc/str",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "JavaScript equivalent of Laravel Str helper.",
   "main": "lib/main.js",
   "source": "src/main.ts",
@@ -30,6 +30,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.19",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "ts-jest": "^29.1.2",
     "typescript": "^5.3.3",
     "uglify-js": "^3.17.4"

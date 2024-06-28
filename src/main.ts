@@ -1,3 +1,5 @@
+// noinspection SpellCheckingInspection
+
 type CharacterType = string | string[] | null;
 
 type HtmlStringType = HTMLElement | Node | string;
@@ -162,6 +164,51 @@ class Str {
      */
     static charAt(subject: string, index: number): string | false {
         return subject.charAt(index);
+    }
+
+    /**
+     * Remove the given string(s) if it exists at the start of the haystack.
+     *
+     * @param { string } subject
+     * @param { string | string[] } needle
+     *
+     * @return string
+     */
+    static chopStart(subject: string, needle: string | string[]): string {
+        let results: string = subject;
+
+        needle = Array.isArray(needle) ? needle : [needle];
+
+        needle.forEach((word: string) => {
+            if (subject.startsWith(word)) {
+                results = subject.substring(word.length);
+            }
+        });
+
+        return results;
+    }
+
+    /**
+     * Remove the given string(s) if it exists at the end of the haystack.
+     *
+     * @param { string } subject
+     * @param { string | string[] } needle
+     *
+     * @return string
+     *
+     */
+    static chopEnd(subject: string, needle: string | string[]): string {
+        let results: string = subject;
+
+        needle = Array.isArray(needle) ? needle : [needle];
+
+        needle.forEach((word: string) => {
+            if (subject.endsWith(word)) {
+                results = subject.substring(0, subject.length - word.length);
+            }
+        });
+
+        return results;
     }
 
     /**
@@ -922,7 +969,7 @@ class Str {
 
         let result: string = segments.shift()!;
 
-        segments.forEach((segment: string) => result += (replace.shift() ?? search) + segment);
+        segments.forEach((segment: string) => result += Str.toStringOr(replace.shift() ?? search, search) + segment);
 
         return result;
     }
@@ -1070,9 +1117,9 @@ class Str {
      * @param { string | function } replace
      * @param { string } subject
      *
-     * @return { this }
+     * @return { string }
      */
-    static replaceMatches(pattern: string, replace: string | Function, subject: string) {
+    static replaceMatches(pattern: string, replace: string | Function, subject: string): string {
         const body: string       = RegExpString.make(/^\/(.*)\/\w*$/, pattern);
         const flags: string      = RegExpString.make(/^\/.*\/(\w*)$/, pattern);
         const expression: RegExp = new RegExp(body, flags + (flags.indexOf('g') !== -1 ? '' : 'g'));
@@ -1176,7 +1223,7 @@ class Str {
      *
      * @return { string }
      */
-    static apa(value: string) {
+    static apa(value: string): string {
         if (value === '') {
             return value;
         }
@@ -1457,7 +1504,7 @@ class Str {
         }
 
         if (length === 0 || length === null) {
-            return string.substring(start);
+            return string.substring(start, length ?? string.length);
         }
 
         return string.substring(start, start + length);
@@ -1583,7 +1630,7 @@ class Str {
      * @return { array }
      */
     static ucsplit(string: string): string[] {
-        return string.split(new RegExp(/(?=\p{Lu})/, 'u'));
+        return string.split(new RegExp(/(?=\p{Lu})/u));
     }
 
     /**
@@ -1621,7 +1668,7 @@ class Str {
      * @return { string }
      */
     static uuid(): string {
-        let time: number = parseInt((Math.random() * 10000000000000000).toString().substring(0, 13));
+        let time: number = parseInt((Math.random() * Number.MAX_SAFE_INTEGER + 1).toString().substring(0, 13));
 
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (character: string): string {
             let randomChar: number = (time + Math.random() * 16) % 16 | 0;
@@ -1683,6 +1730,7 @@ class Str {
          */
         function generateRandomNumber(): number {
             const buffer: Uint8Array = new Uint8Array(1);
+
             crypto.getRandomValues(buffer);
 
             // @ts-ignore
@@ -1817,8 +1865,30 @@ class Stringable {
      *
      * @return { string | false }
      */
-    charAt(index: number) {
+    charAt(index: number): string | false {
         return Str.charAt(this._value, index);
+    }
+
+    /**
+     * Remove the given string if it exists at the start of the current string.
+     *
+     * @param { string | string[] }  needle
+     *
+     * @return { this }
+     */
+    chopStart(needle: string | string[]): Stringable {
+        return new Stringable(Str.chopStart(this._value, needle));
+    }
+
+    /**
+     * Remove the given string if it exists at the end of the current string.
+     *
+     * @param { string | string[] }  needle
+     *
+     * @return { this }
+     */
+    chopEnd(needle: string | string[]): Stringable {
+        return new Stringable(Str.chopEnd(this._value, needle));
     }
 
     /**
@@ -3478,9 +3548,9 @@ class HtmlString {
     /**
      * Get the HTML string.
      *
-     * @return { HTMLElement|Node|string | null }
+     * @return { HTMLElement | Node | string | null }
      */
-    toHtml(): HTMLElement | Node | string {
+    toHtml(): HtmlStringType {
         const pattern: RegExp             = /(?!<!DOCTYPE)<([^\s>]+)(\s|>)+/;
         const tag: RegExpExecArray | null = RegExp(pattern).exec(this.html);
 
