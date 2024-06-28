@@ -134,6 +134,58 @@ Str.charAt('This is my name.', 6);
 // 's'
 ```
 
+#### Str.chopStart()
+
+The `Str.chopStart` method removes the given string if it exists at the start of the subject:
+
+```js
+Str.chopStart('Hello, world!', 'Hello, ');
+
+// 'world!'
+```
+
+You may also pass an array of strings to remove the first matching string found at the start of the subject:
+
+```js
+Str.chopStart('Hello, world!', ['Hi, ', 'Hello, ']);
+
+// 'world!'
+```
+
+If multiple strings in the array are found at the start of the subject, only the first match will be removed:
+
+```js
+Str.chopStart('Hello, Hello, world!', ['Hello, ', 'Hello, ']);
+
+// 'Hello, world!'
+```
+
+#### Str.chopEnd()
+
+The `Str.chopEnd` method removes the given string if it exists at the end of the subject:
+
+```js
+Str.chopEnd('Hello, world!', ', world!');
+
+// 'Hello'
+```
+
+You may also pass an array of strings to remove the first matching string found at the end of the subject:
+
+```js
+Str.chopEnd('Hello, world!', ['planet!', ', world!']);
+
+// 'Hello'
+```
+
+If multiple strings in the array are found at the end of the subject, only the first match will be removed:
+
+```js
+Str.chopEnd('Hello, world!world!', ['world!', 'world!']);
+
+// 'Hello, world!'
+```
+
 #### Str.contains()
 
 The `Str.contains` method determines if the given string contains the given value. This method is case-sensitive:
@@ -1003,6 +1055,7 @@ Str.wrap('is', 'This ', ' Laravel!');
 #### str()
 
 The `str` function returns a Stringable instance of the given string.
+
 ```js
 import { str } from '@bjnstnkvc/str'
 ```
@@ -1148,6 +1201,58 @@ The `charAt` method returns the character at the specified index. If the index i
 Str.of('This is my name.').charAt(6);
 
 // 's'
+```
+
+#### chopStart
+
+The `chopStart` method removes the given string if it exists at the start of the subject:
+
+```js
+Str.of('Hello, world!').chopStart('Hello, ');
+
+// 'world!'
+```
+
+You may also pass an array of strings to remove the first matching string found at the start of the subject:
+
+```js
+Str.of('Hello, world!').chopStart(['Hi, ', 'Hello, ']);
+
+// 'world!'
+```
+
+If multiple strings in the array are found at the start of the subject, only the first match will be removed:
+
+```js
+Str.of('Hello, Hello, world!').chopStart(['Hello, ', 'Hello, ']);
+
+// 'Hello, world!'
+```
+
+#### chopEnd
+
+The `chopEnd` method removes the given string if it exists at the end of the subject:
+
+```js
+Str.of('Hello, world!').chopEnd(', world!');
+
+// 'Hello'
+```
+
+You may also pass an array of strings to remove the first matching string found at the end of the subject:
+
+```js
+Str.of('Hello, world!').chopEnd(['planet!', ', world!']);
+
+// 'Hello'
+```
+
+If multiple strings in the array are found at the end of the subject, only the first match will be removed:
+
+```js
+Str.of('Hello, world!world!').chopEnd(['world!', 'world!']);
+
+// 'Hello, world!'
 ```
 
 #### classBasename
@@ -2040,6 +2145,7 @@ Str.of('Tacos are great!').swap({ 'Tacos': 'Burritos', 'great': 'fantastic' });
 ```
 
 #### take
+
 The `take` method returns a specified number of characters from the beginning of the string:
 
 ```js
@@ -2084,6 +2190,7 @@ Str.of('a nice title uses the correct case').title();
 ```
 
 #### toBase64
+
 The `toBase64` method converts the given string to Base64:
 
 ```js
@@ -2215,7 +2322,6 @@ Str.of('tony stark').whenContains('tony', (string: Stringable) => string.title()
 
 If necessary, you may pass another closure as the third parameter to the `when` method. This closure will execute if the
 string does not contain the given value.
-
 
 You may also pass an array of values to determine if the given string contains any of the values in the array:
 

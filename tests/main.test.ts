@@ -32,6 +32,7 @@ describe('Strings', () => {
             expect(Str.ascii('û')).toEqual('u');
         });
     });
+
     describe('Str.before', () => {
         test('returns everything before the given value in a string', () => {
             expect(Str.before('This is my name', 'my name')).toEqual('This is ');
@@ -65,6 +66,42 @@ describe('Strings', () => {
     describe('Str.charAt', () => {
         test('returns the character at the specified index', () => {
             expect(Str.charAt('This is my name.', 6)).toEqual('s');
+        });
+    });
+
+    describe('Str.chopStart', () => {
+        test('removes the given string if it exists at the start of the subject', () => {
+            expect(Str.chopStart('Hello, world!', 'Hello, ')).toEqual('world!');
+        });
+
+        test('removes the first matching string from an array of needles', () => {
+            expect(Str.chopStart('Hello, world!', ['Hello, ', 'Hi, '])).toEqual('world!');
+        });
+
+        test('removes only the first matching string when both are found at the start', () => {
+            expect(Str.chopStart('Hello, Hello, world!', ['Hello, ', 'Hello, '])).toEqual('Hello, world!');
+        });
+
+        test('does not remove the string if it does not exist at the start of the subject', () => {
+            expect(Str.chopStart('Hello, world!', 'world')).toEqual('Hello, world!');
+        });
+    });
+
+    describe('Str.chopEnd', () => {
+        test('removes the given string if it exists at the end of the subject', () => {
+            expect(Str.chopEnd('Hello, world!', 'world!')).toEqual('Hello, ');
+        });
+
+        test('removes the first matching string from an array of needles', () => {
+            expect(Str.chopEnd('Hello, world!', ['world!', 'planet!'])).toEqual('Hello, ');
+        });
+
+        test('removes only the first matching string when both are found at the end', () => {
+            expect(Str.chopEnd('Hello, world!world!', ['world!', 'world!'])).toEqual('Hello, world!');
+        });
+
+        test('does not remove the string if it does not exist at the end of the subject', () => {
+            expect(Str.chopEnd('Hello, world!', 'Hello')).toEqual('Hello, world!');
         });
     });
 
@@ -173,6 +210,7 @@ describe('Strings', () => {
             expect(Str.isUuid('laravel')).toBeFalsy();
         });
     });
+
     describe('Str.kebab', () => {
         test('converts the given string to kebab-case', () => {
             expect(Str.kebab('fooBar')).toEqual('foo-bar');
@@ -262,6 +300,7 @@ describe('Strings', () => {
             expect(Str.pluralStudly('VerifiedHuman', 1)).toEqual('VerifiedHuman');
         });
     });
+
     describe('Str.random', () => {
         test('generates a random string of the specified length', () => {
             expect(Str.random(40)).toHaveLength(40);
@@ -403,6 +442,29 @@ describe('Strings', () => {
             expect(Str.swap({ 'Tacos': 'Burritos', 'great': 'fantastic' }, 'Tacos are great!')).toEqual('Burritos are fantastic!');
         });
     });
+
+    describe('Str.take', () => {
+        test('takes the first n characters when limit is positive', () => {
+            expect(Str.take('Hello, world!', 5)).toEqual('Hello');
+        });
+
+        test('takes the last n characters when limit is negative', () => {
+            expect(Str.take('Hello, world!', -5)).toEqual('orld!');
+        });
+
+        test('returns an empty string when limit is zero', () => {
+            expect(Str.take('Hello, world!', 0)).toEqual('');
+        });
+
+        test('returns the entire string when limit is greater than string length', () => {
+            expect(Str.take('Hello', 10)).toEqual('Hello');
+        });
+
+        test('returns the entire string when limit is less than negative string length', () => {
+            expect(Str.take('Hello', -10)).toEqual('Hello');
+        });
+    });
+
     describe('Str.title', () => {
         test('converts the given string to Title Case', () => {
             expect(Str.title('a nice title uses the correct case')).toEqual('A Nice Title Uses The Correct Case');
@@ -485,6 +547,12 @@ describe('Strings', () => {
 });
 
 describe('Fluent Strings', () => {
+    describe('after', () => {
+        test('returns everything after the given value in a string', () => {
+            expect(Str.of('This is my name').after('This is').toString()).toEqual(' my name');
+        });
+    });
+
     describe('afterLast', () => {
         test('returns everything after the last occurrence of the given value in a string', () => {
             expect(Str.of('App\\Http\\Controllers\\Controller').afterLast('\\').toString()).toEqual('Controller');
@@ -549,6 +617,42 @@ describe('Fluent Strings', () => {
     describe('charAt', () => {
         test('returns the character at the specified index', () => {
             expect(Str.of('This is my name.').charAt(6).toString()).toEqual('s');
+        });
+    });
+
+    describe('chopStart', () => {
+        test('removes the given string if it exists at the start of the subject', () => {
+            expect(Str.of('Hello, world!').chopStart('Hello, ').toString()).toEqual('world!');
+        });
+
+        test('removes the first matching string from an array of needles', () => {
+            expect(Str.of('Hello, world!').chopStart(['Hello, ', 'Hi, ']).toString()).toEqual('world!');
+        });
+
+        test('removes only the first matching string when both are found at the start', () => {
+            expect(Str.of('Hello, Hello, world!').chopStart(['Hello, ', 'Hello, ']).toString()).toEqual('Hello, world!');
+        });
+
+        test('does not remove the string if it does not exist at the start of the subject', () => {
+            expect(Str.of('Hello, world!').chopStart('world').toString()).toEqual('Hello, world!');
+        });
+    });
+
+    describe('chopEnd', () => {
+        test('removes the given string if it exists at the end of the subject', () => {
+            expect(Str.of('Hello, world!').chopEnd('world!').toString()).toEqual('Hello, ');
+        });
+
+        test('removes the first matching string from an array of needles', () => {
+            expect(Str.of('Hello, world!').chopEnd(['world!', 'planet!']).toString()).toEqual('Hello, ');
+        });
+
+        test('removes only the first matching string when both are found at the end', () => {
+            expect(Str.of('Hello, world!world').chopEnd(['world', 'world!']).toString()).toEqual('Hello, world!');
+        });
+
+        test('does not remove the string if it does not exist at the end of the subject', () => {
+            expect(Str.of('Hello, world!').chopEnd('Hello').toString()).toEqual('Hello, world!');
         });
     });
 
@@ -801,11 +905,41 @@ describe('Fluent Strings', () => {
         });
     });
 
+    describe('pipe', () => {
+        test('returns a Stringable instance', () => {
+            const string: Stringable = Str.of('hello world').pipe((str: Stringable) => str + '!');
+
+            expect(string).toBeInstanceOf(Stringable);
+            expect(string.toString()).toEqual('hello world!');
+        });
+
+        test('calls the method on the string value when callback is a string', () => {
+            expect(Str.of('hello world').pipe('toUpperCase').toString()).toEqual('HELLO WORLD');
+        });
+
+        test('calls the given function with the string value', () => {
+            const string: Stringable = Str.of('hello world');
+            const callback: Function = (str: Stringable) => str.explode(' ').join('-');
+            const result: Stringable = string.pipe(callback);
+
+            expect(result.toString()).toEqual('hello-world');
+        });
+    });
+
     describe('plural', () => {
         test('converts a singular word string to its plural form', () => {
             expect(Str.of('car').plural().toString()).toEqual('cars');
             expect(Str.of('child').plural().toString()).toEqual('children');
             expect(Str.of('child').plural(1).toString()).toEqual('child');
+        });
+    });
+
+    describe('pluralStudly', () => {
+        test('converts a singular word string formatted in studly caps case to its plural form', () => {
+            expect(Str.of('VerifiedHuman').pluralStudly().toString()).toEqual('VerifiedHumans');
+            expect(Str.of('UserFeedback').pluralStudly().toString()).toEqual('UserFeedback');
+            expect(Str.of('VerifiedHuman').pluralStudly(2).toString()).toEqual('VerifiedHumans');
+            expect(Str.of('VerifiedHuman').pluralStudly(1).toString()).toEqual('VerifiedHuman');
         });
     });
 
@@ -828,6 +962,12 @@ describe('Fluent Strings', () => {
     describe('remove', () => {
         test('removes the given value or values from the string', () => {
             expect(Str.of('Arkansas is quite beautiful!').remove('quite ').toString()).toEqual('Arkansas is beautiful!');
+        });
+    });
+
+    describe('reverse', () => {
+        test('reverses the given string', () => {
+            expect(Str.of('Hello World').reverse().toString()).toEqual('dlroW olleH');
         });
     });
 
@@ -965,6 +1105,12 @@ describe('Fluent Strings', () => {
         });
     });
 
+    describe('substrCount', () => {
+        test('returns the number of occurrences of a given value in the given string', () => {
+            expect(Str.of('If you like ice cream, you will like snow cones.').substrCount('like')).toEqual(2);
+        });
+    });
+
     describe('substrReplace', () => {
         test('replaces text within a portion of a string starting at the specified position', () => {
             expect(Str.of('1300').substrReplace(':', 2).toString()).toEqual('13:');
@@ -1040,6 +1186,16 @@ describe('Fluent Strings', () => {
 
         test('removes the specified strings from the beginning and end of a given string with different delimiters', () => {
             expect(Str.of('{framework: "Laravel"}').unwrap('{', '}').toString()).toEqual('framework: "Laravel"');
+        });
+    });
+
+    describe('toHtmlString', () => {
+        // test('converts the string instance to an instance of HTMLElement', () => {
+        //     expect(Str.of('<input type="text" placeholder="Hello">').toHtmlString()).toBeInstanceOf(HTMLInputElement);
+        // });
+
+        test('returns a string If no valid HTML is provided', () => {
+            expect(Str.of('Hello').toHtmlString()).toEqual('Hello');
         });
     });
 
@@ -1147,9 +1303,22 @@ describe('Fluent Strings', () => {
         });
     });
 
+    describe('wordWrap', () => {
+        test('wraps a string to a given number of characters', () => {
+            expect(Str.of('The quick brown fox jumped over the lazy dog.').wordWrap(20, '<br />\n').toString()).toEqual('The quick brown fox<br />\njumped over the lazy<br />\ndog.');
+        });
+    });
+
     describe('words', () => {
         test('limits the number of words in the string', () => {
             expect(Str.of('Perfectly balanced, as all things should be.').words(3, ' >>>').toString()).toEqual('Perfectly balanced, as >>>');
+        });
+    });
+
+    describe('wrap', () => {
+        test('wraps the given string with an additional string or a pair of strings', () => {
+            expect(Str.of('Laravel').wrap('"').toString()).toEqual('"Laravel"');
+            expect(Str.of('is').wrap('This ', ' Laravel!').toString()).toEqual('This is Laravel!');
         });
     });
 
@@ -1352,7 +1521,7 @@ describe('Fluent Strings', () => {
         });
 
         test('format \'v\' returns milliseconds', () => {
-            expect(Str.of('2024-02-29 08:09:07.654').toDate('v', 'CET')).toEqual('654')
+            expect(Str.of('2024-02-29 08:09:07.654').toDate('v', 'CET')).toEqual('654');
         });
 
         test('format \'e\' returns timezone identifier', () => {
