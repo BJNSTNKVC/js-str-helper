@@ -232,7 +232,14 @@ describe('Strings', () => {
     describe('Str.limit', () => {
         test('truncates the given string to the specified length', () => {
             expect(Str.limit('The quick brown fox jumps over the lazy dog', 20)).toEqual('The quick brown fox...');
+        });
+
+        test('truncates the string and appends a custom string', () => {
             expect(Str.limit('The quick brown fox jumps over the lazy dog', 20, ' (...)')).toEqual('The quick brown fox (...)');
+        });
+
+        test('respects word boundaries if \'preserveWord\' is set to true', () => {
+            expect(Str.limit('The quick brown fox jumps over the lazy dog', 20, '...', true)).toEqual('The quick brown...');
         });
     });
 
@@ -810,6 +817,10 @@ describe('Fluent Strings', () => {
 
         test('truncates the string and appends a custom string', () => {
             expect(Str.of('The quick brown fox jumps over the lazy dog').limit(20, ' (...)').toString()).toEqual('The quick brown fox (...)');
+        });
+
+        test('respects word boundaries if \'preserveWord\' is set to true', () => {
+            expect(Str.of('The quick brown fox jumps over the lazy dog').limit(20, '...', true).toString()).toEqual('The quick brown...');
         });
     });
 
