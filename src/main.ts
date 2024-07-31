@@ -507,15 +507,28 @@ class Str {
      * @param { string } value
      * @param { number } limit
      * @param { string } end
+     * @param { boolean } preserveWords
      *
      * @return { string }
      */
-    static limit(value: string, limit: number = 100, end: string = '...'): string {
+    static limit(value: string, limit: number = 100, end: string = '...', preserveWords: boolean = false): string {
         if (value.length <= limit) {
             return value;
         }
 
-        return this.substr(value, 0, limit).trim() + end;
+        if (!preserveWords) {
+            return this.substr(value, 0, limit).trim() + end;
+        }
+
+        value = value.replace(/[\n\r]+/, ' ');
+
+        const trimmed: string = this.substr(value, 0, limit).trim();
+
+        if (this.substr(value, limit, 1) === ' ') {
+            return `${trimmed}${end}`;
+        }
+
+        return `${trimmed.replace(/(.*)\s.*/, '$1')}${end}`;
     }
 
     /**
@@ -2209,11 +2222,12 @@ class Stringable {
      *
      * @param { number } limit
      * @param { string } end
+     * @param { boolean } preserveWords
      *
      * @return { this }
      */
-    limit(limit: number = 100, end: string = '...'): Stringable {
-        return new Stringable(Str.limit(this._value, limit, end));
+    limit(limit: number = 100, end: string = '...', preserveWords: boolean = false): Stringable {
+        return new Stringable(Str.limit(this._value, limit, end, preserveWords));
     }
 
     /**

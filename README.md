@@ -457,6 +457,20 @@ Str.limit('The quick brown fox jumps over the lazy dog', 20, ' (...)');
 // 'The quick brown fox (...)'
 ```
 
+You may pass a boolean as fourth argument to the method to ensure the truncation does not cut off in the middle of a word:
+
+```js
+Str.limit('The quick brown fox jumps over the lazy dog', 18, '...', false);
+
+// 'The quick brown fo...'
+```
+
+```js
+Str.limit('The quick brown fox jumps over the lazy dog', 18, '...', true);
+
+// 'The quick brown...'
+```
+
 #### Str.lower()
 
 The `Str.lower` method converts the given string to lowercase:
@@ -1603,6 +1617,20 @@ Str.of('The quick brown fox jumps over the lazy dog').limit(20, ' (...)');
 // 'The quick brown fox (...)'
 ```
 
+You may pass a boolean as fourth argument to the method to ensure the truncation does not cut off in the middle of a word:
+
+```js
+Str.of('The quick brown fox jumps over the lazy dog').limit(18, '...', false);
+
+// 'The quick brown fo...'
+```
+
+```js
+Str.of('The quick brown fox jumps over the lazy dog').limit(18, '...', true);
+
+// 'The quick brown...'
+```
+
 #### lower
 
 The `lower` method converts the given string to lowercase:
@@ -1798,6 +1826,20 @@ Str.of('LARAVEL FRAMEWORK').pipe((string) => string.title());
 
 ```js
 Str.of('foo').pipe(string => 'bar');
+
+// 'bar'
+```
+
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('LARAVEL FRAMEWORK').pipe((string: Stringable) => string.title());
+
+// 'Laravel Framework'
+```
+
+```typescript
+Str.of('foo').pipe((string: Stringable) => 'bar');
 
 // 'bar'
 ```
@@ -2164,6 +2206,17 @@ closure:
 Str.of('Laravel')
     .append(' Framework')
     .tap((string) => string.dump())
+    .upper();
+
+// 'LARAVEL FRAMEWORK'
+```
+
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('Laravel')
+    .append(' Framework')
+    .tap((string: Stringable) => string.dump())
     .upper();
 
 // 'LARAVEL FRAMEWORK'
