@@ -214,6 +214,72 @@ Str.containsAll('This is my name', ['my', 'name']);
 // true
 ```
 
+#### Str.convertCase()
+
+The `Str.convertCase` method converts the case of a string according the mode of conversion (defaults to `MB_CASE_FOLD`). Modes of conversion are:
+
+##### MB_CASE_UPPER
+
+Performs a full upper-case folding.
+
+```js
+Str.convertCase('hello', Mode.MB_CASE_UPPER);
+
+// HELLO
+```
+
+##### MB_CASE_LOWER
+
+Performs a full lower-case folding.
+
+```js
+Str.convertCase('HELLO', Mode.MB_CASE_UPPER);
+
+// hello
+```
+
+##### MB_CASE_TITLE
+
+Performs a full title-case conversion based on the Cased and CaseIgnorable derived Unicode properties.
+
+```js
+Str.convertCase('a nice title uses the correct case', Mode.MB_CASE_TITLE);
+
+// 'A Nice Title Uses The Correct Case'
+```
+
+##### MB_CASE_FOLD
+
+Performs a full case fold conversion which removes case distinctions present in the string.
+
+```js
+Str.convertCase('HeLLo', Mode.MB_CASE_FOLD);
+
+// hello
+```
+
+#### Str.deduplicate()
+
+The `Str.containsAll` method consecutive instances of a given character with a single character in the given string:
+
+```js
+Str.deduplicate(' laravel   php  framework ')
+
+//  laravel php framework 
+```
+
+```js
+Str.deduplicate('whaaat', 'a')
+
+// what
+```
+
+```js
+Str.deduplicate('/some//odd//path/', '/')
+
+// /some/odd/path/
+```
+
 #### Str.endsWith()
 
 The `Str.endsWith` method determines if the given string ends with the given value:
@@ -500,6 +566,77 @@ Str.mask('taylor@example.com', '*', -15, 3);
 
 // 'tay***@example.com'
 ```
+
+#### Str.match
+
+The `Str.match` method will return the portion of a string that matches a given regular expression pattern:
+
+```js
+Str.match('/bar/', 'foo bar');
+
+// 'bar'
+```
+
+```js
+Str.match('/foo (.*)/', 'foo bar');
+
+// 'bar'
+```
+
+#### Str.matchAll
+
+The `Str.matchAll` method will return an array containing the portions of a string that match a given regular expression
+pattern:
+
+```js
+Str.matchAll('/bar/', 'bar foo bar');
+
+// ['bar', 'bar']
+```
+
+If you specify a matching group within the expression, method will return an array of that group's matches:
+
+```js
+Str.matchAll('/f(\\w*)/', 'bar fun bar fly');
+
+// ['un', 'ly'];
+```
+
+If no matches are found, an empty array will be returned.
+
+#### Str.isMatch
+
+The `Str.isMatch` method will return true if the string matches a given regular expression:
+
+```js
+Str.isMatch('/foo (.*)/', 'foo bar');
+
+// true
+```
+
+```js
+Str.isMatch('/foo (.*)/', 'laravel');
+
+// false
+```
+
+#### Str.numbers()
+
+The `Str.numbers` method removes all non-numeric characters from a string:
+
+```js
+Str.numbers('(555) 123-4567')
+
+// 5551234567
+```
+
+```js
+Str.numbers('L4r4v3l!')
+
+// 443
+```
+
+If no matches are found, an empty string will be returned.
 
 #### Str.orderedUuid()
 
@@ -903,8 +1040,7 @@ Str.substrCount('If you like ice cream, you will like snow cones.', 'like');
 #### Str.substrReplace()
 
 The `Str.substrReplace` method replaces text within a portion of a string, starting at the position specified by the
-third
-argument and replacing the number of characters specified by the fourth argument. Passing 0 to the method's fourth
+third argument and replacing the number of characters specified by the fourth argument. Passing 0 to the method's fourth
 argument will insert the string at the specified position without replacing any of the existing characters in the
 string:
 
@@ -1307,6 +1443,72 @@ Str.of('This is my name').containsAll(['my', 'name']);
 // true
 ```
 
+#### convertCase
+
+The `Str.convertCase` method converts the case of a string according the mode of conversion (defaults to `MB_CASE_FOLD`). Modes of conversion are:
+
+##### MB_CASE_UPPER
+
+Performs a full upper-case folding.
+
+```js
+Str.of('hello').convertCase(Mode.MB_CASE_UPPER);
+
+// HELLO
+```
+
+##### MB_CASE_LOWER
+
+Performs a full lower-case folding.
+
+```js
+Str.of('HELLO').convertCase(Mode.MB_CASE_UPPER);
+
+// hello
+```
+
+##### MB_CASE_TITLE
+
+Performs a full title-case conversion based on the Cased and CaseIgnorable derived Unicode properties.
+
+```js
+Str.of('a nice title uses the correct case').convertCase(Mode.MB_CASE_TITLE);
+
+// 'A Nice Title Uses The Correct Case'
+```
+
+##### MB_CASE_FOLD
+
+Performs a full case fold conversion which removes case distinctions present in the string.
+
+```js
+Str.of('HeLLo').convertCase(Mode.MB_CASE_FOLD);
+
+// hello
+```
+
+#### Str.deduplicate()
+
+The `Str.containsAll` method consecutive instances of a given character with a single character in the given string:
+
+```js
+Str.of(' laravel   php  framework ').deduplicate();
+
+//  laravel php framework 
+```
+
+```js
+Str.of('whaaat').deduplicate('a');
+
+// what
+```
+
+```js
+Str.of('/some//odd//path/').deduplicate( '/');
+
+// /some/odd/path/
+```
+
 #### dirname
 
 The `dirname` method return the parent directory portion of the given string:
@@ -1335,7 +1537,8 @@ Str.of('This is my name').excerpt('my', { 'radius': 3 });
 // '...is my na...'
 ```
 
-The `radius` option, which defaults to 100, allows you to define the number of characters that should appear on each side
+The `radius` option, which defaults to 100, allows you to define the number of characters that should appear on each
+side
 of the truncated string.
 
 In addition, you may use the omission option to change the string that will be prepended and appended to the truncated
@@ -1420,7 +1623,8 @@ Str.of('TGFyYXZlbA==').fromBase64();
 
 #### headline
 
-The `headline` method will convert strings delimited by casing, hyphens, or underscores into a space delimited string with
+The `headline` method will convert strings delimited by casing, hyphens, or underscores into a space delimited string
+with
 each word's first letter capitalized:
 
 ```js
@@ -1617,7 +1821,8 @@ Str.of('The quick brown fox jumps over the lazy dog').limit(20, ' (...)');
 // 'The quick brown fox (...)'
 ```
 
-You may pass a boolean as fourth argument to the method to ensure the truncation does not cut off in the middle of a word:
+You may pass a boolean as fourth argument to the method to ensure the truncation does not cut off in the middle of a
+word:
 
 ```js
 Str.of('The quick brown fox jumps over the lazy dog').limit(18, '...', false);
@@ -1659,7 +1864,8 @@ Str.of('/Laravel/').ltrim('/');
 
 #### mask
 
-The `mask` method masks a portion of a string with a repeated character, and may be used to obfuscate segments of strings
+The `mask` method masks a portion of a string with a repeated character, and may be used to obfuscate segments of
+strings
 such as email addresses and phone numbers:
 
 ```js
@@ -1735,6 +1941,24 @@ Str.of('laravel').isMatch('/foo (.*)/');
 
 // false
 ```
+
+#### numbers
+
+The `numbers` method removes all non-numeric characters from a string:
+
+```js
+Str.of('(555) 123-4567').numbers();
+
+// 5551234567
+```
+
+```js
+Str.of('L4r4v3l!').numbers();
+
+// 443
+```
+
+If no matches are found, an empty string will be returned.
 
 #### newLine
 
@@ -1876,7 +2100,8 @@ Str.of('child').plural(1);
 
 #### position
 
-The `position` method returns the position of the first occurrence of a substring in a string. If the substring does not exist within the string, `false` is returned:
+The `position` method returns the position of the first occurrence of a substring in a string. If the substring does not
+exist within the string, `false` is returned:
 
 ```js
 Str.of('Hello, World!').position('Hello');
@@ -1992,7 +2217,8 @@ Str.of('(+1) 501-555-1000').replaceMatches('/[^A-Za-z0-9]+/', '');
 // '15015551000'
 ```
 
-The `replaceMatches` method also accepts a closure that will be invoked with each portion of the string matching the given
+The `replaceMatches` method also accepts a closure that will be invoked with each portion of the string matching the
+given
 pattern, allowing you to perform the replacement logic within the closure and return the replaced value:
 
 ```js
@@ -2003,7 +2229,8 @@ Str.of('123').replaceMatches('/\\d/', (match) => '[' + match[0] + ']');
 
 #### replaceStart
 
-The `replaceStart` method replaces the first occurrence of the given value only if the value appears at the start of the string:
+The `replaceStart` method replaces the first occurrence of the given value only if the value appears at the start of the
+string:
 
 ```js
 Str.of('Hello World').replaceStart('Hello', 'Laravel');
@@ -2019,7 +2246,8 @@ Str.of('Hello World').replaceStart('World', 'Laravel');
 
 #### replaceEnd
 
-The `replaceEnd` method replaces the last occurrence of the given value only if the value appears at the end of the string:
+The `replaceEnd` method replaces the last occurrence of the given value only if the value appears at the end of the
+string:
 
 ```js
 Str.of('Hello World').replaceEnd('World', 'Laravel');
@@ -2334,8 +2562,7 @@ Str.of('laravel').upper();
 
 #### when
 
-The `when` method invokes the given closure if a given condition is true. The closure will receive the fluent string
-instance:
+The `when` method invokes the given closure if a given condition is true. The closure will receive the fluent string instance:
 
 ```js
 Str.of('Taylor').when(true, (string) => string.append(' Otwell'));
@@ -2351,8 +2578,26 @@ Str.of('Taylor').when(true, (string: Stringable) => string.append(' Otwell'));
 // 'Taylor Otwell'
 ```
 
-If necessary, you may pass another closure as the third parameter to the `when` method. This closure will execute if the
-condition parameter evaluates to false.
+#### unless
+
+The `unless` method invokes the given closure if a given condition is false. The closure will receive the fluent string instance:
+
+```js
+Str.of('Taylor').unless(false, (string) => string.append(' Otwell'));
+
+// 'Taylor Otwell'
+```
+
+Or, if you are using TypeScript:
+
+```typescript
+Str.of('Taylor').unless(false, (string: Stringable) => string.append(' Otwell'));
+
+// 'Taylor Otwell'
+```
+
+If necessary, you may pass another closure as the third parameter to the `unless` method. This closure will execute if the
+condition parameter evaluates to true.
 
 #### whenContains
 
@@ -2436,7 +2681,8 @@ Str.of('  ').whenEmpty((string: Stringable) => string.trim().prepend('Laravel'))
 
 #### whenNotEmpty
 
-The `whenNotEmpty` method invokes the given closure if the string is not empty. If the closure returns a value, that value
+The `whenNotEmpty` method invokes the given closure if the string is not empty. If the closure returns a value, that
+value
 will also be returned by the whenNotEmpty method. If the closure does not return a value, the fluent string instance
 will be returned:
 
@@ -2475,7 +2721,8 @@ Str.of('disney world').whenStartsWith('disney', (string: Stringable) => string.t
 
 #### whenEndsWith
 
-The `whenEndsWith` method invokes the given closure if the string ends with the given sub-string. The closure will receive
+The `whenEndsWith` method invokes the given closure if the string ends with the given sub-string. The closure will
+receive
 the fluent string instance:
 
 ```js
@@ -2637,7 +2884,8 @@ Str.of('Hello, world!').wordCount();
 
 #### words
 
-The `words` method limits the number of words in a string. If necessary, you may specify an additional string that will be
+The `words` method limits the number of words in a string. If necessary, you may specify an additional string that will
+be
 appended to the truncated string:
 
 ```js
