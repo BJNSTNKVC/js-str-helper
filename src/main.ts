@@ -4,6 +4,17 @@ type CharacterType = string | string[] | null;
 
 type HtmlStringType = HTMLElement | Node | string;
 
+enum Mode {
+    MB_CASE_UPPER        = 0,
+    MB_CASE_LOWER        = 1,
+    MB_CASE_TITLE        = 2,
+    MB_CASE_FOLD         = 3,
+    MB_CASE_UPPER_SIMPLE = 4,
+    MB_CASE_LOWER_SIMPLE = 5,
+    MB_CASE_TITLE_SIMPLE = 6,
+    MB_CASE_FOLD_SIMPLE  = 7
+}
+
 class Str {
     /**
      * Get a new Stringable object from the given string.
@@ -266,6 +277,75 @@ class Str {
     }
 
     /**
+     * Convert the case of a string.
+     *
+     * @param { string } string
+     * @param { Mode | number } mode
+     *
+     * @return { string }
+     */
+    static convertCase(string: string, mode: Mode | number = Mode.MB_CASE_FOLD): string {
+        switch (mode) {
+            case Mode.MB_CASE_UPPER: {
+                string = string.toLocaleUpperCase();
+
+                break;
+            }
+            case Mode.MB_CASE_LOWER: {
+                string = string.toLocaleLowerCase();
+
+                break;
+            }
+            case Mode.MB_CASE_TITLE: {
+                string = this.title(string);
+
+                break;
+            }
+            case Mode.MB_CASE_FOLD: {
+                string = string.toLocaleLowerCase();
+
+                break;
+            }
+            case Mode.MB_CASE_UPPER_SIMPLE: {
+                string = string.toUpperCase();
+
+                break;
+            }
+            case Mode.MB_CASE_LOWER_SIMPLE: {
+                string = string.toLowerCase();
+
+                break;
+            }
+            case Mode.MB_CASE_TITLE_SIMPLE: {
+                string = this.title(string);
+
+                break;
+            }
+            case Mode.MB_CASE_FOLD_SIMPLE: {
+                string = string.toLowerCase();
+
+                break;
+            }
+        }
+
+        return string;
+    }
+
+    /**
+     * Replace consecutive instances of a given character with a single character in the given string.
+     *
+     * @param { string } string
+     * @param { string } character
+     *
+     * @return { string }
+     */
+    static deduplicate(string: string, character: string = ' '): string {
+        const regex: RegExp = new RegExp(`${character}+`, 'g');
+
+        return string.replace(regex, character);
+    }
+
+    /**
      * Determine if a given string ends with a given substring.
      *
      * @param { string } haystack
@@ -309,12 +389,11 @@ class Str {
 
         const matches: string[] = [text, (results[0] as string), phrase, results.splice(1).join(phrase)];
 
-        let start = (matches[1] as string).trimStart();
-        let end   = (matches[3] as string).trimEnd();
+        let start: string = (matches[1] as string).trimStart();
+        let end: string   = (matches[3] as string).trimEnd();
 
         start = this.of(this.substr(start, Math.max((start.length - radius), 0), radius))
             .ltrim()
-            // @ts-ignore
             .unless(
                 (startWithRadius: Stringable) => startWithRadius.exactly(start),
                 (startWithRadius: Stringable) => startWithRadius.prepend(omission))
@@ -322,7 +401,6 @@ class Str {
 
         end = this.of(this.substr(end, 0, radius))
             .rtrim()
-            // @ts-ignore
             .unless(
                 (endWithRadius: Stringable) => endWithRadius.exactly(end),
                 (endWithRadius: Stringable) => endWithRadius.append(omission))
@@ -442,7 +520,7 @@ class Str {
      * @return { boolean }
      */
     static isUrl(value: string, protocols: string[] = []): boolean {
-        const protocolPattern = protocols.length === 0 ? 'https?|ftp|file|mailto|tel|data|irc|magnet' : protocols.join('|');
+        const protocolPattern: string = protocols.length === 0 ? 'https?|ftp|file|mailto|tel|data|irc|magnet' : protocols.join('|');
 
         const pattern: RegExp = new RegExp(`^(?:${protocolPattern}):\\/\\/(?:[\\w-]+(?:\\.[\\w-]+)+|localhost|\\d{1,3}(?:\\.\\d{1,3}){3})(?::\\d+)?(?:\\S*)?$`, 'i');
 
@@ -688,6 +766,17 @@ class Str {
         }
 
         return matches.map((match: RegExpMatchArray) => String(match.length === 1 ? match[0] : match[1]));
+    }
+
+    /**
+     * Remove all non-numeric characters from a string.
+     *
+     * @param { string } value
+     *
+     * @return { string }
+     */
+    static numbers(value: string): string {
+        return value.replace(/[^0-9]/g, '');
     }
 
     /**
@@ -1375,7 +1464,7 @@ class Str {
         }
 
         for (const word in irregular) {
-            const pattern = new RegExp(`${irregular[word]}$`, 'i');
+            const pattern: RegExp = new RegExp(`${irregular[word]}$`, 'i');
 
             if (pattern.test(value)) {
                 value = value.replace(pattern, word);
@@ -1385,7 +1474,7 @@ class Str {
         }
 
         for (const word in singular) {
-            const pattern = new RegExp(word, 'i');
+            const pattern: RegExp = new RegExp(word, 'i');
 
             if (pattern.test(value)) {
                 value = value.replace(pattern, (singular[word] as string));
@@ -1407,12 +1496,10 @@ class Str {
      * @return { string }
      */
     static slug(title: string, separator: string = '-', dictionary: { [key: string]: string } = { '@': 'at' }): string {
-        // Convert all dashes/underscores into separator
         let flip: string = separator === '-' ? '_' : '-';
 
         title = title.replace('![' + preg_quote(flip) + ']+!u', separator);
 
-        // Replace dictionary words
         for (let value in dictionary) {
             dictionary[value] = separator + dictionary[value] + separator;
         }
@@ -1421,10 +1508,8 @@ class Str {
             title = title.replaceAll(value, (dictionary[value] as string));
         }
 
-        // Remove all characters that are not the separator, letters, numbers, or whitespace
         title = this.lower(title).replace('![^' + preg_quote(separator) + 'pLpNs]+!u', '');
 
-        // Replace all separator characters and whitespace by a single separator
         return title.replaceAll(/\s/g, separator).replace(new RegExp('\\' + separator + '+', 'g'), separator);
     }
 
@@ -1440,6 +1525,86 @@ class Str {
         value = ucwords(value).replace(new RegExp(/\s+/, 'u'), '');
 
         value = this.lower(value.replace(new RegExp(/(.)(?=[A-Z])/, 'ug'), `$1${delimiter}`));
+
+        return value;
+    }
+
+    /**
+     * Remove all whitespace from both ends of a string.
+     *
+     * @param { string } value
+     * @param { string | null } charlist
+     *
+     * @return { string }
+     */
+    static trim(value: string, charlist: string | null = null): string {
+        if (charlist === null) {
+            return value.trim();
+        }
+
+        if (charlist === '') {
+            return value;
+        }
+
+        if (charlist === ' ') {
+            return value.replaceAll(' ', '');
+        }
+
+        charlist = charlist.split('').join('|');
+
+        const regex: RegExp = new RegExp(`${charlist}+`, 'g');
+
+        return value.replace(regex, '') ?? value;
+    }
+
+    /**
+     * Remove all whitespace from the beginning of a string.
+     *
+     * @param { string } value
+     * @param { string | null } charlist
+     *
+     * @return { string }
+     */
+    static ltrim(value: string, charlist: string | null = null): string {
+        if (charlist === null) {
+            return value.trimStart();
+        }
+
+        if (charlist === '') {
+            return value;
+        }
+
+        if (charlist === ' ') {
+            return this.replaceStart(' ', '', value);
+        }
+
+        charlist.split('').forEach((chararacter: string) => value = this.replaceStart(chararacter, '', value));
+
+        return value;
+    }
+
+    /**
+     * Remove all whitespace from the end of a string.
+     *
+     * @param { string } value
+     * @param { string | null } charlist
+     *
+     * @return { string }
+     */
+    static rtrim(value: string, charlist: string | null = null): string {
+        if (charlist === null) {
+            return value.trimEnd();
+        }
+
+        if (charlist === '') {
+            return value;
+        }
+
+        if (charlist === ' ') {
+            return this.replaceEnd(' ', '', value);
+        }
+
+        charlist.split('').forEach((chararacter: string) => value = this.replaceEnd(chararacter, '', value));
 
         return value;
     }
@@ -1780,6 +1945,7 @@ class Stringable {
      * The underlying string value.
      *
      * @private
+     *
      * @type { string }
      */
     _value: string;
@@ -1990,6 +2156,28 @@ class Stringable {
      */
     containsAll(needles: string[], ignoreCase: boolean = false): boolean {
         return Str.containsAll(this._value, needles, ignoreCase);
+    }
+
+    /**
+     * Convert the case of a string.
+     *
+     * @param { Mode | number } mode
+     *
+     * @return { this }
+     */
+    convertCase(mode: Mode | number = Mode.MB_CASE_FOLD): Stringable {
+        return new Stringable(Str.convertCase(this._value, mode));
+    }
+
+    /**
+     * Replace consecutive instances of a given character with a single character in the given string.
+     *
+     * @param { string } character
+     *
+     * @return { string }
+     */
+    deduplicate(character: string = ' '): Stringable {
+        return new Stringable(Str.deduplicate(this._value, character));
     }
 
     /**
@@ -2294,6 +2482,15 @@ class Stringable {
      */
     test(pattern: string): boolean {
         return this.match(pattern).isNotEmpty();
+    }
+
+    /**
+     * Remove all non-numeric characters from a string.
+     *
+     * @return { this }
+     */
+    numbers(): Stringable {
+        return new Stringable(Str.numbers(this._value));
     }
 
     /**
@@ -3693,6 +3890,7 @@ if (typeof exports != 'undefined') {
 if (typeof global !== 'undefined') {
     const _global: any = global;
 
+    _global.Mode       = Mode;
     _global.Str        = Str;
     _global.Stringable = Stringable;
     _global.str        = str;

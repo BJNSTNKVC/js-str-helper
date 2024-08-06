@@ -21,12 +21,6 @@ describe('Strings', () => {
         });
     });
 
-    describe('Str.apa', () => {
-        test('converts the given string to title case following the APA guidelines', () => {
-            expect(Str.apa('Creating A Project')).toEqual('Creating a Project');
-        });
-    });
-
     describe('Str.ascii', () => {
         test('attempts to transliterate the string into an ASCII value', () => {
             expect(Str.ascii('û')).toEqual('u');
@@ -121,6 +115,30 @@ describe('Strings', () => {
         });
     });
 
+    describe('Str.convertCase', () => {
+        test('converts the case of a string', () => {
+            expect(Str.convertCase('hello', Mode.MB_CASE_UPPER)).toEqual('HELLO');
+            expect(Str.convertCase('WORLD', Mode.MB_CASE_UPPER)).toEqual('WORLD');
+
+            expect(Str.convertCase('HELLO', Mode.MB_CASE_LOWER)).toEqual('hello');
+            expect(Str.convertCase('WORLD', Mode.MB_CASE_LOWER)).toEqual('world');
+
+            expect(Str.convertCase('HeLLo', Mode.MB_CASE_FOLD)).toEqual('hello');
+            expect(Str.convertCase('WoRLD', Mode.MB_CASE_FOLD)).toEqual('world');
+
+            expect(Str.convertCase('üöä', Mode.MB_CASE_UPPER)).toEqual('ÜÖÄ');
+            expect(Str.convertCase('ÜÖÄ', Mode.MB_CASE_LOWER)).toEqual('üöä');
+        });
+    });
+
+    describe('Str.deduplicate', () => {
+        test('replace consecutive instances of a given character with a single character in the given string', () => {
+            expect(Str.deduplicate(' laravel   php  framework ')).toEqual(' laravel php framework ');
+            expect(Str.deduplicate('whaaat', 'a')).toEqual('what');
+            expect(Str.deduplicate('/some//odd//path/', '/')).toEqual('/some/odd/path/');
+        });
+    });
+
     describe('Str.endsWith', () => {
         test('determines if the given string ends with the given value', () => {
             expect(Str.endsWith('This is my name', 'name')).toBeTruthy();
@@ -155,16 +173,17 @@ describe('Strings', () => {
         });
     });
 
-    describe('Str.fromBase64', () => {
-        test('converts the given string from Base64', () => {
-            expect(Str.fromBase64('TGFyYXZlbA==')).toEqual('Laravel');
+    describe('Str.wrap', () => {
+        test('wraps the given string with an additional string or a pair of strings', () => {
+            expect(Str.wrap('Laravel', '"')).toEqual('"Laravel"');
+            expect(Str.wrap('is', 'This ', ' Laravel!')).toEqual('This is Laravel!');
         });
     });
 
-    describe('Str.headline', () => {
-        test('converts strings delimited by casing, hyphens, or underscores into a space delimited string with each word’s first letter capitalized', () => {
-            expect(Str.headline('steve_jobs')).toEqual('Steve Jobs');
-            expect(Str.headline('EmailNotificationSent')).toEqual('Email Notification Sent');
+    describe('Str.unwrap', () => {
+        test('removes the specified strings from the beginning and end of a given string', () => {
+            expect(Str.unwrap('-Laravel-', '-')).toEqual('Laravel');
+            expect(Str.unwrap('{framework: "Laravel"}', '{', '}')).toEqual('framework: "Laravel"');
         });
     });
 
@@ -197,13 +216,6 @@ describe('Strings', () => {
         });
     });
 
-    describe('Str.isUlid', () => {
-        test('determines if the given string is a valid ULID', () => {
-            expect(Str.isUlid('01gd6r360bp37zj17nxb55yv40')).toBeTruthy();
-            expect(Str.isUlid('laravel')).toBeFalsy();
-        });
-    });
-
     describe('Str.isUuid', () => {
         test('determines if the given string is a valid UUID', () => {
             expect(Str.isUuid('a0a2a2d2-0b87-4a18-83f2-2529882be2de')).toBeTruthy();
@@ -211,15 +223,16 @@ describe('Strings', () => {
         });
     });
 
-    describe('Str.kebab', () => {
-        test('converts the given string to kebab-case', () => {
-            expect(Str.kebab('fooBar')).toEqual('foo-bar');
+    describe('Str.isUlid', () => {
+        test('determines if the given string is a valid ULID', () => {
+            expect(Str.isUlid('01gd6r360bp37zj17nxb55yv40')).toBeTruthy();
+            expect(Str.isUlid('laravel')).toBeFalsy();
         });
     });
 
-    describe('Str.lcfirst', () => {
-        test('returns the given string with the first character lowercased', () => {
-            expect(Str.lcfirst('Foo Bar')).toEqual('foo Bar');
+    describe('Str.kebab', () => {
+        test('converts the given string to kebab-case', () => {
+            expect(Str.kebab('fooBar')).toEqual('foo-bar');
         });
     });
 
@@ -249,6 +262,12 @@ describe('Strings', () => {
         });
     });
 
+    describe('Str.words', () => {
+        test('limits the number of words in a string', () => {
+            expect(Str.words('Perfectly balanced, as all things should be.', 3, ' >>>')).toEqual('Perfectly balanced, as >>>');
+        });
+    });
+
     describe('Str.mask', () => {
         test('masks a portion of a string with a repeated character', () => {
             expect(Str.mask('taylor@example.com', '*', 3)).toEqual('tay***************');
@@ -256,9 +275,41 @@ describe('Strings', () => {
         });
     });
 
-    describe('Str.orderedUuid', () => {
-        test('generates a "timestamp first" UUID', () => {
-            expect(Str.orderedUuid()).toMatch(/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/);
+    describe('Str.match', () => {
+        test('returns the portion of a string that matches a given regular expression pattern', () => {
+            expect(Str.match('/bar/', 'foo bar')).toEqual('bar');
+        });
+
+        test('returns the portion of a string that matches a regular expression with a capturing group', () => {
+            expect(Str.match('/foo (.*)/', 'foo bar')).toEqual('bar');
+        });
+    });
+
+    describe('Str.isMatch', () => {
+        test('determines if the string matches a given regular expression', () => {
+            expect(Str.isMatch('/foo (.*)/', 'foo bar')).toBeTruthy();
+        });
+
+        test('determines if the string does not match a given regular expression', () => {
+            expect(Str.isMatch('/foo (.*)/', 'laravel')).toBeFalsy();
+        });
+    });
+
+    describe('Str.matchAll', () => {
+        test('returns an array containing portions of a string that match a given regular expression pattern', () => {
+            expect(Str.matchAll('/bar/', 'bar foo bar')).toEqual(['bar', 'bar']);
+        });
+
+        test('returns an array containing matches of a regular expression with a capturing group', () => {
+            expect(Str.matchAll('/f(\\w*)/', 'bar fun bar fly')).toEqual(['un', 'ly']);
+        });
+    });
+
+    describe('Str.numbers', () => {
+        test('removes all non-numeric characters from a string', () => {
+            expect(Str.numbers('(555) 123-4567')).toEqual('5551234567');
+            expect(Str.numbers('L4r4v3l!')).toEqual('443');
+            expect(Str.numbers('Laravel!')).toEqual('');
         });
     });
 
@@ -283,13 +334,6 @@ describe('Strings', () => {
         });
     });
 
-    describe('Str.password', () => {
-        test('generates a secure, random password of a given length', () => {
-            expect(Str.password()).toHaveLength(32);
-            expect(Str.password(12)).toHaveLength(12);
-        });
-    });
-
     describe('Str.plural', () => {
         test('converts a singular word string to its plural form', () => {
             expect(Str.plural('car')).toEqual('cars');
@@ -308,22 +352,38 @@ describe('Strings', () => {
         });
     });
 
+    describe('Str.password', () => {
+        test('generates a secure, random password of a given length', () => {
+            expect(Str.password()).toHaveLength(32);
+            expect(Str.password(12)).toHaveLength(12);
+        });
+    });
+
+    describe('Str.position', () => {
+        test('returns the position of the first occurrence of a substring in a string', () => {
+            expect(Str.position('Hello, World!', 'Hello')).toEqual(0);
+        });
+
+        test('returns the position of the first occurrence of a substring in a string', () => {
+            expect(Str.position('Hello, World!', 'W')).toEqual(7);
+        });
+    });
+
     describe('Str.random', () => {
         test('generates a random string of the specified length', () => {
             expect(Str.random(40)).toHaveLength(40);
         });
     });
 
-    describe('Str.remove', () => {
-        test('removes the given value or array of values from the string', () => {
-            expect(Str.remove('e', 'Peter Piper picked a peck of pickled peppers.')).toEqual('Ptr Pipr pickd a pck of pickld ppprs.');
-            expect(Str.remove('E', 'Peter Piper picked a peck of pickled peppers.', false)).toEqual('Ptr Pipr pickd a pck of pickld ppprs.');
-        });
-    });
-
     describe('Str.repeat', () => {
         test('repeats the given string', () => {
             expect(Str.repeat('a', 5)).toEqual('aaaaa');
+        });
+    });
+
+    describe('Str.replaceArray', () => {
+        test('replaces a given value in the string sequentially using an array', () => {
+            expect(Str.replaceArray('?', ['8:30', '9:00'], 'The event will take place between ? and ?')).toEqual('The event will take place between 8:30 and 9:00');
         });
     });
 
@@ -334,28 +394,9 @@ describe('Strings', () => {
         });
     });
 
-    describe('Str.replaceArray', () => {
-        test('replaces a given value in the string sequentially using an array', () => {
-            expect(Str.replaceArray('?', ['8:30', '9:00'], 'The event will take place between ? and ?')).toEqual('The event will take place between 8:30 and 9:00');
-        });
-    });
-
     describe('Str.replaceFirst', () => {
         test('replaces the first occurrence of a given value in a string', () => {
             expect(Str.replaceFirst('the', 'a', 'the quick brown fox jumps over the lazy dog')).toEqual('a quick brown fox jumps over the lazy dog');
-        });
-    });
-
-    describe('Str.replaceLast', () => {
-        test('replaces the last occurrence of a given value in a string', () => {
-            expect(Str.replaceLast('the', 'a', 'the quick brown fox jumps over the lazy dog')).toEqual('the quick brown fox jumps over a lazy dog');
-        });
-    });
-
-    describe('Str.replaceMatches', () => {
-        test('replaces all portions of a string matching a pattern with the given replacement string', () => {
-            expect(Str.replaceMatches('/[^A-Za-z0-9]+/', '', '(+1) 501-555-1000')).toEqual('15015551000');
-            expect(Str.replaceMatches('/\\d/', (matches) => '[' + matches[0] + ']', '123')).toEqual('[1][2][3]');
         });
     });
 
@@ -366,6 +407,12 @@ describe('Strings', () => {
         });
     });
 
+    describe('Str.replaceLast', () => {
+        test('replaces the last occurrence of a given value in a string', () => {
+            expect(Str.replaceLast('the', 'a', 'the quick brown fox jumps over the lazy dog')).toEqual('the quick brown fox jumps over a lazy dog');
+        });
+    });
+
     describe('Str.replaceEnd', () => {
         test('replaces the last occurrence of the given value only if the value appears at the end of the string', () => {
             expect(Str.replaceEnd('World', 'Laravel', 'Hello World')).toEqual('Hello Laravel');
@@ -373,9 +420,55 @@ describe('Strings', () => {
         });
     });
 
+    describe('Str.replaceMatches', () => {
+        test('replaces all portions of a string matching a pattern with the given replacement string', () => {
+            expect(Str.replaceMatches('/[^A-Za-z0-9]+/', '', '(+1) 501-555-1000')).toEqual('15015551000');
+            expect(Str.replaceMatches('/\\d/', (matches) => '[' + matches[0] + ']', '123')).toEqual('[1][2][3]');
+        });
+    });
+
+    describe('Str.remove', () => {
+        test('removes the given value or array of values from the string', () => {
+            expect(Str.remove('e', 'Peter Piper picked a peck of pickled peppers.')).toEqual('Ptr Pipr pickd a pck of pickld ppprs.');
+            expect(Str.remove('E', 'Peter Piper picked a peck of pickled peppers.', false)).toEqual('Ptr Pipr pickd a pck of pickld ppprs.');
+        });
+    });
+
     describe('Str.reverse', () => {
         test('reverses the given string', () => {
             expect(Str.reverse('Hello World')).toEqual('dlroW olleH');
+        });
+    });
+
+    describe('Str.start', () => {
+        test('adds a single instance of the given value to a string if it does not already start with that value', () => {
+            expect(Str.start('this/string', '/')).toEqual('/this/string');
+            expect(Str.start('/this/string', '/')).toEqual('/this/string');
+        });
+    });
+
+    describe('Str.upper', () => {
+        test('converts the given string to uppercase', () => {
+            expect(Str.upper('laravel')).toEqual('LARAVEL');
+        });
+    });
+
+    describe('Str.title', () => {
+        test('converts the given string to Title Case', () => {
+            expect(Str.title('a nice title uses the correct case')).toEqual('A Nice Title Uses The Correct Case');
+        });
+    });
+
+    describe('Str.headline', () => {
+        test('converts strings delimited by casing, hyphens, or underscores into a space delimited string with each word’s first letter capitalized', () => {
+            expect(Str.headline('steve_jobs')).toEqual('Steve Jobs');
+            expect(Str.headline('EmailNotificationSent')).toEqual('Email Notification Sent');
+        });
+    });
+
+    describe('Str.apa', () => {
+        test('converts the given string to title case following the APA guidelines', () => {
+            expect(Str.apa('Creating A Project')).toEqual('Creating a Project');
         });
     });
 
@@ -399,16 +492,54 @@ describe('Strings', () => {
         });
     });
 
-    describe('Str.squish', () => {
-        test('removes all extraneous white space from a string', () => {
-            expect(Str.squish('    laravel    framework    ')).toEqual('laravel framework');
+    describe('Str.trim', () => {
+        test('removes all whitespace from both ends of a string', () => {
+            expect(Str.trim('   Laravel   ')).toEqual('Laravel');
+            expect(Str.trim('Laravel   ')).toEqual('Laravel');
+            expect(Str.trim('   Laravel')).toEqual('Laravel');
+            expect(Str.trim('Laravel')).toEqual('Laravel');
+        });
+
+        test('removes all whitespace from both ends of a string with specified characters', () => {
+            expect(Str.trim(' Laravel ', '')).toEqual(' Laravel ');
+            expect(Str.trim(' Laravel ', ' ')).toEqual('Laravel');
+            expect(Str.trim('-Laravel  Framework_', '-_')).toEqual('Laravel  Framework');
         });
     });
 
-    describe('Str.start', () => {
-        test('adds a single instance of the given value to a string if it does not already start with that value', () => {
-            expect(Str.start('this/string', '/')).toEqual('/this/string');
-            expect(Str.start('/this/string', '/')).toEqual('/this/string');
+    describe('Str.ltrim', () => {
+        test('removes all whitespace from the beginning of a string', () => {
+            expect(Str.ltrim('   Laravel   ')).toEqual('Laravel   ');
+            expect(Str.ltrim('Laravel   ')).toEqual('Laravel   ');
+            expect(Str.ltrim('   Laravel')).toEqual('Laravel');
+            expect(Str.ltrim('Laravel')).toEqual('Laravel');
+        });
+
+        test('removes all whitespace from the beginning of a string with specified characters', () => {
+            expect(Str.ltrim(' Laravel ', '')).toEqual(' Laravel ');
+            expect(Str.ltrim(' Laravel ', ' ')).toEqual('Laravel ');
+            expect(Str.ltrim('-Laravel  Framework_', '-_')).toEqual('Laravel  Framework_');
+        });
+    });
+
+    describe('Str.rtrim', () => {
+        test('removes all whitespace from the end of a string', () => {
+            expect(Str.rtrim('   Laravel   ')).toEqual('   Laravel');
+            expect(Str.rtrim('Laravel   ')).toEqual('Laravel');
+            expect(Str.rtrim('   Laravel')).toEqual('   Laravel');
+            expect(Str.rtrim('Laravel')).toEqual('Laravel');
+        });
+
+        test('removes all whitespace from the end of a string with specified characters', () => {
+            expect(Str.rtrim(' Laravel ', '')).toEqual(' Laravel ');
+            expect(Str.rtrim(' Laravel ', ' ')).toEqual(' Laravel');
+            expect(Str.rtrim('-Laravel  Framework_', '-_')).toEqual('-Laravel  Framework');
+        });
+    });
+
+    describe('Str.squish', () => {
+        test('removes all extraneous white space from a string', () => {
+            expect(Str.squish('    laravel    framework    ')).toEqual('laravel framework');
         });
     });
 
@@ -472,15 +603,21 @@ describe('Strings', () => {
         });
     });
 
-    describe('Str.title', () => {
-        test('converts the given string to Title Case', () => {
-            expect(Str.title('a nice title uses the correct case')).toEqual('A Nice Title Uses The Correct Case');
-        });
-    });
-
     describe('Str.toBase64', () => {
         test('converts the given string to Base64', () => {
             expect(Str.toBase64('Laravel')).toEqual('TGFyYXZlbA==');
+        });
+    });
+
+    describe('Str.fromBase64', () => {
+        test('converts the given string from Base64', () => {
+            expect(Str.fromBase64('TGFyYXZlbA==')).toEqual('Laravel');
+        });
+    });
+
+    describe('Str.lcfirst', () => {
+        test('returns the given string with the first character lowercased', () => {
+            expect(Str.lcfirst('Foo Bar')).toEqual('foo Bar');
         });
     });
 
@@ -496,31 +633,6 @@ describe('Strings', () => {
         });
     });
 
-    describe('Str.upper', () => {
-        test('converts the given string to uppercase', () => {
-            expect(Str.upper('laravel')).toEqual('LARAVEL');
-        });
-    });
-
-    describe('Str.ulid', () => {
-        test('generates a ULID', () => {
-            expect(Str.ulid()).toMatch(/[0-9A-Z]{26}/);
-        });
-    });
-
-    describe('Str.unwrap', () => {
-        test('removes the specified strings from the beginning and end of a given string', () => {
-            expect(Str.unwrap('-Laravel-', '-')).toEqual('Laravel');
-            expect(Str.unwrap('{framework: "Laravel"}', '{', '}')).toEqual('framework: "Laravel"');
-        });
-    });
-
-    describe('Str.uuid', () => {
-        test('generates a UUID (version 4)', () => {
-            expect(Str.uuid()).toMatch(/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/);
-        });
-    });
-
     describe('Str.wordCount', () => {
         test('returns the number of words that a string contains', () => {
             expect(Str.wordCount('Hello, world!')).toEqual(2);
@@ -533,16 +645,21 @@ describe('Strings', () => {
         });
     });
 
-    describe('Str.words', () => {
-        test('limits the number of words in a string', () => {
-            expect(Str.words('Perfectly balanced, as all things should be.', 3, ' >>>')).toEqual('Perfectly balanced, as >>>');
+    describe('Str.uuid', () => {
+        test('generates a UUID (version 4)', () => {
+            expect(Str.uuid()).toMatch(/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/);
         });
     });
 
-    describe('Str.wrap', () => {
-        test('wraps the given string with an additional string or a pair of strings', () => {
-            expect(Str.wrap('Laravel', '"')).toEqual('"Laravel"');
-            expect(Str.wrap('is', 'This ', ' Laravel!')).toEqual('This is Laravel!');
+    describe('Str.orderedUuid', () => {
+        test('generates a "timestamp first" UUID', () => {
+            expect(Str.orderedUuid()).toMatch(/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/);
+        });
+    });
+
+    describe('Str.ulid', () => {
+        test('generates a ULID', () => {
+            expect(Str.ulid()).toMatch(/[0-9A-Z]{26}/);
         });
     });
 
@@ -566,15 +683,15 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('apa', () => {
-        test('converts the given string to title case following the APA guidelines', () => {
-            expect(Str.of('a nice title uses the correct case').apa().toString()).toEqual('A Nice Title Uses the Correct Case');
-        });
-    });
-
     describe('append', () => {
         test('appends the given values to the string', () => {
             expect(Str.of('Taylor').append(' Otwell').toString()).toEqual('Taylor Otwell');
+        });
+    });
+
+    describe('newLine', () => {
+        test('appends an "end of line" character to a string', () => {
+            expect(Str.of('Laravel').newLine().append('Framework').toString()).toEqual('Laravel\nFramework');
         });
     });
 
@@ -588,36 +705,6 @@ describe('Fluent Strings', () => {
         test('returns the trailing name component of the given string', () => {
             expect(Str.of('/foo/bar/baz').basename().toString()).toEqual('baz');
             expect(Str.of('/foo/bar/baz.jpg').basename('.jpg').toString()).toEqual('baz');
-        });
-    });
-
-    describe('before', () => {
-        test('returns everything before the given value in a string', () => {
-            expect(Str.of('This is my name').before('my name').toString()).toEqual('This is ');
-        });
-    });
-
-    describe('beforeLast', () => {
-        test('returns everything before the last occurrence of the given value in a string', () => {
-            expect(Str.of('This is my name').beforeLast('is').toString()).toEqual('This ');
-        });
-    });
-
-    describe('between', () => {
-        test('returns the portion of a string between two values', () => {
-            expect(Str.of('This is my name').between('This', 'name').toString()).toEqual(' is my ');
-        });
-    });
-
-    describe('betweenFirst', () => {
-        test('returns the smallest possible portion of a string between two values', () => {
-            expect(Str.of('[a] bc [d]').betweenFirst('[', ']').toString()).toEqual('a');
-        });
-    });
-
-    describe('camel', () => {
-        test('converts the given string to camelCase', () => {
-            expect(Str.of('foo_bar').camel().toString()).toEqual('fooBar');
         });
     });
 
@@ -669,6 +756,36 @@ describe('Fluent Strings', () => {
         });
     });
 
+    describe('before', () => {
+        test('returns everything before the given value in a string', () => {
+            expect(Str.of('This is my name').before('my name').toString()).toEqual('This is ');
+        });
+    });
+
+    describe('beforeLast', () => {
+        test('returns everything before the last occurrence of the given value in a string', () => {
+            expect(Str.of('This is my name').beforeLast('is').toString()).toEqual('This ');
+        });
+    });
+
+    describe('between', () => {
+        test('returns the portion of a string between two values', () => {
+            expect(Str.of('This is my name').between('This', 'name').toString()).toEqual(' is my ');
+        });
+    });
+
+    describe('betweenFirst', () => {
+        test('returns the smallest possible portion of a string between two values', () => {
+            expect(Str.of('[a] bc [d]').betweenFirst('[', ']').toString()).toEqual('a');
+        });
+    });
+
+    describe('camel', () => {
+        test('converts the given string to camelCase', () => {
+            expect(Str.of('foo_bar').camel().toString()).toEqual('fooBar');
+        });
+    });
+
     describe('contains', () => {
         test('determines if the given string contains the given value', () => {
             expect(Str.of('This is my name').contains('my').toString()).toBeTruthy();
@@ -681,16 +798,34 @@ describe('Fluent Strings', () => {
         });
     });
 
+    describe('convertCase', () => {
+        test('converts the case of a string', () => {
+            expect(Str.of('hello').convertCase(Mode.MB_CASE_UPPER).toString()).toEqual('HELLO');
+            expect(Str.of('WORLD').convertCase(Mode.MB_CASE_UPPER).toString()).toEqual('WORLD');
+
+            expect(Str.of('HELLO').convertCase(Mode.MB_CASE_LOWER).toString()).toEqual('hello');
+            expect(Str.of('WORLD').convertCase(Mode.MB_CASE_LOWER).toString()).toEqual('world');
+
+            expect(Str.of('HeLLo').convertCase(Mode.MB_CASE_FOLD).toString()).toEqual('hello');
+            expect(Str.of('WoRLD').convertCase(Mode.MB_CASE_FOLD).toString()).toEqual('world');
+
+            expect(Str.of('üöä').convertCase(Mode.MB_CASE_UPPER).toString()).toEqual('ÜÖÄ');
+            expect(Str.of('ÜÖÄ').convertCase(Mode.MB_CASE_LOWER).toString()).toEqual('üöä');
+        });
+    });
+
+    describe('deduplicate', () => {
+        test('replace consecutive instances of a given character with a single character in the given string', () => {
+            expect(Str.of(' laravel   php  framework ').deduplicate().toString()).toEqual(' laravel php framework ');
+            expect(Str.of('whaaat').deduplicate('a').toString()).toEqual('what');
+            expect(Str.of('/some//odd//path/').deduplicate('/').toString()).toEqual('/some/odd/path/');
+        });
+    });
+
     describe('dirname', () => {
         test('return the parent directory portion of the given string', () => {
             expect(Str.of('/foo/bar/baz').dirname().toString()).toEqual('/foo/bar');
             expect(Str.of('/foo/bar/baz').dirname(2).toString()).toEqual('/foo');
-        });
-    });
-
-    describe('excerpt', () => {
-        test('extracts an excerpt from the string that matches the first instance of a phrase within that string', () => {
-            expect(Str.of('This is my name').excerpt('my', { 'radius': 3 }).toString()).toEqual('...is my na...');
         });
     });
 
@@ -706,9 +841,21 @@ describe('Fluent Strings', () => {
         });
     });
 
+    describe('excerpt', () => {
+        test('extracts an excerpt from the string that matches the first instance of a phrase within that string', () => {
+            expect(Str.of('This is my name').excerpt('my', { 'radius': 3 }).toString()).toEqual('...is my na...');
+        });
+    });
+
     describe('explode', () => {
         test('splits the string by the given delimiter and returns an array containing each section of the split string', () => {
             expect(Str.of('foo bar baz').explode(' ')).toEqual(['foo', 'bar', 'baz']);
+        });
+    });
+
+    describe('split', () => {
+        test('splits a string into an array using a regular expression', () => {
+            expect(Str.of('one, two, three').split('/[\s,]+/')).toEqual(['one', 'two', 'three']);
         });
     });
 
@@ -719,19 +866,6 @@ describe('Fluent Strings', () => {
 
         test('does not add a value to a string that already ends with that value', () => {
             expect(Str.of('this/string/').finish('/').toString()).toEqual('this/string/');
-        });
-    });
-
-    describe('fromBase64', () => {
-        test('converts the given string from Base64', () => {
-            expect(Str.of('TGFyYXZlbA==').fromBase64().toString()).toEqual('Laravel');
-        });
-    });
-
-    describe('headline', () => {
-        test('converts strings delimited by casing, hyphens, or underscores into a space delimited string with each word\'s first letter capitalized', () => {
-            expect(Str.of('taylor_otwell').headline().toString()).toEqual('Taylor Otwell');
-            expect(Str.of('EmailNotificationSent').headline().toString()).toEqual('Email Notification Sent');
         });
     });
 
@@ -749,32 +883,11 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('isEmpty', () => {
-        test('determines if the given string is empty', () => {
-            expect(Str.of('  ').trim().isEmpty()).toBeTruthy();
-            expect(Str.of('Laravel').trim().isEmpty()).toBeFalsy();
-        });
-    });
-
     describe('isJson', () => {
         test('determines if a given string is valid JSON', () => {
             expect(Str.of('[1,2,3]').isJson()).toBeTruthy();
             expect(Str.of('{"first": "John", "last": "Doe"}').isJson()).toBeTruthy();
             expect(Str.of('{first: "John", last: "Doe"}').isJson()).toBeFalsy();
-        });
-    });
-
-    describe('isNotEmpty', () => {
-        test('determines if the given string is not empty', () => {
-            expect(Str.of('  ').trim().isNotEmpty()).toBeFalsy();
-            expect(Str.of('Laravel').trim().isNotEmpty()).toBeTruthy();
-        });
-    });
-
-    describe('isUlid', () => {
-        test('determines if a given string is a ULID', () => {
-            expect(Str.of('01gd6r360bp37zj17nxb55yv40').toString()).toBeTruthy();
-            expect(Str.of('Taylor').isUlid()).toBeFalsy();
         });
     });
 
@@ -792,15 +905,30 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('kebab', () => {
-        test('converts the given string to kebab-case', () => {
-            expect(Str.of('fooBar').kebab().toString()).toEqual('foo-bar');
+    describe('isUlid', () => {
+        test('determines if a given string is a ULID', () => {
+            expect(Str.of('01gd6r360bp37zj17nxb55yv40').toString()).toBeTruthy();
+            expect(Str.of('Taylor').isUlid()).toBeFalsy();
         });
     });
 
-    describe('lcfirst', () => {
-        test('returns the given string with the first character lowercased', () => {
-            expect(Str.of('Foo Bar').lcfirst().toString()).toEqual('foo Bar');
+    describe('isEmpty', () => {
+        test('determines if the given string is empty', () => {
+            expect(Str.of('  ').trim().isEmpty()).toBeTruthy();
+            expect(Str.of('Laravel').trim().isEmpty()).toBeFalsy();
+        });
+    });
+
+    describe('isNotEmpty', () => {
+        test('determines if the given string is not empty', () => {
+            expect(Str.of('  ').trim().isNotEmpty()).toBeFalsy();
+            expect(Str.of('Laravel').trim().isNotEmpty()).toBeTruthy();
+        });
+    });
+
+    describe('kebab', () => {
+        test('converts the given string to kebab-case', () => {
+            expect(Str.of('fooBar').kebab().toString()).toEqual('foo-bar');
         });
     });
 
@@ -830,16 +958,6 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('ltrim', () => {
-        test('trims the left side of the string', () => {
-            expect(Str.of('  Laravel  ').ltrim().toString()).toEqual('Laravel  ');
-        });
-
-        test('trims the left side of the string with specified characters', () => {
-            expect(Str.of('/Laravel/').ltrim('/').toString()).toEqual('Laravel/');
-        });
-    });
-
     describe('mask', () => {
         test('masks a portion of a string with a repeated character', () => {
             expect(Str.of('taylor@example.com').mask('*', 3).toString()).toEqual('tay***************');
@@ -860,16 +978,6 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('matchAll', () => {
-        test('returns an array containing portions of a string that match a given regular expression pattern', () => {
-            expect(Str.of('bar foo bar').matchAll('/bar/')).toEqual(['bar', 'bar']);
-        });
-
-        test('returns an array containing matches of a regular expression with a capturing group', () => {
-            expect(Str.of('bar fun bar fly').matchAll('/f(\\w*)/')).toEqual(['un', 'ly']);
-        });
-    });
-
     describe('isMatch', () => {
         test('determines if the string matches a given regular expression', () => {
             expect(Str.of('foo bar').isMatch('/foo (.*)/')).toBeTruthy();
@@ -880,9 +988,27 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('newLine', () => {
-        test('appends an "end of line" character to a string', () => {
-            expect(Str.of('Laravel').newLine().append('Framework').toString()).toEqual('Laravel\nFramework');
+    describe('matchAll', () => {
+        test('returns an array containing portions of a string that match a given regular expression pattern', () => {
+            expect(Str.of('bar foo bar').matchAll('/bar/')).toEqual(['bar', 'bar']);
+        });
+
+        test('returns an array containing matches of a regular expression with a capturing group', () => {
+            expect(Str.of('bar fun bar fly').matchAll('/f(\\w*)/')).toEqual(['un', 'ly']);
+        });
+    });
+
+    describe('test', () => {
+        test('determines if a string matches the given regular expression pattern', () => {
+            expect(Str.of('Laravel Framework').test('/Laravel/').toString()).toEqual('true');
+        });
+    });
+
+    describe('numbers', () => {
+        test('removes all non-numeric characters from a string', () => {
+            expect(Str.of('(555) 123-4567').numbers().toString()).toEqual('5551234567');
+            expect(Str.of('L4r4v3l!').numbers().toString()).toEqual('443');
+            expect(Str.of('Laravel!').numbers().toString()).toEqual('');
         });
     });
 
@@ -1006,22 +1132,6 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('replaceLast', () => {
-        test('replaces the last occurrence of a given value in a string', () => {
-            expect(Str.of('the quick brown fox jumps over the lazy dog').replaceLast('the', 'a').toString()).toEqual('the quick brown fox jumps over a lazy dog');
-        });
-    });
-
-    describe('replaceMatches', () => {
-        test('replaces all portions of a string matching a pattern with the given replacement string', () => {
-            expect(Str.of('(+1) 501-555-1000').replaceMatches('/[^A-Za-z0-9]+/', '').toString()).toEqual('15015551000');
-        });
-
-        test('replaces all portions of a string matching a pattern with the given replacement string', () => {
-            expect(Str.of('123').replaceMatches('/\\d/', (match) => '[' + match[0] + ']').toString()).toEqual('[1][2][3]');
-        });
-    });
-
     describe('replaceStart', () => {
         test('replaces the first occurrence of the given value only if it appears at the start of the string', () => {
             expect(Str.of('Hello World').replaceStart('Hello', 'Laravel').toString()).toEqual('Laravel World');
@@ -1029,6 +1139,12 @@ describe('Fluent Strings', () => {
 
         test('does not replace the first occurrence of the given value if it does not appear at the start of the string', () => {
             expect(Str.of('Hello World').replaceStart('World', 'Laravel').toString()).toEqual('Hello World');
+        });
+    });
+
+    describe('replaceLast', () => {
+        test('replaces the last occurrence of a given value in a string', () => {
+            expect(Str.of('the quick brown fox jumps over the lazy dog').replaceLast('the', 'a').toString()).toEqual('the quick brown fox jumps over a lazy dog');
         });
     });
 
@@ -1042,13 +1158,54 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('rtrim', () => {
-        test('trims the right side of the given string', () => {
-            expect(Str.of('  Laravel  ').rtrim().toString()).toEqual('  Laravel');
+    describe('replaceMatches', () => {
+        test('replaces all portions of a string matching a pattern with the given replacement string', () => {
+            expect(Str.of('(+1) 501-555-1000').replaceMatches('/[^A-Za-z0-9]+/', '').toString()).toEqual('15015551000');
         });
 
-        test('trims the right side of the string with specified characters', () => {
-            expect(Str.of('/Laravel/').rtrim('/').toString()).toEqual('/Laravel');
+        test('replaces all portions of a string matching a pattern with the given replacement string', () => {
+            expect(Str.of('123').replaceMatches('/\\d/', (match) => '[' + match[0] + ']').toString()).toEqual('[1][2][3]');
+        });
+    });
+
+    describe('squish', () => {
+        test('removes all extraneous white space from a string', () => {
+            expect(Str.of('    laravel    framework    ').squish().toString()).toEqual('laravel framework');
+        });
+    });
+
+    describe('start', () => {
+        test('adds a single instance of the given value to a string if it does not already start with that value', () => {
+            expect(Str.of('this/string').start('/').toString()).toEqual('/this/string');
+        });
+
+        test('does not add a value to a string that already starts with that value', () => {
+            expect(Str.of('/this/string').start('/').toString()).toEqual('/this/string');
+        });
+    });
+
+    describe('upper', () => {
+        test('converts the given string to uppercase', () => {
+            expect(Str.of('laravel').upper().toString()).toEqual('LARAVEL');
+        });
+    });
+
+    describe('title', () => {
+        test('converts the given string to Title Case', () => {
+            expect(Str.of('a nice title uses the correct case').title().toString()).toEqual('A Nice Title Uses The Correct Case');
+        });
+    });
+
+    describe('headline', () => {
+        test('converts strings delimited by casing, hyphens, or underscores into a space delimited string with each word\'s first letter capitalized', () => {
+            expect(Str.of('taylor_otwell').headline().toString()).toEqual('Taylor Otwell');
+            expect(Str.of('EmailNotificationSent').headline().toString()).toEqual('Email Notification Sent');
+        });
+    });
+
+    describe('apa', () => {
+        test('converts the given string to title case following the APA guidelines', () => {
+            expect(Str.of('a nice title uses the correct case').apa().toString()).toEqual('A Nice Title Uses the Correct Case');
         });
     });
 
@@ -1069,28 +1226,6 @@ describe('Fluent Strings', () => {
     describe('snake', () => {
         test('converts the given string to snake_case', () => {
             expect(Str.of('fooBar').snake().toString()).toEqual('foo_bar');
-        });
-    });
-
-    describe('split', () => {
-        test('splits a string into an array using a regular expression', () => {
-            expect(Str.of('one, two, three').split('/[\s,]+/')).toEqual(['one', 'two', 'three']);
-        });
-    });
-
-    describe('squish', () => {
-        test('removes all extraneous white space from a string', () => {
-            expect(Str.of('    laravel    framework    ').squish().toString()).toEqual('laravel framework');
-        });
-    });
-
-    describe('start', () => {
-        test('adds a single instance of the given value to a string if it does not already start with that value', () => {
-            expect(Str.of('this/string').start('/').toString()).toEqual('/this/string');
-        });
-
-        test('does not add a value to a string that already starts with that value', () => {
-            expect(Str.of('/this/string').start('/').toString()).toEqual('/this/string');
         });
     });
 
@@ -1150,24 +1285,6 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('test', () => {
-        test('determines if a string matches the given regular expression pattern', () => {
-            expect(Str.of('Laravel Framework').test('/Laravel/').toString()).toEqual('true');
-        });
-    });
-
-    describe('title', () => {
-        test('converts the given string to Title Case', () => {
-            expect(Str.of('a nice title uses the correct case').title().toString()).toEqual('A Nice Title Uses The Correct Case');
-        });
-    });
-
-    describe('toBase64', () => {
-        test('converts the given string to Base64', () => {
-            expect(Str.of('Laravel').toBase64().toString()).toEqual('TGFyYXZlbA==');
-        });
-    });
-
     describe('trim', () => {
         test('trims the given string', () => {
             expect(Str.of('  Laravel  ').trim().toString()).toEqual('Laravel');
@@ -1175,6 +1292,32 @@ describe('Fluent Strings', () => {
 
         test('trims the given string with custom characters', () => {
             expect(Str.of('/Laravel/').trim('/').toString()).toEqual('Laravel');
+        });
+    });
+
+    describe('ltrim', () => {
+        test('trims the left side of the string', () => {
+            expect(Str.of('  Laravel  ').ltrim().toString()).toEqual('Laravel  ');
+        });
+
+        test('trims the left side of the string with specified characters', () => {
+            expect(Str.of('/Laravel/').ltrim('/').toString()).toEqual('Laravel/');
+        });
+    });
+
+    describe('rtrim', () => {
+        test('trims the right side of the given string', () => {
+            expect(Str.of('  Laravel  ').rtrim().toString()).toEqual('  Laravel');
+        });
+
+        test('trims the right side of the string with specified characters', () => {
+            expect(Str.of('/Laravel/').rtrim('/').toString()).toEqual('/Laravel');
+        });
+    });
+
+    describe('lcfirst', () => {
+        test('returns the given string with the first character lowercased', () => {
+            expect(Str.of('Foo Bar').lcfirst().toString()).toEqual('foo Bar');
         });
     });
 
@@ -1190,39 +1333,15 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('unwrap', () => {
-        test('removes the specified strings from the beginning and end of a given string', () => {
-            expect(Str.of('-Laravel-').unwrap('-').toString()).toEqual('Laravel');
-        });
-
-        test('removes the specified strings from the beginning and end of a given string with different delimiters', () => {
-            expect(Str.of('{framework: "Laravel"}').unwrap('{', '}').toString()).toEqual('framework: "Laravel"');
-        });
-    });
-
-    describe('toHtmlString', () => {
-        // test('converts the string instance to an instance of HTMLElement', () => {
-        //     expect(Str.of('<input type="text" placeholder="Hello">').toHtmlString()).toBeInstanceOf(HTMLInputElement);
-        // });
-
-        test('returns a string If no valid HTML is provided', () => {
-            expect(Str.of('Hello').toHtmlString()).toEqual('Hello');
-        });
-    });
-
-    describe('upper', () => {
-        test('converts the given string to uppercase', () => {
-            expect(Str.of('laravel').upper().toString()).toEqual('LARAVEL');
-        });
-    });
-
     describe('when', () => {
         test('invokes the given closure if a given condition is true', () => {
             expect(Str.of('Taylor').when(true, (string) => string.append(' Otwell')).toString()).toEqual('Taylor Otwell');
         });
+    });
 
-        test('invokes the given closure if a given condition is true (TypeScript)', () => {
-            expect(Str.of('Taylor').when(true, (string) => string.append(' Otwell')).toString()).toEqual('Taylor Otwell');
+    describe('unless', () => {
+        test('invokes the given closure if a given condition is false', () => {
+            expect(Str.of('Taylor').unless(false, (string) => string.append(' Otwell')).toString()).toEqual('Taylor Otwell');
         });
     });
 
@@ -1251,12 +1370,6 @@ describe('Fluent Strings', () => {
     describe('whenNotEmpty', () => {
         test('invokes the given closure if the string is not empty', () => {
             expect(Str.of('Framework').whenNotEmpty((string) => string.prepend('Laravel ')).toString()).toEqual('Laravel Framework');
-        });
-    });
-
-    describe('whenStartsWith', () => {
-        test('invokes the given closure if the string starts with the given sub-string', () => {
-            expect(Str.of('disney world').whenStartsWith('disney', (string) => string.title()).toString()).toEqual('Disney World');
         });
     });
 
@@ -1290,21 +1403,33 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('whenIsUlid', () => {
-        test('invokes the given closure if the string is a valid ULID', () => {
-            expect(Str.of('01gd6r360bp37zj17nxb55yv40').whenIsUlid((string) => string.substr(0, 8)).toString()).toEqual('01gd6r36');
-        });
-    });
-
     describe('whenIsUuid', () => {
         test('invokes the given closure if the string is a valid UUID', () => {
             expect(Str.of('a0a2a2d2-0b87-4a18-83f2-2529882be2de').whenIsUuid((string) => string.substr(0, 8)).toString()).toEqual('a0a2a2d2');
         });
     });
 
+    describe('whenIsUlid', () => {
+        test('invokes the given closure if the string is a valid ULID', () => {
+            expect(Str.of('01gd6r360bp37zj17nxb55yv40').whenIsUlid((string) => string.substr(0, 8)).toString()).toEqual('01gd6r36');
+        });
+    });
+
+    describe('whenStartsWith', () => {
+        test('invokes the given closure if the string starts with the given sub-string', () => {
+            expect(Str.of('disney world').whenStartsWith('disney', (string) => string.title()).toString()).toEqual('Disney World');
+        });
+    });
+
     describe('whenTest', () => {
         test('invokes the given closure if the string matches the given regular expression', () => {
             expect(Str.of('laravel framework').whenTest('/laravel/', (string) => string.title()).toString()).toEqual('Laravel Framework');
+        });
+    });
+
+    describe('words', () => {
+        test('limits the number of words in the string', () => {
+            expect(Str.of('Perfectly balanced, as all things should be.').words(3, ' >>>').toString()).toEqual('Perfectly balanced, as >>>');
         });
     });
 
@@ -1320,16 +1445,42 @@ describe('Fluent Strings', () => {
         });
     });
 
-    describe('words', () => {
-        test('limits the number of words in the string', () => {
-            expect(Str.of('Perfectly balanced, as all things should be.').words(3, ' >>>').toString()).toEqual('Perfectly balanced, as >>>');
-        });
-    });
-
     describe('wrap', () => {
         test('wraps the given string with an additional string or a pair of strings', () => {
             expect(Str.of('Laravel').wrap('"').toString()).toEqual('"Laravel"');
             expect(Str.of('is').wrap('This ', ' Laravel!').toString()).toEqual('This is Laravel!');
+        });
+    });
+
+    describe('unwrap', () => {
+        test('removes the specified strings from the beginning and end of a given string', () => {
+            expect(Str.of('-Laravel-').unwrap('-').toString()).toEqual('Laravel');
+        });
+
+        test('removes the specified strings from the beginning and end of a given string with different delimiters', () => {
+            expect(Str.of('{framework: "Laravel"}').unwrap('{', '}').toString()).toEqual('framework: "Laravel"');
+        });
+    });
+
+    describe('toHtmlString', () => {
+        // test('converts the string instance to an instance of HTMLElement', () => {
+        //     expect(Str.of('<input type="text" placeholder="Hello">').toHtmlString()).toBeInstanceOf(HTMLInputElement);
+        // });
+
+        test('returns a string If no valid HTML is provided', () => {
+            expect(Str.of('Hello').toHtmlString()).toEqual('Hello');
+        });
+    });
+
+    describe('toBase64', () => {
+        test('converts the given string to Base64', () => {
+            expect(Str.of('Laravel').toBase64().toString()).toEqual('TGFyYXZlbA==');
+        });
+    });
+
+    describe('fromBase64', () => {
+        test('converts the given string from Base64', () => {
+            expect(Str.of('TGFyYXZlbA==').fromBase64().toString()).toEqual('Laravel');
         });
     });
 
