@@ -5,14 +5,14 @@ type CharacterType = string | string[] | null;
 type HtmlStringType = HTMLElement | Node | string;
 
 enum Mode {
-    MB_CASE_UPPER        = 0,
-    MB_CASE_LOWER        = 1,
-    MB_CASE_TITLE        = 2,
-    MB_CASE_FOLD         = 3,
+    MB_CASE_UPPER = 0,
+    MB_CASE_LOWER = 1,
+    MB_CASE_TITLE = 2,
+    MB_CASE_FOLD = 3,
     MB_CASE_UPPER_SIMPLE = 4,
     MB_CASE_LOWER_SIMPLE = 5,
     MB_CASE_TITLE_SIMPLE = 6,
-    MB_CASE_FOLD_SIMPLE  = 7
+    MB_CASE_FOLD_SIMPLE = 7
 }
 
 class Str {
@@ -277,6 +277,19 @@ class Str {
     }
 
     /**
+     * Determine if a given string doesn't contain a given substring.
+     *
+     * @param { string } haystack
+     * @param { string | array } needles
+     * @param { boolean } ignoreCase
+     *
+     * @return { boolean }
+     */
+    static doesntContain(haystack: string, needles: string | string[], ignoreCase: boolean = false): boolean {
+        return !this.contains(haystack, needles, ignoreCase);
+    }
+
+    /**
      * Convert the case of a string.
      *
      * @param { string } string
@@ -378,9 +391,12 @@ class Str {
      *
      * @return { string | null }
      */
-    static excerpt(text: string, phrase: string = '', options: { radius?: number, omission?: string } = {}): string | null {
-        const radius: number    = options.radius ?? 100;
-        const omission: string  = options.omission ?? '...';
+    static excerpt(text: string, phrase: string = '', options: {
+        radius?: number,
+        omission?: string
+    } = {}): string | null {
+        const radius: number = options.radius ?? 100;
+        const omission: string = options.omission ?? '...';
         const results: string[] = text.split(phrase);
 
         if (results.length === 1) {
@@ -390,7 +406,7 @@ class Str {
         const matches: string[] = [text, (results[0] as string), phrase, results.splice(1).join(phrase)];
 
         let start: string = (matches[1] as string).trimStart();
-        let end: string   = (matches[3] as string).trimEnd();
+        let end: string = (matches[3] as string).trimEnd();
 
         start = this.of(this.substr(start, Math.max((start.length - radius), 0), radius))
             .ltrim()
@@ -657,10 +673,10 @@ class Str {
         }
 
         let start: number | string = index;
-        let endIndex: number       = length ?? string.length;
+        let endIndex: number = length ?? string.length;
 
         if (start < 0) {
-            start    = string.length + start;
+            start = string.length + start;
             endIndex = start + (length ?? 0);
         }
 
@@ -674,7 +690,7 @@ class Str {
             return string;
         }
 
-        let strLen: number     = string.length;
+        let strLen: number = string.length;
         let startIndex: number = index;
 
         if (index < 0) {
@@ -684,7 +700,7 @@ class Str {
         start = string.substring(0, startIndex);
 
         let segmentLen: number = segment.length;
-        let end: string        = string.substring(startIndex + segmentLen);
+        let end: string = string.substring(startIndex + segmentLen);
 
         return start + character.substring(0, 1).repeat(segmentLen) + end;
     }
@@ -698,8 +714,8 @@ class Str {
      * @return { string }
      */
     static match(pattern: string, subject: string): string {
-        const body: string       = RegExpString.make(/^\/(.*)\/\w*$/, pattern);
-        const flags: string      = RegExpString.make(/^\/.*\/(\w*)$/, pattern);
+        const body: string = RegExpString.make(/^\/(.*)\/\w*$/, pattern);
+        const flags: string = RegExpString.make(/^\/.*\/(\w*)$/, pattern);
         const expression: RegExp = new RegExp(body, flags);
 
         const matches: RegExpMatchArray | null = RegExp(expression).exec(subject);
@@ -732,9 +748,9 @@ class Str {
             }
 
             // @ts-ignore
-            let body: string       = /^\/(.*)\/\w*$/.exec(item)[1];
+            let body: string = /^\/(.*)\/\w*$/.exec(item)[1];
             // @ts-ignore
-            let flags: string      = /^\/.*\/(\w*)$/.exec(item)[1];
+            let flags: string = /^\/.*\/(\w*)$/.exec(item)[1];
             let expression: RegExp = new RegExp(body, flags);
 
             if (RegExp(expression).exec(value)) {
@@ -754,7 +770,7 @@ class Str {
      * @return { array }
      */
     static matchAll(pattern: string, subject: string): string[] {
-        const body: string  = RegExpString.make(/^\/(.*)\/\w*$/, pattern);
+        const body: string = RegExpString.make(/^\/(.*)\/\w*$/, pattern);
         const flags: string = RegExpString.make(/^\/.*\/(\w*)$/, pattern);
 
         const expression: RegExp = new RegExp(body, flags + (flags.indexOf('g') !== -1 ? '' : 'g'));
@@ -789,8 +805,8 @@ class Str {
      * @return { string }
      */
     static padBoth(value: string, length: number, pad: string = ' '): string {
-        const short: number      = Math.max(0, length - value.length);
-        const shortLeft: number  = Math.floor(short / 2);
+        const short: number = Math.max(0, length - value.length);
+        const shortLeft: number = Math.floor(short / 2);
         const shortRight: number = Math.ceil(short / 2);
 
         return pad.repeat(shortLeft).substring(0, shortLeft) + value + pad.repeat(shortRight).substring(0, shortRight);
@@ -847,24 +863,24 @@ class Str {
          * @type { object }
          */
         const plural: { [key: string]: string } = {
-            '(quiz)$'                    : '$1zes',
-            '^(ox)$'                     : '$1en',
-            '([m|l])ouse$'               : '$1ice',
-            '(matr|vert|ind)ix|ex$'      : '$1ices',
-            '(x|ch|ss|sh)$'              : '$1es',
-            '([^aeiouy]|qu)y$'           : '$1ies',
-            '(hive)$'                    : '$1s',
-            '(?:([^f])fe|([lr])f)$'      : '$1$2ves',
-            '(shea|lea|loa|thie)f$'      : '$1ves',
-            'sis$'                       : 'ses',
-            '([ti])um$'                  : '$1a',
+            '(quiz)$': '$1zes',
+            '^(ox)$': '$1en',
+            '([m|l])ouse$': '$1ice',
+            '(matr|vert|ind)ix|ex$': '$1ices',
+            '(x|ch|ss|sh)$': '$1es',
+            '([^aeiouy]|qu)y$': '$1ies',
+            '(hive)$': '$1s',
+            '(?:([^f])fe|([lr])f)$': '$1$2ves',
+            '(shea|lea|loa|thie)f$': '$1ves',
+            'sis$': 'ses',
+            '([ti])um$': '$1a',
             '(tomat|potat|ech|her|vet)o$': '$1oes',
-            '(bu)s$'                     : '$1ses',
-            '(alias)$'                   : '$1es',
-            '(octop)us$'                 : '$1i',
-            '(ax|test)is$'               : '$1es',
-            '(us)$'                      : '$1es',
-            '([^s]+)$'                   : '$1s',
+            '(bu)s$': '$1ses',
+            '(alias)$': '$1es',
+            '(octop)us$': '$1i',
+            '(ax|test)is$': '$1es',
+            '(us)$': '$1es',
+            '([^s]+)$': '$1s',
         };
 
         /**
@@ -873,14 +889,14 @@ class Str {
          * @type { object }
          */
         const irregular: { [key: string]: string } = {
-            'move'  : 'moves',
-            'foot'  : 'feet',
-            'goose' : 'geese',
-            'sex'   : 'sexes',
-            'child' : 'children',
-            'human' : 'humans',
-            'man'   : 'men',
-            'tooth' : 'teeth',
+            'move': 'moves',
+            'foot': 'feet',
+            'goose': 'geese',
+            'sex': 'sexes',
+            'child': 'children',
+            'human': 'humans',
+            'man': 'men',
+            'tooth': 'teeth',
             'person': 'people',
         };
 
@@ -973,7 +989,7 @@ class Str {
      * @return { string }
      */
     static password(length: number = 32, letters: boolean = true, numbers: boolean = true, symbols: boolean = true, spaces: boolean = false): string {
-        let password: string[]   = [];
+        let password: string[] = [];
         let collection: string[] = [];
 
         while (password.length < length) {
@@ -1222,8 +1238,8 @@ class Str {
      * @return { string }
      */
     static replaceMatches(pattern: string, replace: string | Function, subject: string): string {
-        const body: string       = RegExpString.make(/^\/(.*)\/\w*$/, pattern);
-        const flags: string      = RegExpString.make(/^\/.*\/(\w*)$/, pattern);
+        const body: string = RegExpString.make(/^\/(.*)\/\w*$/, pattern);
+        const flags: string = RegExpString.make(/^\/.*\/(\w*)$/, pattern);
         const expression: RegExp = new RegExp(body, flags + (flags.indexOf('g') !== -1 ? '' : 'g'));
 
         if (replace instanceof Function) {
@@ -1380,34 +1396,34 @@ class Str {
          * @type { object }
          */
         const singular: { [key: string]: string } = {
-            '(quiz)zes$'                                                   : '$1',
-            '(matr)ices$'                                                  : '$1ix',
-            '(vert|ind)ices$'                                              : '$1ex',
-            '^(ox)en$'                                                     : '$1',
-            '(alias)es$'                                                   : '$1',
-            '(octop|vir)i$'                                                : '$1us',
-            '(cris|ax|test)es$'                                            : '$1is',
-            '(shoe)s$'                                                     : '$1',
-            '(o)es$'                                                       : '$1',
-            '(bus)es$'                                                     : '$1',
-            '([m|l])ice$'                                                  : '$1ouse',
-            '(x|ch|ss|sh)es$'                                              : '$1',
-            '(m)ovies$'                                                    : '$1ovie',
-            '(s)eries$'                                                    : '$1eries',
-            '([^aeiouy]|qu)ies$'                                           : '$1y',
-            '([lr])ves$'                                                   : '$1f',
-            '(tive)s$'                                                     : '$1',
-            '(hive)s$'                                                     : '$1',
-            '(li|wi|kni)ves$'                                              : '$1fe',
-            '(shea|loa|lea|thie)ves$'                                      : '$1f',
-            '(^analy)ses$'                                                 : '$1sis',
+            '(quiz)zes$': '$1',
+            '(matr)ices$': '$1ix',
+            '(vert|ind)ices$': '$1ex',
+            '^(ox)en$': '$1',
+            '(alias)es$': '$1',
+            '(octop|vir)i$': '$1us',
+            '(cris|ax|test)es$': '$1is',
+            '(shoe)s$': '$1',
+            '(o)es$': '$1',
+            '(bus)es$': '$1',
+            '([m|l])ice$': '$1ouse',
+            '(x|ch|ss|sh)es$': '$1',
+            '(m)ovies$': '$1ovie',
+            '(s)eries$': '$1eries',
+            '([^aeiouy]|qu)ies$': '$1y',
+            '([lr])ves$': '$1f',
+            '(tive)s$': '$1',
+            '(hive)s$': '$1',
+            '(li|wi|kni)ves$': '$1fe',
+            '(shea|loa|lea|thie)ves$': '$1f',
+            '(^analy)ses$': '$1sis',
             '((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$': '$1$2sis',
-            '([ti])a$'                                                     : '$1um',
-            '(n)ews$'                                                      : '$1ews',
-            '(h|bl)ouses$'                                                 : '$1ouse',
-            '(corpse)s$'                                                   : '$1',
-            '(us)es$'                                                      : '$1',
-            's$'                                                           : '',
+            '([ti])a$': '$1um',
+            '(n)ews$': '$1ews',
+            '(h|bl)ouses$': '$1ouse',
+            '(corpse)s$': '$1',
+            '(us)es$': '$1',
+            's$': '',
         };
 
         /**
@@ -1416,13 +1432,13 @@ class Str {
          * @type { object }
          */
         const irregular: { [key: string]: string } = {
-            'move'  : 'moves',
-            'foot'  : 'feet',
-            'goose' : 'geese',
-            'sex'   : 'sexes',
-            'child' : 'children',
-            'man'   : 'men',
-            'tooth' : 'teeth',
+            'move': 'moves',
+            'foot': 'feet',
+            'goose': 'geese',
+            'sex': 'sexes',
+            'child': 'children',
+            'man': 'men',
+            'tooth': 'teeth',
             'person': 'people',
         };
 
@@ -1495,7 +1511,7 @@ class Str {
      *
      * @return { string }
      */
-    static slug(title: string, separator: string = '-', dictionary: { [key: string]: string } = { '@': 'at' }): string {
+    static slug(title: string, separator: string = '-', dictionary: { [key: string]: string } = {'@': 'at'}): string {
         let flip: string = separator === '-' ? '_' : '-';
 
         title = title.replace('![' + preg_quote(flip) + ']+!u', separator);
@@ -1834,8 +1850,8 @@ class Str {
      */
     static wordWrap(string: string, characters: number = 75, breakStr: string = '\n', cutLongWords: boolean = false): string {
         const breakWithSpace: string = cutLongWords ? breakStr + '\u00ad' : breakStr;
-        const regex: RegExp          = new RegExp(`.{1,${characters}}`, 'g');
-        const result: string         = string.replace(regex, (substr: string) => substr.trim() + breakWithSpace);
+        const regex: RegExp = new RegExp(`.{1,${characters}}`, 'g');
+        const result: string = string.replace(regex, (substr: string) => substr.trim() + breakWithSpace);
 
         return this.replaceLast(breakStr, '', result);
     }
@@ -1850,7 +1866,7 @@ class Str {
 
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (character: string): string {
             let randomChar: number = (time + Math.random() * 16) % 16 | 0;
-            time                   = Math.floor(time / 16);
+            time = Math.floor(time / 16);
 
             return (character === 'x' ? randomChar : (randomChar & 0x3 | 0x8)).toString(16);
         });
@@ -1866,7 +1882,7 @@ class Str {
 
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (character: string): string {
             let randomChar: number = (time + Math.random() * 16) % 16 | 0;
-            time                   = Math.floor(time / 16);
+            time = Math.floor(time / 16);
 
             return (character === 'x' ? randomChar : (randomChar & 0x3 | 0x8)).toString(16);
         });
@@ -1878,10 +1894,10 @@ class Str {
      * @return { string }
      */
     static ulid(): string {
-        const encoding: string       = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+        const encoding: string = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
         const encodingLength: number = encoding.length;
-        const timeLength: number     = 10;
-        const randomLength: number   = 16;
+        const timeLength: number = 10;
+        const randomLength: number = 16;
 
         /**
          * Generate random Encoding Time.
@@ -1890,12 +1906,12 @@ class Str {
          */
         function generateEncodedTime(): string {
             let encodedTime: string = '';
-            let now: number         = new Date().getTime();
+            let now: number = new Date().getTime();
 
             for (let length: number = timeLength; length > 0; length--) {
                 const mod: number = now % encodingLength;
-                encodedTime       = encoding.charAt(mod) + encodedTime;
-                now               = (now - mod) / encodingLength;
+                encodedTime = encoding.charAt(mod) + encodedTime;
+                now = (now - mod) / encodingLength;
             }
 
             return encodedTime;
@@ -2159,6 +2175,18 @@ class Stringable {
     }
 
     /**
+     * Determine if a given string doesn't contain a given substring.
+     *
+     * @param  { string | array } needles
+     * @param  { boolean } ignoreCase
+     *
+     * @return { boolean }
+     */
+    doesntContain(needles: string | string[], ignoreCase: boolean = false): boolean {
+        return !this.contains(needles, ignoreCase);
+    }
+
+    /**
      * Convert the case of a string.
      *
      * @param { Mode | number } mode
@@ -2188,21 +2216,21 @@ class Stringable {
      * @return { this }
      */
     dirname(levels: number = 1): Stringable {
-        let dirname: string         = this._value;
-        let parts: string[]         = [];
+        let dirname: string = this._value;
+        let parts: string[] = [];
         let isValidDirname: boolean = false;
         let hasValidLevels: boolean = false;
 
         if (this._value.split('/')[0] !== this._value) {
-            parts          = this._value.split('/');
-            dirname        = parts.slice(0, parts.length - levels).join('/');
+            parts = this._value.split('/');
+            dirname = parts.slice(0, parts.length - levels).join('/');
             isValidDirname = true;
             hasValidLevels = parts.length <= levels + 1;
         }
 
         if (this._value.split('\\')[0] !== this._value) {
-            parts          = this._value.split('\\');
-            dirname        = parts.slice(0, parts.length - levels).join('\\');
+            parts = this._value.split('\\');
+            dirname = parts.slice(0, parts.length - levels).join('\\');
             isValidDirname = true;
             hasValidLevels = parts.length <= levels + 1;
         }
@@ -2285,8 +2313,8 @@ class Stringable {
      * @return { array }
      */
     split(pattern: string, limit: number = -1): string[] {
-        const body: string       = RegExpString.make(/^\/(.*)\/\w*$/, pattern);
-        const flags: string      = RegExpString.make(/^\/.*\/(\w*)$/, pattern);
+        const body: string = RegExpString.make(/^\/(.*)\/\w*$/, pattern);
+        const flags: string = RegExpString.make(/^\/.*\/(\w*)$/, pattern);
         const expression: RegExp = new RegExp(body, flags + (flags.indexOf('g') !== -1 ? '' : 'g'));
 
         let segments: string[] = this._value.split(expression);
@@ -2712,8 +2740,8 @@ class Stringable {
      * @return { this }
      */
     replaceMatches(pattern: string, replace: string | Function): Stringable {
-        const body: string       = RegExpString.make(/^\/(.*)\/\w*$/, pattern);
-        const flags: string      = RegExpString.make(/^\/.*\/(\w*)$/, pattern);
+        const body: string = RegExpString.make(/^\/(.*)\/\w*$/, pattern);
+        const flags: string = RegExpString.make(/^\/.*\/(\w*)$/, pattern);
         const expression: RegExp = new RegExp(body, flags + (flags.indexOf('g') !== -1 ? '' : 'g'));
 
         if (replace instanceof Function) {
@@ -2799,7 +2827,7 @@ class Stringable {
      *
      * @return { this }
      */
-    slug(separator: string = '-', dictionary: { [key: string]: string } = { '@': 'at' }): Stringable {
+    slug(separator: string = '-', dictionary: { [key: string]: string } = {'@': 'at'}): Stringable {
         return new Stringable(Str.slug(this._value, separator, dictionary));
     }
 
@@ -3375,13 +3403,13 @@ class Stringable {
 
         if (format === null) {
             return new Date(this._value).toLocaleDateString('en-us', {
-                year    : 'numeric',
-                month   : 'numeric',
-                day     : 'numeric',
-                hour    : 'numeric',
-                minute  : 'numeric',
-                second  : 'numeric',
-                hour12  : false,
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: false,
                 timeZone: tz ?? undefined,
             });
         }
@@ -3389,25 +3417,25 @@ class Stringable {
         let date: string = '';
 
         const now: Date = new Date(new Date(this._value).toLocaleString('en-US', {
-            year                  : 'numeric',
-            month                 : 'numeric',
-            day                   : 'numeric',
-            hour                  : 'numeric',
-            minute                : 'numeric',
-            second                : 'numeric',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
             fractionalSecondDigits: 3,
-            hour12                : false,
-            timeZone              : tz ?? undefined,
+            hour12: false,
+            timeZone: tz ?? undefined,
         }));
 
-        const month: number         = now.getMonth();
-        const dayOfTheWeek: number  = now.getDay();
+        const month: number = now.getMonth();
+        const dayOfTheWeek: number = now.getDay();
         const dayOfTheMonth: number = now.getDate();
-        const year: number          = now.getFullYear();
-        const hours: number         = now.getHours();
-        const minutes: number       = now.getMinutes();
-        const seconds: number       = now.getSeconds();
-        const milliseconds: number  = now.getMilliseconds();
+        const year: number = now.getFullYear();
+        const hours: number = now.getHours();
+        const minutes: number = now.getMinutes();
+        const seconds: number = now.getSeconds();
+        const milliseconds: number = now.getMilliseconds();
 
         const elements: RegExpMatchArray | null = format.match(/\\?.|./g);
 
@@ -3421,7 +3449,7 @@ class Stringable {
 
                 // A textual representation of a day, three letters (e.g., Mon through Sun)
                 case 'D':
-                    date += now.toLocaleString('en-US', { weekday: 'short' });
+                    date += now.toLocaleString('en-US', {weekday: 'short'});
 
                     break;
 
@@ -3433,7 +3461,7 @@ class Stringable {
 
                 // A full textual representation of the day of the week (e.g., Sunday through Saturday)
                 case 'l':
-                    date += now.toLocaleString('en-US', { weekday: 'long' });
+                    date += now.toLocaleString('en-US', {weekday: 'long'});
 
                     break;
 
@@ -3445,7 +3473,15 @@ class Stringable {
 
                 // English ordinal suffix for the day of the month, 2 characters (e.g., st, nd, rd or th)
                 case 'S': {
-                    let suffix: { [key: number]: string } = { 1: 'st', 2: 'nd', 3: 'rd', 21: 'st', 22: 'nd', 23: 'rd', 31: 'st' };
+                    let suffix: { [key: number]: string } = {
+                        1: 'st',
+                        2: 'nd',
+                        3: 'rd',
+                        21: 'st',
+                        22: 'nd',
+                        23: 'rd',
+                        31: 'st'
+                    };
                     date += suffix[dayOfTheMonth] ?? 'th';
 
                     break;
@@ -3458,9 +3494,9 @@ class Stringable {
 
                 // Numeric representation of the day of the week (e.g., The day of the year (starting from 0))
                 case 'z': {
-                    let start: Date          = new Date(year, 0, 0);
-                    let diff: number         = ((now as unknown as number) - (start as unknown as number)) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
-                    let day: number          = 86400000;
+                    let start: Date = new Date(year, 0, 0);
+                    let diff: number = ((now as unknown as number) - (start as unknown as number)) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+                    let day: number = 86400000;
                     const currentDay: number = Math.floor(diff / day);
 
                     date += currentDay;
@@ -3470,11 +3506,11 @@ class Stringable {
                 // ISO 8601 week number of year, weeks starting on Monday (e.g., 42 (the 42nd week in the year))
                 case 'W': {
                     let parsedDate: Date = new Date(Date.UTC(year, month, dayOfTheMonth));
-                    let weekDay: number  = parsedDate.getUTCDay() || 7;
+                    let weekDay: number = parsedDate.getUTCDay() || 7;
 
                     parsedDate.setUTCDate(parsedDate.getUTCDate() + 4 - weekDay);
 
-                    let yearStart: Date    = new Date(Date.UTC(parsedDate.getUTCFullYear(), 0, 1));
+                    let yearStart: Date = new Date(Date.UTC(parsedDate.getUTCFullYear(), 0, 1));
                     let weekNumber: number = Math.ceil(((((parsedDate as unknown as number) - (yearStart as unknown as number)) / 86400000) + 1) / 7);
 
                     date += Str.padLeft((weekNumber.toString()), 2, '0');
@@ -3483,7 +3519,7 @@ class Stringable {
                 }
                 // A full textual representation of a month, such as January or March (e.g., January through December)
                 case 'F':
-                    date += now.toLocaleString('en-US', { month: 'long' });
+                    date += now.toLocaleString('en-US', {month: 'long'});
 
                     break;
 
@@ -3497,7 +3533,7 @@ class Stringable {
                 }
                 // A short textual representation of a month, three letters (e.g., Jan through Dec)
                 case 'M':
-                    date += now.toLocaleString('en-US', { month: 'short' });
+                    date += now.toLocaleString('en-US', {month: 'short'});
 
                     break;
 
@@ -3568,7 +3604,7 @@ class Stringable {
 
                 // Swatch Internet time (e.g., 000 through 999)
                 case 'B': {
-                    const hours: number   = now.getUTCHours();
+                    const hours: number = now.getUTCHours();
                     const minutes: number = now.getUTCMinutes();
                     const seconds: number = now.getUTCSeconds();
 
@@ -3625,7 +3661,7 @@ class Stringable {
 
                 // Timezone identifier (e.g., UTC, GMT, Atlantic/Azores)
                 case 'e': {
-                    date += Intl.DateTimeFormat('en-us', { timeZone: tz ?? undefined }).resolvedOptions().timeZone;
+                    date += Intl.DateTimeFormat('en-us', {timeZone: tz ?? undefined}).resolvedOptions().timeZone;
 
                     break;
                 }
@@ -3633,7 +3669,7 @@ class Stringable {
                 // Whether the date is in daylight saving time (e.g., 1 if Daylight Saving Time, 0 otherwise)
                 case 'I': {
                     let january: number = new Date(year, 0, 1).getTimezoneOffset();
-                    let july: number    = new Date(year, 6, 1).getTimezoneOffset();
+                    let july: number = new Date(year, 6, 1).getTimezoneOffset();
 
                     date += Math.max(january, july) !== now.getTimezoneOffset() ? '1' : '0';
 
@@ -3641,7 +3677,10 @@ class Stringable {
                 }
                 // Difference to Greenwich time (GMT) without colon between hours and minutes (e.g., +0200)
                 case 'O': {
-                    const timeZoneData: string = now.toLocaleDateString('en-us', { timeZoneName: 'longOffset', timeZone: tz ?? undefined, })
+                    const timeZoneData: string = now.toLocaleDateString('en-us', {
+                        timeZoneName: 'longOffset',
+                        timeZone: tz ?? undefined,
+                    })
                         .split(', ')
                         .pop()!
                         .trim();
@@ -3653,7 +3692,10 @@ class Stringable {
 
                 // Difference to Greenwich time (GMT) with colon between hours and minutes (e.g., +02:00)
                 case 'P': {
-                    const timeZoneData: string = now.toLocaleDateString('en-us', { timeZoneName: 'longOffset', timeZone: tz ?? undefined, })
+                    const timeZoneData: string = now.toLocaleDateString('en-us', {
+                        timeZoneName: 'longOffset',
+                        timeZone: tz ?? undefined,
+                    })
                         .split(', ')
                         .pop()!
                         .trim();
@@ -3665,7 +3707,10 @@ class Stringable {
 
                 // The same as P, but returns Z instead of +00:00 (e.g., +02:00)
                 case 'p': {
-                    const timeZoneData: string = now.toLocaleDateString('en-us', { timeZoneName: 'longOffset', timeZone: tz ?? undefined, })
+                    const timeZoneData: string = now.toLocaleDateString('en-us', {
+                        timeZoneName: 'longOffset',
+                        timeZone: tz ?? undefined,
+                    })
                         .split(', ')
                         .pop()!
                         .trim();
@@ -3677,7 +3722,10 @@ class Stringable {
 
                 // Timezone abbreviation, if known; otherwise the GMT offset (e.g., EST, MDT, +05)
                 case 'T': {
-                    const timeZoneData: string = now.toLocaleDateString('en-us', { timeZoneName: 'short', timeZone: tz ?? undefined, })
+                    const timeZoneData: string = now.toLocaleDateString('en-us', {
+                        timeZoneName: 'short',
+                        timeZone: tz ?? undefined,
+                    })
                         .split(', ')
                         .pop()!
                         .trim();
@@ -3691,14 +3739,17 @@ class Stringable {
                 // The offset for timezones west of UTC is always negative,
                 // and for those east of UTC is always positive. (e.g., -43200 through 50400)
                 case 'Z': {
-                    const timezone: string                = now.toLocaleDateString('en-us', { timeZoneName: 'longOffset', timeZone: tz ?? undefined });
+                    const timezone: string = now.toLocaleDateString('en-us', {
+                        timeZoneName: 'longOffset',
+                        timeZone: tz ?? undefined
+                    });
                     const symbol: RegExpMatchArray | null = timezone.match(/[+-]/);
-                    const data: string[]                  = timezone.split(/[+-]/);
+                    const data: string[] = timezone.split(/[+-]/);
 
-                    const sign: string   = symbol ? symbol.pop()! : '+';
+                    const sign: string = symbol ? symbol.pop()! : '+';
                     const offset: string = data.length === 2 ? (data[1] as string) : '0:00';
 
-                    const hours: number   = parseInt(offset.split(':')[0] as string);
+                    const hours: number = parseInt(offset.split(':')[0] as string);
                     const minutes: number = parseInt(offset.split(':')[1] as string);
 
                     const offsetInSeconds: number = hours * 3600 + minutes * 60;
@@ -3762,7 +3813,7 @@ class HtmlString {
      * @return { HTMLElement | Node | string | null }
      */
     toHtml(): HtmlStringType {
-        const pattern: RegExp             = /(?!<!DOCTYPE)<([^\s>]+)(\s|>)+/;
+        const pattern: RegExp = /(?!<!DOCTYPE)<([^\s>]+)(\s|>)+/;
         const tag: RegExpExecArray | null = RegExp(pattern).exec(this.html);
 
         if (!tag) {
@@ -3890,8 +3941,8 @@ if (typeof exports != 'undefined') {
 if (typeof global !== 'undefined') {
     const _global: any = global;
 
-    _global.Mode       = Mode;
-    _global.Str        = Str;
+    _global.Mode = Mode;
+    _global.Str = Str;
     _global.Stringable = Stringable;
-    _global.str        = str;
+    _global.str = str;
 }

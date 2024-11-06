@@ -44,8 +44,8 @@ Str.after('This is my name', 'This is');
 
 #### Str.afterLast()
 
-The `Str.afterLast` method returns everything after the last occurrence of the given value in a string. The entire
-string will be returned if the value does not exist within the string:
+The `Str.afterLast` method returns everything after the last occurrence of the given value in a string.
+The entire string will be returned if the value does not exist within the string:
 
 ```js
 Str.afterLast('App\\Http\\Controllers\\Controller', '\\');
@@ -55,8 +55,7 @@ Str.afterLast('App\\Http\\Controllers\\Controller', '\\');
 
 #### Str.apa()
 
-The `Str.apa` method converts the given string to title case following
-the [APA guidelines](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case):
+The `Str.apa` method converts the given string to title case following the [APA guidelines](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case):
 
 ```js
 Str.apa('Creating A Project');
@@ -204,6 +203,14 @@ Str.contains('This is my name', ['my', 'foo']);
 // true
 ```
 
+You may disable case sensitivity by setting the `ignoreCase` argument to `true`:
+
+```js
+Str.contains('This is my name', 'MY', true);
+
+// true
+```
+
 #### Str.containsAll()
 
 The `Str.containsAll` method determines if the given string contains all the values in a given array:
@@ -212,6 +219,39 @@ The `Str.containsAll` method determines if the given string contains all the val
 Str.containsAll('This is my name', ['my', 'name']);
 
 // true
+```
+You may disable case sensitivity by setting the `ignoreCase` argument to `true`:
+
+```js
+Str.containsAll('This is my name', ['MY', 'NAME'], true);
+
+// true
+```
+
+#### Str.doesntContain()
+
+The `Str.doesntContain` method determines if the given string doesn't contain the given value. By default, this method is case-sensitive:
+
+```js
+Str.doesntContain('This is name', 'my');
+
+// true
+```
+
+You may also pass an array of values to determine if the given string doesn't contain any of the values in the array:
+
+```js
+Str.doesntContain('This is my name', ['my', 'foo']);
+
+// true
+```
+
+You may disable case sensitivity by setting the `ignoreCase` argument to `true`:
+
+```js
+Str.doesntContain('This is my name', 'MY', true);
+
+// false
 ```
 
 #### Str.convertCase()
@@ -260,24 +300,18 @@ Str.convertCase('HeLLo', Mode.MB_CASE_FOLD);
 
 #### Str.deduplicate()
 
-The `Str.containsAll` method consecutive instances of a given character with a single character in the given string:
+The `Str.deduplicate` method replaces consecutive instances of a character with a single instance of that character in the given string. By default, the method deduplicates spaces:
 
 ```js
-Str.deduplicate(' laravel   php  framework ')
+Str.deduplicate('The   Laravel   Framework')
 
-//  laravel php framework 
+//  The Laravel Framework 
 ```
 
 ```js
-Str.deduplicate('whaaat', 'a')
+Str.deduplicate('The---Laravel---Framework', '-')
 
-// what
-```
-
-```js
-Str.deduplicate('/some//odd//path/', '/')
-
-// /some/odd/path/
+// The-Laravel-Framework
 ```
 
 #### Str.endsWith()
@@ -306,8 +340,7 @@ Str.endsWith('This is my name', ['this', 'foo']);
 
 #### Str.excerpt()
 
-The `Str.excerpt` method extracts an excerpt from a given string that matches the first instance of a phrase within that
-string:
+The `Str.excerpt` method extracts an excerpt from a given string that matches the first instance of a phrase within that string:
 
 ```js
 Str.excerpt('This is my name', 'my', { 'radius': 3 });
@@ -315,11 +348,8 @@ Str.excerpt('This is my name', 'my', { 'radius': 3 });
 // '...is my na...'
 ```
 
-The `radius` option, which defaults to 100, allows you to define the number of characters that should appear on each side
-of the truncated string.
-
-In addition, you may use the omission option to define the string that will be prepended and appended to the truncated
-string:
+The `radius` option, which defaults to 100, allows you to define the number of characters that should appear on each side of the truncated string.
+In addition, you may use the omission option to define the string that will be prepended and appended to the truncated string:
 
 ```js
 Str.excerpt('This is my name', 'name', { 'radius': 3, 'omission': '(...) ' });
@@ -329,8 +359,7 @@ Str.excerpt('This is my name', 'name', { 'radius': 3, 'omission': '(...) ' });
 
 #### Str.finish()
 
-The `Str.finish` method adds a single instance of the given value to a string if it does not already end with that
-value:
+The `Str.finish` method adds a single instance of the given value to a string if it does not already end with that value:
 
 ```js
 Str.finish('this/string', '/');
@@ -356,9 +385,7 @@ Str.fromBase64('TGFyYXZlbA==');
 
 #### Str.headline()
 
-The `Str.headline` method will convert strings delimited by casing, hyphens, or underscores into a space delimited
-string
-with each word's first letter capitalized:
+The `Str.headline` method will convert strings delimited by casing, hyphens, or underscores into a space delimited string with each word's first letter capitalized:
 
 ```js
 Str.headline('steve_jobs');
@@ -514,8 +541,7 @@ Str.limit('The quick brown fox jumps over the lazy dog', 20);
 // 'The quick brown fox...'
 ```
 
-You may pass a third argument to the method to change the string that will be appended to the end of the truncated
-string:
+You may pass a third argument to the method to change the string that will be appended to the end of the truncated string:
 
 ```js
 Str.limit('The quick brown fox jumps over the lazy dog', 20, ' (...)');
@@ -549,8 +575,7 @@ Str.lower('LARAVEL');
 
 #### Str.mask()
 
-The `Str.mask` method masks a portion of a string with a repeated character, and may be used to obfuscate segments of
-strings such as email addresses and phone numbers:
+The `Str.mask` method masks a portion of a string with a repeated character, and may be used to obfuscate segments of strings such as email addresses and phone numbers:
 
 ```js
 Str.mask('taylor@example.com', '*', 3);
@@ -558,8 +583,7 @@ Str.mask('taylor@example.com', '*', 3);
 // 'tay***************'
 ```
 
-If needed, you provide a negative number as the third argument to the mask method, which will instruct the method to
-begin masking at the given distance from the end of the string:
+If needed, you provide a negative number as the third argument to the mask method, which will instruct the method to begin masking at the given distance from the end of the string:
 
 ```js
 Str.mask('taylor@example.com', '*', -15, 3);
@@ -585,8 +609,7 @@ Str.match('/foo (.*)/', 'foo bar');
 
 #### Str.matchAll
 
-The `Str.matchAll` method will return an array containing the portions of a string that match a given regular expression
-pattern:
+The `Str.matchAll` method will return an array containing the portions of a string that match a given regular expression pattern:
 
 ```js
 Str.matchAll('/bar/', 'bar foo bar');
@@ -640,8 +663,8 @@ If no matches are found, an empty string will be returned.
 
 #### Str.orderedUuid()
 
-The `Str.orderedUuid` method generates a "timestamp first" UUID that may be efficiently stored in an indexed database
-column. Each UUID that is generated using this method will be sorted after UUIDs previously generated using the method:
+The `Str.orderedUuid` method generates a "timestamp first" UUID that may be efficiently stored in an indexed database column. 
+Each UUID that is generated using this method will be sorted after UUIDs previously generated using the method:
 
 ```js
 Str.orderedUuid();
@@ -699,8 +722,9 @@ Str.padRight('James', 10);
 
 #### Str.password()
 
-The `Str.password` method may be used to generate a secure, random password of a given length. The password will consist
-of a combination of letters, numbers, symbols, and spaces. By default, passwords are 32 characters long:
+The `Str.password` method may be used to generate a secure, random password of a given length.
+The password will consist of a combination of letters, numbers, symbols, and spaces.
+By default, passwords are 32 characters long:
 
 ```js
 Str.password();
@@ -868,9 +892,7 @@ Str.replaceMatches('/[^A-Za-z0-9]+/', '', '(+1) 501-555-1000')
 // '15015551000'
 ```
 
-The `replaceMatches` method also accepts a closure that will be invoked with each portion of the string matching the
-given
-pattern, allowing you to perform the replacement logic within the closure and return the replaced value:
+The `replaceMatches` method also accepts a closure that will be invoked with each portion of the string matching the given pattern, allowing you to perform the replacement logic within the closure and return the replaced value:
 
 ```js
 Str.replaceMatches('/\\d/', (matches) => '[' + matches[0] + ']', '123');
@@ -880,8 +902,7 @@ Str.replaceMatches('/\\d/', (matches) => '[' + matches[0] + ']', '123');
 
 #### Str.replaceStart()
 
-The `Str.replaceStart` method replaces the first occurrence of the given value only if the value appears at the start of
-the string:
+The `Str.replaceStart` method replaces the first occurrence of the given value only if the value appears at the start of the string:
 
 ```js
 Str.replaceStart('Hello', 'Laravel', 'Hello World');
@@ -895,8 +916,7 @@ Str.replaceStart('World', 'Laravel', 'Hello World');
 
 #### Str.replaceEnd()
 
-The `Str.replaceEnd` method replaces the last occurrence of the given value only if the value appears at the end of the
-string:
+The `Str.replaceEnd` method replaces the last occurrence of the given value only if the value appears at the end of the string:
 
 ```js
 Str.replaceEnd('World', 'Laravel', 'Hello World');
@@ -962,8 +982,7 @@ Str.snake('fooBar', '-');
 
 #### Str.squish()
 
-The `Str.squish` method removes all extraneous white space from a string, including extraneous white space between
-words:
+The `Str.squish` method removes all extraneous white space from a string, including extraneous white space between words:
 
 ```js
 Str.squish('    laravel    framework    ');
@@ -973,8 +992,7 @@ Str.squish('    laravel    framework    ');
 
 #### Str.start()
 
-The `Str.start` method adds a single instance of the given value to a string if it does not already start with that
-value:
+The `Str.start` method adds a single instance of the given value to a string if it does not already start with that value:
 
 ```js
 Str.start('this/string', '/');
@@ -998,8 +1016,7 @@ Str.startsWith('This is my name', 'This');
 // true
 ```
 
-If an array of possible values is passed, the startsWith method will return true if the string begins with any of the
-given values:
+If an array of possible values is passed, the startsWith method will return true if the string begins with any of the given values:
 
 ```js
 Str.startsWith('This is my name', ['This', 'That', 'There']);
@@ -1039,10 +1056,8 @@ Str.substrCount('If you like ice cream, you will like snow cones.', 'like');
 
 #### Str.substrReplace()
 
-The `Str.substrReplace` method replaces text within a portion of a string, starting at the position specified by the
-third argument and replacing the number of characters specified by the fourth argument. Passing 0 to the method's fourth
-argument will insert the string at the specified position without replacing any of the existing characters in the
-string:
+The `Str.substrReplace` method replaces text within a portion of a string, starting at the position specified by the third argument and replacing the number of characters specified by the fourth argument.
+Passing `0` to the method's fourth argument will insert the string at the specified position without replacing any of the existing characters in the string:
 
 ```js
 Str.substrReplace('1300', ':', 2);
@@ -1177,8 +1192,8 @@ dog.
 
 #### Str.words()
 
-The `Str.words` method limits the number of words in a string. An additional string may be passed to this method via its
-third argument to specify which string should be appended to the end of the truncated string:
+The `Str.words` method limits the number of words in a string.
+An additional string may be passed to this method via its third argument to specify which string should be appended to the end of the truncated string:
 
 ```js
 Str.words('Perfectly balanced, as all things should be.', 3, ' >>>');
@@ -1220,13 +1235,12 @@ str('Taylor').append(' Otwell');
 
 ### Fluent Strings
 
-Fluent strings provide a more fluent, object-oriented interface for working with string values, allowing you to chain
-multiple string operations together using a more readable syntax compared to traditional string operations.
+Fluent strings provide a more fluent, object-oriented interface for working with string values, allowing you to chain multiple string operations together using a more readable syntax compared to traditional string operations.
 
 #### after
 
-The `after` method returns everything after the given value in a string. The entire string will be returned if the value
-does not exist within the string:
+The `after` method returns everything after the given value in a string.
+The entire string will be returned if the value does not exist within the string:
 
 ```js
 Str.of('This is my name').after('This is');
@@ -1236,8 +1250,8 @@ Str.of('This is my name').after('This is');
 
 #### afterLast
 
-The `afterLast` method returns everything after the last occurrence of the given value in a string. The entire string will
-be returned if the value does not exist within the string:
+The `afterLast` method returns everything after the last occurrence of the given value in a string.
+The entire string will be returned if the value does not exist within the string:
 
 ```js
 Str.of('App\\Http\\Controllers\\Controller').afterLast('\\');
@@ -1433,12 +1447,54 @@ Str.of('This is my name').contains(['my', 'foo']);
 // true
 ```
 
+You may disable case sensitivity by setting the `ignoreCase` argument to `true`:
+
+```js
+Str.of('This is my name').contains('MY', true);
+
+// true
+```
+
 #### containsAll
 
 The `containsAll` method determines if the given string contains all the values in the given array:
 
 ```js
 Str.of('This is my name').containsAll(['my', 'name']);
+
+// true
+```
+
+You may disable case sensitivity by setting the `ignoreCase` argument to `true`:
+
+```js
+Str.of('This is my name').containsAll(['MY', 'NAME'], true);
+
+// true
+```
+
+#### doesntContain
+
+The `doesntContain` method determines if the given string doesn't contain the given value. By default, this method is case-sensitive:
+
+```js
+Str.of('This is name').doesntContain('my');
+
+// true
+```
+
+You may also pass an array of values to determine if the given string contains any of the values in the array:
+
+```js
+Str.of('This is name').doesntContain(['my', 'foo']);
+
+// true
+```
+
+You may disable case sensitivity by setting the `ignoreCase` argument to `true`:
+
+```js
+Str.of('This is name').doesntContain('MY', true);
 
 // true
 ```
@@ -1487,26 +1543,20 @@ Str.of('HeLLo').convertCase(Mode.MB_CASE_FOLD);
 // hello
 ```
 
-#### Str.deduplicate()
+#### deduplicate
 
-The `Str.containsAll` method consecutive instances of a given character with a single character in the given string:
+The `deduplicate` method replaces consecutive instances of a character with a single instance of that character in the given string. By default, the method deduplicates spaces:
 
 ```js
-Str.of(' laravel   php  framework ').deduplicate();
+Str.of('The   Laravel   Framework').deduplicate()
 
-//  laravel php framework 
+//  The Laravel Framework 
 ```
 
 ```js
-Str.of('whaaat').deduplicate('a');
+Str.of('The---Laravel---Framework', '-').deduplicate()
 
-// what
-```
-
-```js
-Str.of('/some//odd//path/').deduplicate( '/');
-
-// /some/odd/path/
+// The-Laravel-Framework
 ```
 
 #### dirname
@@ -1537,12 +1587,8 @@ Str.of('This is my name').excerpt('my', { 'radius': 3 });
 // '...is my na...'
 ```
 
-The `radius` option, which defaults to 100, allows you to define the number of characters that should appear on each
-side
-of the truncated string.
-
-In addition, you may use the omission option to change the string that will be prepended and appended to the truncated
-string:
+The `radius` option, which defaults to 100, allows you to define the number of characters that should appear on each side of the truncated string.
+In addition, you may use the omission option to change the string that will be prepended and appended to the truncated string:
 
 ```js
 Str.of('This is my name').excerpt('name', { 'radius': 3, 'omission': '(...) ' });
@@ -1586,8 +1632,7 @@ Str.of('Laravel').exactly('Laravel');
 
 #### explode
 
-The `explode` method splits the string by the given delimiter and returns an array containing each section of the split
-string:
+The `explode` method splits the string by the given delimiter and returns an array containing each section of the split string:
 
 ```js
 Str.of('foo bar baz').explode(' ');
@@ -1623,9 +1668,7 @@ Str.of('TGFyYXZlbA==').fromBase64();
 
 #### headline
 
-The `headline` method will convert strings delimited by casing, hyphens, or underscores into a space delimited string
-with
-each word's first letter capitalized:
+The `headline` method will convert strings delimited by casing, hyphens, or underscores into a space delimited string with each word's first letter capitalized:
 
 ```js
 Str.of('taylor_otwell').headline();
@@ -1821,8 +1864,7 @@ Str.of('The quick brown fox jumps over the lazy dog').limit(20, ' (...)');
 // 'The quick brown fox (...)'
 ```
 
-You may pass a boolean as fourth argument to the method to ensure the truncation does not cut off in the middle of a
-word:
+You may pass a boolean as fourth argument to the method to ensure the truncation does not cut off in the middle of a word:
 
 ```js
 Str.of('The quick brown fox jumps over the lazy dog').limit(18, '...', false);
@@ -1864,9 +1906,7 @@ Str.of('/Laravel/').ltrim('/');
 
 #### mask
 
-The `mask` method masks a portion of a string with a repeated character, and may be used to obfuscate segments of
-strings
-such as email addresses and phone numbers:
+The `mask` method masks a portion of a string with a repeated character, and may be used to obfuscate segments of strings such as email addresses and phone numbers:
 
 ```js
 Str.of('taylor@example.com').mask('*', 3);
@@ -1874,8 +1914,7 @@ Str.of('taylor@example.com').mask('*', 3);
 // 'tay***************'
 ```
 
-If needed, you may provide negative numbers as the third or fourth argument to the mask method, which will instruct the
-method to begin masking at the given distance from the end of the string:
+If needed, you may provide negative numbers as the third or fourth argument to the mask method, which will instruct the method to begin masking at the given distance from the end of the string:
 
 ```js
 Str.of('taylor@example.com').mask('*', -15, 3);
@@ -2005,8 +2044,7 @@ Str.of('James').padLeft(10);
 
 #### padRight
 
-The `padRight` method pads the right side of a string with another string until the final string reaches the desired
-length:
+The `padRight` method pads the right side of a string with another string until the final string reaches the desired length:
 
 ```js
 Str.of('James').padRight(10, '-');
@@ -2100,8 +2138,8 @@ Str.of('child').plural(1);
 
 #### position
 
-The `position` method returns the position of the first occurrence of a substring in a string. If the substring does not
-exist within the string, `false` is returned:
+The `position` method returns the position of the first occurrence of a substring in a string. 
+If the substring does not exist within the string, `false` is returned:
 
 ```js
 Str.of('Hello, World!').position('Hello');
@@ -2217,9 +2255,8 @@ Str.of('(+1) 501-555-1000').replaceMatches('/[^A-Za-z0-9]+/', '');
 // '15015551000'
 ```
 
-The `replaceMatches` method also accepts a closure that will be invoked with each portion of the string matching the
-given
-pattern, allowing you to perform the replacement logic within the closure and return the replaced value:
+The `replaceMatches` method also accepts a closure that will be invoked with each portion of the string matching the given pattern, 
+allowing you to perform the replacement logic within the closure and return the replaced value:
 
 ```js
 Str.of('123').replaceMatches('/\\d/', (match) => '[' + match[0] + ']');
@@ -2387,10 +2424,8 @@ Str.of('Laravel Framework').substr(8, 5);
 
 #### substrReplace
 
-The `substrReplace` method replaces text within a portion of a string, starting at the position specified by the second
-argument and replacing the number of characters specified by the third argument. Passing `0` to the method's third
-argument will insert the string at the specified position without replacing any of the existing characters in the
-string:
+The `substrReplace` method replaces text within a portion of a string, starting at the position specified by the second argument and replacing the number of characters specified by the third argument. 
+Passing `0` to the method's third argument will insert the string at the specified position without replacing any of the existing characters in the string:
 
 ```js
 Str.of('1300').substrReplace(':', 2);
@@ -2426,9 +2461,8 @@ Str.of('Build something amazing!').take(5);
 
 #### tap
 
-The `tap` method passes the string to the given closure, allowing you to examine and interact with the string while not
-affecting the string itself. The original string is returned by the `tap` method regardless of what is returned by the
-closure:
+The `tap` method passes the string to the given closure, allowing you to examine and interact with the string while not affecting the string itself.
+The original string is returned by the `tap` method regardless of what is returned by the closure:
 
 ```js
 Str.of('Laravel')
@@ -2562,7 +2596,8 @@ Str.of('laravel').upper();
 
 #### when
 
-The `when` method invokes the given closure if a given condition is true. The closure will receive the fluent string instance:
+The `when` method invokes the given closure if a given condition is true.
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('Taylor').when(true, (string) => string.append(' Otwell'));
@@ -2580,7 +2615,8 @@ Str.of('Taylor').when(true, (string: Stringable) => string.append(' Otwell'));
 
 #### unless
 
-The `unless` method invokes the given closure if a given condition is false. The closure will receive the fluent string instance:
+The `unless` method invokes the given closure if a given condition is false.
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('Taylor').unless(false, (string) => string.append(' Otwell'));
@@ -2596,13 +2632,13 @@ Str.of('Taylor').unless(false, (string: Stringable) => string.append(' Otwell'))
 // 'Taylor Otwell'
 ```
 
-If necessary, you may pass another closure as the third parameter to the `unless` method. This closure will execute if the
-condition parameter evaluates to true.
+If necessary, you may pass another closure as the third parameter to the `unless` method.
+This closure will execute if the condition parameter evaluates to true.
 
 #### whenContains
 
-The `whenContains` method invokes the given closure if the string contains the given value. The closure will receive the
-fluent string instance:
+The `whenContains` method invokes the given closure if the string contains the given value.
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('tony stark').whenContains('tony', (string) => string.title());
@@ -2618,9 +2654,8 @@ Str.of('tony stark').whenContains('tony', (string: Stringable) => string.title()
 // 'Tony Stark'
 ```
 
-If necessary, you may pass another closure as the third parameter to the `when` method. This closure will execute if the
-string does not contain the given value.
-
+If necessary, you may pass another closure as the third parameter to the `when` method. 
+This closure will execute if the string does not contain the given value.
 You may also pass an array of values to determine if the given string contains any of the values in the array:
 
 ```js
@@ -2639,8 +2674,8 @@ Str.of('tony stark').whenContains(['tony', 'hulk'], (string: Stringable) => stri
 
 #### whenContainsAll
 
-The `whenContainsAll` method invokes the given closure if the string contains all the given sub-strings. The closure
-will receive the fluent string instance:
+The `whenContainsAll` method invokes the given closure if the string contains all the given sub-strings. 
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('tony stark').whenContainsAll(['tony', 'stark'], (string) => string.title());
@@ -2656,14 +2691,14 @@ Str.of('tony stark').whenContainsAll(['tony', 'stark'], (string: Stringable) => 
 // 'Tony Stark'
 ```
 
-If necessary, you may pass another closure as the third parameter to the `when` method. This closure will execute if the
-condition parameter evaluates to false.
+If necessary, you may pass another closure as the third parameter to the `when` method.
+This closure will execute if the condition parameter evaluates to false.
 
 #### whenEmpty
 
-The `whenEmpty` method invokes the given closure if the string is empty. If the closure returns a value, that value will
-also be returned by the whenEmpty method. If the closure does not return a value, the fluent string instance will be
-returned:
+The `whenEmpty` method invokes the given closure if the string is empty. 
+If the closure returns a value, that value will also be returned by the whenEmpty method.
+If the closure does not return a value, the fluent string instance will be returned:
 
 ```js
 Str.of('  ').whenEmpty((string) => string.trim().prepend('Laravel'));
@@ -2681,10 +2716,9 @@ Str.of('  ').whenEmpty((string: Stringable) => string.trim().prepend('Laravel'))
 
 #### whenNotEmpty
 
-The `whenNotEmpty` method invokes the given closure if the string is not empty. If the closure returns a value, that
-value
-will also be returned by the whenNotEmpty method. If the closure does not return a value, the fluent string instance
-will be returned:
+The `whenNotEmpty` method invokes the given closure if the string is not empty. 
+If the closure returns a value, that value will also be returned by the whenNotEmpty method. 
+If the closure does not return a value, the fluent string instance will be returned:
 
 ```js
 Str.of('Framework').whenNotEmpty((string) => string.prepend('Laravel '));
@@ -2702,8 +2736,8 @@ Str.of('Framework').whenNotEmpty((string: Stringable) => string.prepend('Laravel
 
 #### whenStartsWith
 
-The `whenStartsWith` method invokes the given closure if the string starts with the given sub-string. The closure will
-receive the fluent string instance:
+The `whenStartsWith` method invokes the given closure if the string starts with the given sub-string.
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('disney world').whenStartsWith('disney', (string) => string.title());
@@ -2721,9 +2755,8 @@ Str.of('disney world').whenStartsWith('disney', (string: Stringable) => string.t
 
 #### whenEndsWith
 
-The `whenEndsWith` method invokes the given closure if the string ends with the given sub-string. The closure will
-receive
-the fluent string instance:
+The `whenEndsWith` method invokes the given closure if the string ends with the given sub-string.
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('disney world').whenEndsWith('world', (string) => string.title());
@@ -2741,8 +2774,8 @@ Str.of('disney world').whenEndsWith('world', (string: Stringable) => string.titl
 
 #### whenExactly
 
-The `whenExactly` method invokes the given closure if the string exactly matches the given string. The closure will
-receive the fluent string instance:
+The `whenExactly` method invokes the given closure if the string exactly matches the given string.
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('laravel').whenExactly('laravel', (string) => string.title());
@@ -2760,8 +2793,8 @@ Str.of('laravel').whenExactly('laravel', (string: Stringable) => string.title())
 
 #### whenNotExactly
 
-The `whenNotExactly` method invokes the given closure if the string does not exactly match the given string. The closure
-will receive the fluent string instance:
+The `whenNotExactly` method invokes the given closure if the string does not exactly match the given string.
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('framework').whenNotExactly('laravel', (string) => string.title());
@@ -2779,8 +2812,9 @@ Str.of('framework').whenNotExactly('laravel', (string: Stringable) => string.tit
 
 #### whenIs
 
-The `whenIs` method invokes the given closure if the string matches a given pattern. Asterisks may be used as wildcard
-values. The closure will receive the fluent string instance:
+The `whenIs` method invokes the given closure if the string matches a given pattern. 
+Asterisks may be used as wildcard values.
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('foo/bar').whenIs('foo/*', (string) => string.append('/baz'));
@@ -2798,8 +2832,8 @@ Str.of('foo/bar').whenIs('foo/*', (string: Stringable) => string.append('/baz'))
 
 #### whenIsAscii
 
-The `whenIsAscii` method invokes the given closure if the string is 7-bit ASCII. The closure will receive the fluent
-string instance:
+The `whenIsAscii` method invokes the given closure if the string is 7-bit ASCII.
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('laravel').whenIsAscii((string) => string.title());
@@ -2817,8 +2851,8 @@ Str.of('laravel').whenIsAscii((string: Stringable) => string.title());
 
 #### whenIsUlid
 
-The `whenIsUlid` method invokes the given closure if the string is a valid ULID. The closure will receive the fluent
-string instance:
+The `whenIsUlid` method invokes the given closure if the string is a valid ULID.
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('01gd6r360bp37zj17nxb55yv40').whenIsUlid((string) => string.substr(0, 8));
@@ -2836,8 +2870,8 @@ Str.of('01gd6r360bp37zj17nxb55yv40').whenIsUlid((string: Stringable) => string.s
 
 #### whenIsUuid
 
-The `whenIsUuid` method invokes the given closure if the string is a valid UUID. The closure will receive the fluent
-string instance:
+The `whenIsUuid` method invokes the given closure if the string is a valid UUID.
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('a0a2a2d2-0b87-4a18-83f2-2529882be2de').whenIsUuid((string) => string.substr(0, 8));
@@ -2856,7 +2890,7 @@ Str.of('a0a2a2d2-0b87-4a18-83f2-2529882be2de').whenIsUuid((string: Stringable) =
 #### whenTest
 
 The `whenTest` method invokes the given closure if the string matches the given regular expression.
-receive the fluent string instance:
+The closure will receive the fluent string instance:
 
 ```js
 Str.of('laravel framework').whenTest('/laravel/', (string) => string.title());
@@ -2884,9 +2918,7 @@ Str.of('Hello, world!').wordCount();
 
 #### words
 
-The `words` method limits the number of words in a string. If necessary, you may specify an additional string that will
-be
-appended to the truncated string:
+The `words` method limits the number of words in a string. If necessary, you may specify an additional string that will be appended to the truncated string:
 
 ```js
 Str.of('Perfectly balanced, as all things should be.').words(3, ' >>>');
@@ -2992,8 +3024,7 @@ Str.of('13 September 2023, 12:00 PM').toDate();
 // 9/13/2023, 12:00:00
 ```
 
-You may provide a string as a second and/or third argument to the function in order to format the date and set the
-Timezone respectively:
+You may provide a string as a second and/or third argument to the function in order to format the date and set the Timezone respectively:
 
 ```js
 Str.of('13 September 2023, 12:00 PM').toDate('Y-m-d H:i:s', 'Europe/London');
