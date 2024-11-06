@@ -107,11 +107,33 @@ describe('Strings', () => {
         test('determines if the given string contains any of the values in the array', () => {
             expect(Str.contains('This is my name', ['my', 'foo'])).toBeTruthy();
         });
+
+        test('determines if the given string contains the given value case-insensitively', () => {
+            expect(Str.contains('This is my name', 'MY', true)).toBeTruthy();
+        });
     });
 
     describe('Str.containsAll', () => {
         test('determines if the given string contains all the values in a given array', () => {
             expect(Str.containsAll('This is my name', ['my', 'name'])).toBeTruthy();
+        });
+
+        test('determines if the given string contains all the values in a given array case-insensitively', () => {
+            expect(Str.contains('This is my name', ['MY', 'NAME'], true)).toBeTruthy();
+        });
+    });
+
+    describe('Str.doesntContain', () => {
+        test('determines if the given string doesnt contain the given value', () => {
+            expect(Str.doesntContain('This is name', 'my')).toBeTruthy();
+        });
+
+        test('determines if the given string doesnt contain any of the values in the array', () => {
+            expect(Str.doesntContain('This is name', ['my', 'foo'])).toBeTruthy();
+        });
+
+        test('determines if the given string doesnt contain the given value case-insensitively', () => {
+            expect(Str.doesntContain('This is name', 'MY', true)).toBeTruthy();
         });
     });
 
@@ -155,11 +177,14 @@ describe('Strings', () => {
 
     describe('Str.excerpt', () => {
         test('extracts an excerpt from a given string that matches the first instance of a phrase', () => {
-            expect(Str.excerpt('This is my name', 'my', { 'radius': 3 })).toEqual('...is my na...');
+            expect(Str.excerpt('This is my name', 'my', {'radius': 3})).toEqual('...is my na...');
         });
 
         test('allows definition of custom omission strings', () => {
-            expect(Str.excerpt('This is my name', 'name', { 'radius': 3, 'omission': '(...) ' })).toEqual('(...) my name');
+            expect(Str.excerpt('This is my name', 'name', {
+                'radius': 3,
+                'omission': '(...) '
+            })).toEqual('(...) my name');
         });
     });
 
@@ -577,7 +602,10 @@ describe('Strings', () => {
 
     describe('Str.swap', () => {
         test('replaces multiple values in the given string', () => {
-            expect(Str.swap({ 'Tacos': 'Burritos', 'great': 'fantastic' }, 'Tacos are great!')).toEqual('Burritos are fantastic!');
+            expect(Str.swap({
+                'Tacos': 'Burritos',
+                'great': 'fantastic'
+            }, 'Tacos are great!')).toEqual('Burritos are fantastic!');
         });
     });
 
@@ -787,14 +815,41 @@ describe('Fluent Strings', () => {
     });
 
     describe('contains', () => {
+
         test('determines if the given string contains the given value', () => {
-            expect(Str.of('This is my name').contains('my').toString()).toBeTruthy();
+            expect(Str.of('This is my name').contains('my')).toBeTruthy();
+        });
+
+        test('determines if the given string contains any of the values in the array', () => {
+            expect(Str.of('This is my name').contains(['my', 'foo'])).toBeTruthy();
+        });
+
+        test('determines if the given string contains the given value case-insensitively', () => {
+            expect(Str.of('This is my name').contains('MY', true)).toBeTruthy();
         });
     });
 
     describe('containsAll', () => {
-        test('determines if the given string contains all the values in the given array', () => {
-            expect(Str.of('This is my name').containsAll(['my', 'name']).toString()).toBeTruthy();
+        test('determines if the given string contains all the values in a given array', () => {
+            expect(Str.of('This is my name').containsAll(['my', 'name'])).toBeTruthy();
+        });
+
+        test('determines if the given string contains all the values in a given array case-insensitively', () => {
+            expect(Str.of('This is my name').containsAll(['my', 'name'])).toBeTruthy();
+        });
+    });
+
+    describe('doesntContain', () => {
+        test('determines if the given string doesnt contain the given value', () => {
+            expect(Str.of('This is name').doesntContain('my')).toBeTruthy();
+        });
+
+        test('determines if the given string doesnt contain any of the values in the array', () => {
+            expect(Str.of('This is name').doesntContain(['my', 'foo'])).toBeTruthy();
+        });
+
+        test('determines if the given string doesnt contain the given value case-insensitively', () => {
+            expect(Str.of('This is name').doesntContain('MY', true)).toBeTruthy();
         });
     });
 
@@ -843,7 +898,7 @@ describe('Fluent Strings', () => {
 
     describe('excerpt', () => {
         test('extracts an excerpt from the string that matches the first instance of a phrase within that string', () => {
-            expect(Str.of('This is my name').excerpt('my', { 'radius': 3 }).toString()).toEqual('...is my na...');
+            expect(Str.of('This is my name').excerpt('my', {'radius': 3}).toString()).toEqual('...is my na...');
         });
     });
 
@@ -1269,7 +1324,10 @@ describe('Fluent Strings', () => {
 
     describe('swap', () => {
         test('replaces multiple values in the string', () => {
-            expect(Str.of('Tacos are great!').swap({ 'Tacos': 'Burritos', 'great': 'fantastic' }).toString()).toEqual('Burritos are fantastic!');
+            expect(Str.of('Tacos are great!').swap({
+                'Tacos': 'Burritos',
+                'great': 'fantastic'
+            }).toString()).toEqual('Burritos are fantastic!');
         });
     });
 
