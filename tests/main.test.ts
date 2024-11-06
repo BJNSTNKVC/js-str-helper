@@ -214,8 +214,19 @@ describe('Strings', () => {
 
     describe('Str.is', () => {
         test('determines if a given string matches a given pattern', () => {
+            expect(Str.is('a', 'a')).toBeTruthy();
             expect(Str.is('foo*', 'foobar')).toBeTruthy();
             expect(Str.is('baz*', 'foobar')).toBeFalsy();
+            expect(Str.is(['a*', 'b*'], 'b/')).toBeTruthy();
+            expect(Str.is(['a*', 'b*'], 'f/')).toBeFalsy();
+        });
+
+        test('determines if a given string matches a given pattern case-insensitively', () => {
+            expect(Str.is('A', 'a', true)).toBeTruthy();
+            expect(Str.is('FOO*', 'foobar', true)).toBeTruthy();
+            expect(Str.is('baz*', 'foobar', true)).toBeFalsy();
+            expect(Str.is(['A*', 'B*'], 'b/', true)).toBeTruthy();
+            expect(Str.is(['A*', 'B*'], 'f/', true)).toBeFalsy();
         });
     });
 
@@ -926,8 +937,19 @@ describe('Fluent Strings', () => {
 
     describe('is', () => {
         test('determines if a given string matches a given pattern', () => {
+            expect(Str.of('a').is('a')).toBeTruthy();
             expect(Str.of('foobar').is('foo*')).toBeTruthy();
             expect(Str.of('foobar').is('baz*')).toBeFalsy();
+            expect(Str.of('b/').is(['a*', 'b*'])).toBeTruthy();
+            expect(Str.of('f/').is(['a*', 'b*'])).toBeFalsy();
+        });
+
+        test('determines if a given string matches a given pattern case-insensitively', () => {
+            expect(Str.of('a').is('A', true)).toBeTruthy();
+            expect(Str.of('foobar').is('FOO*', true)).toBeTruthy();
+            expect(Str.of('foobar').is('baz*', true)).toBeFalsy();
+            expect(Str.of('b/').is(['A*', 'B*'], true)).toBeTruthy();
+            expect(Str.of('f/').is(['A*', 'B*'], true)).toBeFalsy();
         });
     });
 
