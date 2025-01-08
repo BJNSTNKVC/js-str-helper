@@ -415,6 +415,14 @@ Str.is('baz*', 'foobar');
 // false
 ```
 
+You may disable case sensitivity by setting the ignoreCase argument to true:
+
+```js
+Str.is('*.jpg', 'photo.JPG', true);
+
+// true
+```
+
 #### Str.isAscii()
 
 The `Str.isAscii` method determines if a given string is 7-bit ASCII:
@@ -1696,6 +1704,14 @@ Str.of('foobar').is('foo*');
 Str.of('foobar').is('baz*');
 
 // false
+```
+
+You may disable case sensitivity by setting the ignoreCase argument to true:
+
+```js
+Str.of('photo.JPG').is('*.jpg', true);
+
+// true
 ```
 
 #### isAscii
