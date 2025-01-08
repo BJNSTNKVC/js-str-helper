@@ -476,10 +476,11 @@ class Str {
      *
      * @param { string | array } pattern
      * @param { string } value
+     * @param { boolean } ignoreCase
      *
      * @return { boolean }
      */
-    static is(pattern: string | string[], value: string): boolean {
+    static is(pattern: string | string[], value: string, ignoreCase: boolean = false): boolean {
         let patterns: string[] = Array.isArray(pattern) ? pattern : [pattern];
 
         for (let pattern of patterns) {
@@ -487,9 +488,13 @@ class Str {
                 return true;
             }
 
+            if (ignoreCase && pattern.toLowerCase() === value.toLowerCase()) {
+                return true;
+            }
+
             pattern = pattern.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&').replace(/\\\*/g, '.*');
 
-            const regex: RegExp = new RegExp('^' + pattern + '$', 'u');
+            const regex: RegExp = new RegExp('^' + pattern + '$', ignoreCase ? 'iu' : 'u');
 
             if (regex.test(value)) {
                 return true;
@@ -2345,11 +2350,12 @@ class Stringable {
      * Determine if a given string matches a given pattern.
      *
      * @param { string | array } pattern
+     * @param { boolean } ignoreCase
      *
      * @return { boolean }
      */
-    is(pattern: string | string[]): boolean {
-        return Str.is(pattern, this._value);
+    is(pattern: string | string[], ignoreCase: boolean = false): boolean {
+        return Str.is(pattern, this._value, ignoreCase);
     }
 
     /**
