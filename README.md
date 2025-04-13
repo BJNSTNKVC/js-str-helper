@@ -792,16 +792,32 @@ Str.pluralStudly('UserFeedback');
 // 'UserFeedback'
 ```
 
-You may provide an integer as a second argument to the function to retrieve the singular or plural form of the string:
+#### Str.pluralPascal()
+
+The `Str.pluralPascal` method converts a singular word string formatted in Pascal case to its plural form.
 
 ```js
-Str.pluralStudly('VerifiedHuman', 2);
+Str.pluralPascal('VerifiedHuman');
 
 // 'VerifiedHumans'
 ```
 
 ```js
-Str.pluralStudly('VerifiedHuman', 1);
+Str.pluralPascal('UserFeedback');
+
+// 'UserFeedback'
+```
+
+You may provide an integer as a second argument to the function to retrieve the singular or plural form of the string:
+
+```js
+Str.pluralPascal('VerifiedHuman', 2);
+
+// 'VerifiedHumans'
+```
+
+```js
+Str.pluralPascal('VerifiedHuman', 1);
 
 // 'VerifiedHuman'
 ```
@@ -1034,10 +1050,20 @@ Str.startsWith('This is my name', ['This', 'That', 'There']);
 
 #### Str.studly()
 
-The `Str.studly` method converts the given string to StudlyCase:
+The `Str.studly` method converts the given string to Studly caps case:
 
 ```js
 Str.studly('foo_bar');
+
+// 'FooBar'
+```
+
+#### Str.pascal()
+
+The `Str.pascal` method converts the given string to Pascal case:
+
+```js
+Str.pascal('foo_bar');
 
 // 'FooBar'
 ```
@@ -2152,6 +2178,36 @@ Str.of('child').plural(1);
 // 'child'
 ```
 
+#### pluralPascal
+
+The `pluralPascal` method converts a singular word string formatted in Pascal case to its plural form.
+
+```js
+Str.of('VerifiedHuman').pluralPascal();
+
+// 'VerifiedHumans'
+```
+
+```js
+Str.of('UserFeedback').pluralPascal();
+
+// 'UserFeedback'
+```
+
+You may provide an integer as a second argument to the function to retrieve the singular or plural form of the string:
+
+```js
+Str.of('VerifiedHuman').pluralPascal(2);
+
+// 'VerifiedHumans'
+```
+
+```js
+Str.of('VerifiedHuman').pluralPascal(1);
+
+// 'VerifiedHuman'
+```
+
 #### position
 
 The `position` method returns the position of the first occurrence of a substring in a string. 
@@ -2414,10 +2470,20 @@ Str.of('This is my name').startsWith('This');
 
 #### studly
 
-The `studly` method converts the given string to StudlyCase:
+The `studly` method converts the given string to Studly caps case:
 
 ```js
 Str.of('foo_bar').studly();
+
+// 'FooBar'
+```
+
+#### pascal
+
+The `studly` method converts the given string to Pascal case:
+
+```js
+Str.of('foo_bar').pascal();
 
 // 'FooBar'
 ```
