@@ -177,14 +177,11 @@ describe('Strings', () => {
 
     describe('Str.excerpt', () => {
         test('extracts an excerpt from a given string that matches the first instance of a phrase', () => {
-            expect(Str.excerpt('This is my name', 'my', {'radius': 3})).toEqual('...is my na...');
+            expect(Str.excerpt('This is my name', 'my', { 'radius': 3 })).toEqual('...is my na...');
         });
 
         test('allows definition of custom omission strings', () => {
-            expect(Str.excerpt('This is my name', 'name', {
-                'radius': 3,
-                'omission': '(...) '
-            })).toEqual('(...) my name');
+            expect(Str.excerpt('This is my name', 'name', { 'radius'  : 3, 'omission': '(...) ' })).toEqual('(...) my name');
         });
     });
 
@@ -371,11 +368,107 @@ describe('Strings', () => {
     });
 
     describe('Str.plural', () => {
-        test('converts a singular word string to its plural form', () => {
-            expect(Str.plural('car')).toEqual('cars');
-            expect(Str.plural('child')).toEqual('children');
-            expect(Str.plural('child', 2)).toEqual('children');
-            expect(Str.plural('child', 1)).toEqual('child');
+        test('converts singular to plural for regular nouns', () => {
+            expect(Str.plural('car')).toBe('cars');
+            expect(Str.plural('book')).toBe('books');
+            expect(Str.plural('apple')).toBe('apples');
+        });
+
+        test('handles count parameter correctly', () => {
+            expect(Str.plural('child', 1)).toBe('child');
+            expect(Str.plural('child', 2)).toBe('children');
+            expect(Str.plural('person', 1)).toBe('person');
+            expect(Str.plural('person', 3)).toBe('people');
+        });
+
+        test('converts irregular nouns correctly', () => {
+            // A
+            expect(Str.plural('alumna')).toBe('alumnae');
+            expect(Str.plural('analysis')).toBe('analyses');
+            expect(Str.plural('axis')).toBe('axes');
+
+            // B-C
+            expect(Str.plural('bacterium')).toBe('bacteria');
+            expect(Str.plural('child')).toBe('children');
+            expect(Str.plural('crisis')).toBe('crises');
+
+            // D-F
+            expect(Str.plural('datum')).toBe('data');
+            expect(Str.plural('foot')).toBe('feet');
+            expect(Str.plural('fungus')).toBe('fungi');
+
+            // G-M
+            expect(Str.plural('goose')).toBe('geese');
+            expect(Str.plural('man')).toBe('men');
+            expect(Str.plural('mouse')).toBe('mice');
+
+            // N-S
+            expect(Str.plural('nucleus')).toBe('nuclei');
+            expect(Str.plural('person')).toBe('people');
+            expect(Str.plural('thesis')).toBe('theses');
+
+            // T-Z
+            expect(Str.plural('tooth')).toBe('teeth');
+            expect(Str.plural('wife')).toBe('wives');
+            expect(Str.plural('zombie')).toBe('zombies');
+        });
+
+        test('handles uncountable nouns correctly', () => {
+            expect(Str.plural('sheep')).toBe('sheep');
+            expect(Str.plural('fish')).toBe('fish');
+            expect(Str.plural('series')).toBe('series');
+            expect(Str.plural('money')).toBe('money');
+            expect(Str.plural('information')).toBe('information');
+            expect(Str.plural('equipment')).toBe('equipment');
+        });
+
+        test('handles special pluralization rules', () => {
+            // -f/-fe → -ves
+            expect(Str.plural('leaf')).toBe('leaves');
+            expect(Str.plural('knife')).toBe('knives');
+
+            // -y → -ies
+            expect(Str.plural('city')).toBe('cities');
+            expect(Str.plural('baby')).toBe('babies');
+
+            // -o → -oes
+            expect(Str.plural('potato')).toBe('potatoes');
+            expect(Str.plural('volcano')).toBe('volcanoes');
+
+            // -us → -i
+            expect(Str.plural('cactus')).toBe('cacti');
+            expect(Str.plural('focus')).toBe('foci');
+
+            // -is → -es
+            expect(Str.plural('analysis')).toBe('analyses');
+            expect(Str.plural('basis')).toBe('bases');
+
+            // -ix → -ices
+            expect(Str.plural('matrix')).toBe('matrices');
+            expect(Str.plural('index')).toBe('indices');
+        });
+
+        test('handles compound words and special cases', () => {
+            expect(Str.plural('passerby')).toBe('passersby');
+            expect(Str.plural('runner-up')).toBe('runners-up');
+        });
+
+        test('handles words with multiple plural forms', () => {
+            expect(Str.plural('octopus')).toBe('octopuses');
+            expect(Str.plural('hoof')).toBe('hoofs');
+        });
+
+        test('preserves case sensitivity', () => {
+            expect(Str.plural('Hero')).toBe('Heroes');
+            expect(Str.plural('CHILD')).toBe('CHILDREN');
+            expect(Str.plural('Analysis')).toBe('Analyses');
+        });
+
+        test('handles edge cases', () => {
+            expect(Str.plural('')).toBe('');
+            expect(Str.plural(' ')).toBe(' ');
+            expect(Str.plural('sheep', 0)).toBe('sheep');
+            expect(Str.plural('person', 1.5)).toBe('people');
         });
     });
 
@@ -385,6 +478,15 @@ describe('Strings', () => {
             expect(Str.pluralStudly('UserFeedback')).toEqual('UserFeedback');
             expect(Str.pluralStudly('VerifiedHuman', 2)).toEqual('VerifiedHumans');
             expect(Str.pluralStudly('VerifiedHuman', 1)).toEqual('VerifiedHuman');
+        });
+    });
+
+    describe('Str.pluralPascal', () => {
+        test('converts a singular word string formatted in Pascal case to its plural form', () => {
+            expect(Str.pluralPascal('VerifiedHuman')).toEqual('VerifiedHumans');
+            expect(Str.pluralPascal('UserFeedback')).toEqual('UserFeedback');
+            expect(Str.pluralPascal('VerifiedHuman', 2)).toEqual('VerifiedHumans');
+            expect(Str.pluralPascal('VerifiedHuman', 1)).toEqual('VerifiedHuman');
         });
     });
 
@@ -509,9 +611,98 @@ describe('Strings', () => {
     });
 
     describe('Str.singular', () => {
-        test('converts a string to its singular form', () => {
-            expect(Str.singular('cars')).toEqual('car');
-            expect(Str.singular('children')).toEqual('child');
+        test('converts plural to singular for regular nouns', () => {
+            expect(Str.singular('cars')).toBe('car');
+            expect(Str.singular('books')).toBe('book');
+            expect(Str.singular('apples')).toBe('apple');
+        });
+
+        test('handles irregular nouns correctly', () => {
+            // A
+            expect(Str.singular('alumnae')).toBe('alumna');
+            expect(Str.singular('analyses')).toBe('analysis');
+            expect(Str.singular('axes')).toBe('axis');
+
+            // B-C
+            expect(Str.singular('bacteria')).toBe('bacterium');
+            expect(Str.singular('children')).toBe('child');
+            expect(Str.singular('crises')).toBe('crisis');
+
+            // D-F
+            expect(Str.singular('demos')).toBe('demo');
+            expect(Str.singular('feet')).toBe('foot');
+            expect(Str.singular('fungi')).toBe('fungus');
+
+            // G-M
+            expect(Str.singular('geese')).toBe('goose');
+            expect(Str.singular('men')).toBe('man');
+            expect(Str.singular('mice')).toBe('mouse');
+
+            // N-S
+            expect(Str.singular('nuclei')).toBe('nucleus');
+            expect(Str.singular('people')).toBe('person');
+            expect(Str.singular('theses')).toBe('thesis');
+
+            // T-Z
+            expect(Str.singular('teeth')).toBe('tooth');
+            expect(Str.singular('wives')).toBe('wife');
+            expect(Str.singular('zombies')).toBe('zombie');
+        });
+
+        test('handles uncountable nouns correctly', () => {
+            expect(Str.singular('sheep')).toBe('sheep');
+            expect(Str.singular('fish')).toBe('fish');
+            expect(Str.singular('series')).toBe('series');
+            expect(Str.singular('money')).toBe('money');
+            expect(Str.singular('information')).toBe('information');
+        });
+
+        test('handles special singularization rules', () => {
+            // -ves → -f/-fe
+            expect(Str.singular('leaves')).toBe('leaf');
+            expect(Str.singular('knives')).toBe('knife');
+
+            // -ies → -y
+            expect(Str.singular('cities')).toBe('city');
+            expect(Str.singular('babies')).toBe('baby');
+
+            // -oes → -o
+            expect(Str.singular('potatoes')).toBe('potato');
+            expect(Str.singular('volcanoes')).toBe('volcano');
+
+            // -i → -us
+            expect(Str.singular('cacti')).toBe('cactus');
+            expect(Str.singular('foci')).toBe('focus');
+
+            // -es → -is
+            expect(Str.singular('analyses')).toBe('analysis');
+            expect(Str.singular('bases')).toBe('basis');
+
+            // -ices → -ix/ex
+            expect(Str.singular('matrices')).toBe('matrix');
+            expect(Str.singular('indices')).toBe('index');
+        });
+
+        test('handles compound words and special cases', () => {
+            expect(Str.singular('passersby')).toBe('passerby');
+            expect(Str.singular('runners-up')).toBe('runner-up');
+        });
+
+        test('handles words with multiple singular forms', () => {
+            expect(Str.singular('octopuses')).toBe('octopus');
+            expect(Str.singular('hoofs')).toBe('hoof');
+        });
+
+        test('preserves case sensitivity', () => {
+            expect(Str.singular('Heroes')).toBe('Hero');
+            expect(Str.singular('CHILDREN')).toBe('CHILD');
+            expect(Str.singular('Analyses')).toBe('Analysis');
+        });
+
+        test('handles edge cases', () => {
+            expect(Str.singular('')).toBe('');
+            expect(Str.singular(' ')).toBe(' ');
+            expect(Str.singular('123')).toBe('123');
         });
     });
 
@@ -587,8 +778,14 @@ describe('Strings', () => {
     });
 
     describe('Str.studly', () => {
-        test('converts the given string to StudlyCase', () => {
+        test('converts the given string to studly caps case', () => {
             expect(Str.studly('foo_bar')).toEqual('FooBar');
+        });
+    });
+
+    describe('Str.pascal', () => {
+        test('converts the given string to Pascal case', () => {
+            expect(Str.pascal('foo_bar')).toEqual('FooBar');
         });
     });
 
@@ -909,7 +1106,7 @@ describe('Fluent Strings', () => {
 
     describe('excerpt', () => {
         test('extracts an excerpt from the string that matches the first instance of a phrase within that string', () => {
-            expect(Str.of('This is my name').excerpt('my', {'radius': 3}).toString()).toEqual('...is my na...');
+            expect(Str.of('This is my name').excerpt('my', { 'radius': 3 }).toString()).toEqual('...is my na...');
         });
     });
 
@@ -1141,10 +1338,107 @@ describe('Fluent Strings', () => {
     });
 
     describe('plural', () => {
-        test('converts a singular word string to its plural form', () => {
-            expect(Str.of('car').plural().toString()).toEqual('cars');
-            expect(Str.of('child').plural().toString()).toEqual('children');
-            expect(Str.of('child').plural(1).toString()).toEqual('child');
+        test('converts singular to plural for regular nouns', () => {
+            expect(Str.of('car').plural().toString()).toBe('cars');
+            expect(Str.of('book').plural().toString()).toBe('books');
+            expect(Str.of('apple').plural().toString()).toBe('apples');
+        });
+
+        test('handles count parameter correctly', () => {
+            expect(Str.of('child').plural(1).toString()).toBe('child');
+            expect(Str.of('child').plural(2).toString()).toBe('children');
+            expect(Str.of('person').plural(1).toString()).toBe('person');
+            expect(Str.of('person').plural(3).toString()).toBe('people');
+        });
+
+        test('converts irregular nouns correctly', () => {
+            // A
+            expect(Str.of('alumna').plural().toString()).toBe('alumnae');
+            expect(Str.of('analysis').plural().toString()).toBe('analyses');
+            expect(Str.of('axis').plural().toString()).toBe('axes');
+
+            // B-C
+            expect(Str.of('bacterium').plural().toString()).toBe('bacteria');
+            expect(Str.of('child').plural().toString()).toBe('children');
+            expect(Str.of('crisis').plural().toString()).toBe('crises');
+
+            // D-F
+            expect(Str.of('datum').plural().toString()).toBe('data');
+            expect(Str.of('foot').plural().toString()).toBe('feet');
+            expect(Str.of('fungus').plural().toString()).toBe('fungi');
+
+            // G-M
+            expect(Str.of('goose').plural().toString()).toBe('geese');
+            expect(Str.of('man').plural().toString()).toBe('men');
+            expect(Str.of('mouse').plural().toString()).toBe('mice');
+
+            // N-S
+            expect(Str.of('nucleus').plural().toString()).toBe('nuclei');
+            expect(Str.of('person').plural().toString()).toBe('people');
+            expect(Str.of('thesis').plural().toString()).toBe('theses');
+
+            // T-Z
+            expect(Str.of('tooth').plural().toString()).toBe('teeth');
+            expect(Str.of('wife').plural().toString()).toBe('wives');
+            expect(Str.of('zombie').plural().toString()).toBe('zombies');
+        });
+
+        test('handles uncountable nouns correctly', () => {
+            expect(Str.of('sheep').plural().toString()).toBe('sheep');
+            expect(Str.of('fish').plural().toString()).toBe('fish');
+            expect(Str.of('series').plural().toString()).toBe('series');
+            expect(Str.of('money').plural().toString()).toBe('money');
+            expect(Str.of('information').plural().toString()).toBe('information');
+            expect(Str.of('equipment').plural().toString()).toBe('equipment');
+        });
+
+        test('handles special pluralization rules', () => {
+            // -f/-fe → -ves
+            expect(Str.of('leaf').plural().toString()).toBe('leaves');
+            expect(Str.of('knife').plural().toString()).toBe('knives');
+
+            // -y → -ies
+            expect(Str.of('city').plural().toString()).toBe('cities');
+            expect(Str.of('baby').plural().toString()).toBe('babies');
+
+            // -o → -oes
+            expect(Str.of('potato').plural().toString()).toBe('potatoes');
+            expect(Str.of('volcano').plural().toString()).toBe('volcanoes');
+
+            // -us → -i
+            expect(Str.of('cactus').plural().toString()).toBe('cacti');
+            expect(Str.of('focus').plural().toString()).toBe('foci');
+
+            // -is → -es
+            expect(Str.of('analysis').plural().toString()).toBe('analyses');
+            expect(Str.of('basis').plural().toString()).toBe('bases');
+
+            // -ix → -ices
+            expect(Str.of('matrix').plural().toString()).toBe('matrices');
+            expect(Str.of('index').plural().toString()).toBe('indices');
+        });
+
+        test('handles compound words and special cases', () => {
+            expect(Str.of('passerby').plural().toString()).toBe('passersby');
+            expect(Str.of('runner-up').plural().toString()).toBe('runners-up');
+        });
+
+        test('handles words with multiple plural forms', () => {
+            expect(Str.of('octopus').plural().toString()).toBe('octopuses');
+            expect(Str.of('hoof').plural().toString()).toBe('hoofs');
+        });
+
+        test('preserves case sensitivity', () => {
+            expect(Str.of('Hero').plural().toString()).toBe('Heroes');
+            expect(Str.of('CHILD').plural().toString()).toBe('CHILDREN');
+            expect(Str.of('Analysis').plural().toString()).toBe('Analyses');
+        });
+
+        test('handles edge cases', () => {
+            expect(Str.of('').plural().toString()).toBe('');
+            expect(Str.of(' ').plural().toString()).toBe(' ');
+            expect(Str.of('sheep').plural(0).toString()).toBe('sheep');
+            expect(Str.of('person').plural(1.5).toString()).toBe('people');
         });
     });
 
@@ -1154,6 +1448,15 @@ describe('Fluent Strings', () => {
             expect(Str.of('UserFeedback').pluralStudly().toString()).toEqual('UserFeedback');
             expect(Str.of('VerifiedHuman').pluralStudly(2).toString()).toEqual('VerifiedHumans');
             expect(Str.of('VerifiedHuman').pluralStudly(1).toString()).toEqual('VerifiedHuman');
+        });
+    });
+
+    describe('pluralPascal', () => {
+        test('converts a singular word string formatted in Pascal case to its plural form', () => {
+            expect(Str.of('VerifiedHuman').pluralPascal().toString()).toEqual('VerifiedHumans');
+            expect(Str.of('UserFeedback').pluralPascal().toString()).toEqual('UserFeedback');
+            expect(Str.of('VerifiedHuman').pluralPascal(2).toString()).toEqual('VerifiedHumans');
+            expect(Str.of('VerifiedHuman').pluralPascal(1).toString()).toEqual('VerifiedHuman');
         });
     });
 
@@ -1287,10 +1590,98 @@ describe('Fluent Strings', () => {
     });
 
     describe('singular', () => {
-        test('converts a plural word string to its singular form', () => {
-            expect(Str.of('cars').singular().toString()).toEqual('car');
-            expect(Str.of('children').singular(2).toString()).toEqual('child');
+        test('converts plural to singular for regular nouns', () => {
+            expect(Str.of('cars').singular().toString()).toBe('car');
+            expect(Str.of('books').singular().toString()).toBe('book');
+            expect(Str.of('apples').singular().toString()).toBe('apple');
+        });
 
+        test('handles irregular nouns correctly', () => {
+            // A
+            expect(Str.of('alumnae').singular().toString()).toBe('alumna');
+            expect(Str.of('analyses').singular().toString()).toBe('analysis');
+            expect(Str.of('axes').singular().toString()).toBe('axis');
+
+            // B-C
+            expect(Str.of('bacteria').singular().toString()).toBe('bacterium');
+            expect(Str.of('children').singular().toString()).toBe('child');
+            expect(Str.of('crises').singular().toString()).toBe('crisis');
+
+            // D-F
+            expect(Str.of('demos').singular().toString()).toBe('demo');
+            expect(Str.of('feet').singular().toString()).toBe('foot');
+            expect(Str.of('fungi').singular().toString()).toBe('fungus');
+
+            // G-M
+            expect(Str.of('geese').singular().toString()).toBe('goose');
+            expect(Str.of('men').singular().toString()).toBe('man');
+            expect(Str.of('mice').singular().toString()).toBe('mouse');
+
+            // N-S
+            expect(Str.of('nuclei').singular().toString()).toBe('nucleus');
+            expect(Str.of('people').singular().toString()).toBe('person');
+            expect(Str.of('theses').singular().toString()).toBe('thesis');
+
+            // T-Z
+            expect(Str.of('teeth').singular().toString()).toBe('tooth');
+            expect(Str.of('wives').singular().toString()).toBe('wife');
+            expect(Str.of('zombies').singular().toString()).toBe('zombie');
+        });
+
+        test('handles uncountable nouns correctly', () => {
+            expect(Str.of('sheep').singular().toString()).toBe('sheep');
+            expect(Str.of('fish').singular().toString()).toBe('fish');
+            expect(Str.of('series').singular().toString()).toBe('series');
+            expect(Str.of('money').singular().toString()).toBe('money');
+            expect(Str.of('information').singular().toString()).toBe('information');
+        });
+
+        test('handles special singularization rules', () => {
+            // -ves → -f/-fe
+            expect(Str.of('leaves').singular().toString()).toBe('leaf');
+            expect(Str.of('knives').singular().toString()).toBe('knife');
+
+            // -ies → -y
+            expect(Str.of('cities').singular().toString()).toBe('city');
+            expect(Str.of('babies').singular().toString()).toBe('baby');
+
+            // -oes → -o
+            expect(Str.of('potatoes').singular().toString()).toBe('potato');
+            expect(Str.of('volcanoes').singular().toString()).toBe('volcano');
+
+            // -i → -us
+            expect(Str.of('cacti').singular().toString()).toBe('cactus');
+            expect(Str.of('foci').singular().toString()).toBe('focus');
+
+            // -es → -is
+            expect(Str.of('analyses').singular().toString()).toBe('analysis');
+            expect(Str.of('bases').singular().toString()).toBe('basis');
+
+            // -ices → -ix/ex
+            expect(Str.of('matrices').singular().toString()).toBe('matrix');
+            expect(Str.of('indices').singular().toString()).toBe('index');
+        });
+
+        test('handles compound words and special cases', () => {
+            expect(Str.of('passersby').singular().toString()).toBe('passerby');
+            expect(Str.of('runners-up').singular().toString()).toBe('runner-up');
+        });
+
+        test('handles words with multiple singular forms', () => {
+            expect(Str.of('octopuses').singular().toString()).toBe('octopus');
+            expect(Str.of('hoofs').singular().toString()).toBe('hoof');
+        });
+
+        test('preserves case sensitivity', () => {
+            expect(Str.of('Heroes').singular().toString()).toBe('Hero');
+            expect(Str.of('CHILDREN').singular().toString()).toBe('CHILD');
+            expect(Str.of('Analyses').singular().toString()).toBe('Analysis');
+        });
+
+        test('handles edge cases', () => {
+            expect(Str.of('').singular().toString()).toBe('');
+            expect(Str.of(' ').singular().toString()).toBe(' ');
+            expect(Str.of('123').singular().toString()).toBe('123');
         });
     });
 
@@ -1313,8 +1704,14 @@ describe('Fluent Strings', () => {
     });
 
     describe('studly', () => {
-        test('converts the given string to StudlyCase', () => {
+        test('converts the given string to studly caps case', () => {
             expect(Str.of('foo_bar').studly().toString()).toEqual('FooBar');
+        });
+    });
+
+    describe('pascal', () => {
+        test('converts the given string to Pascal case', () => {
+            expect(Str.of('foo_bar').pascal().toString()).toEqual('FooBar');
         });
     });
 

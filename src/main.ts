@@ -4,6 +4,8 @@ type CharacterType = string | string[] | null;
 
 type HtmlStringType = HTMLElement | Node | string;
 
+type ExcerptOptions = { radius?: number, omission?: string }
+
 enum Mode {
     MB_CASE_UPPER = 0,
     MB_CASE_LOWER = 1,
@@ -391,10 +393,7 @@ class Str {
      *
      * @return { string | null }
      */
-    static excerpt(text: string, phrase: string = '', options: {
-        radius?: number,
-        omission?: string
-    } = {}): string | null {
+    static excerpt(text: string, phrase: string = '', options: ExcerptOptions = {}): string | null {
         const radius: number = options.radius ?? 100;
         const omission: string = options.omission ?? '...';
         const results: string[] = text.split(phrase);
@@ -856,100 +855,496 @@ class Str {
      * @return { string }
      */
     static plural(value: string, count: number | number[] = 2): string {
-        const isCapital: boolean = /[A-Z]/.test(value.charAt(0));
-
-        if (count !== undefined && count === 1) {
+        if ((count !== undefined && count === 1) || value.trim() === '') {
             return value;
         }
 
-        /**
-         * List of rules for plural words.
-         *
-         * @type { object }
-         */
+        // List of rules for plural words.
         const plural: { [key: string]: string } = {
-            '(quiz)$': '$1zes',
-            '^(ox)$': '$1en',
-            '([m|l])ouse$': '$1ice',
-            '(matr|vert|ind)ix|ex$': '$1ices',
-            '(x|ch|ss|sh)$': '$1es',
-            '([^aeiouy]|qu)y$': '$1ies',
-            '(hive)$': '$1s',
-            '(?:([^f])fe|([lr])f)$': '$1$2ves',
-            '(shea|lea|loa|thie)f$': '$1ves',
-            'sis$': 'ses',
+            // Special cases (unchanged plurals)
+            '^(.*)menu$': '$1menus',
+            '^tights$': 'tights',
+            '^shorts$': 'shorts',
+            '^glasses$': 'glasses',
+            '^pants$': 'pants',
+
+            // -us -> -i (second declension nouns)
+            '(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|vir)us$': '$1i',
+            '(vir)us$': '$1i',
+
+            // -um/on -> -a (neuter nouns)
             '([ti])um$': '$1a',
-            '(tomat|potat|ech|her|vet)o$': '$1oes',
-            '(bu)s$': '$1ses',
-            '(alias)$': '$1es',
-            '(octop)us$': '$1i',
-            '(ax|test)is$': '$1es',
-            '(us)$': '$1es',
-            '([^s]+)$': '$1s',
+            '(tax)on$': '$1a',
+            '(criteri)on$': '$1a',
+
+            // -ix/ex -> -ices
+            '(matr)ix$': '$1ices',
+            '(vert|ind)ex$': '$1ices',
+
+            // -o -> -oes
+            '(buffal|her|potat|tomat|volcan)o$': '$1oes',
+
+            // -ouse -> -ouses
+            '(h|bl)ouse$': '$1ouses',
+            'ouse$': 'ouses',
+
+            // -y -> -ies
+            '([^aeiouy]|qu)y$': '$1ies',
+
+            // -f/fe -> -ves
+            '([lr])f$': '$1ves',
+            '([^fo])fe$': '$1ves',
+            '(shea|loa|lea|thie)f$': '$1ves',
+            '(li|wi|kni)fe$': '$1ves',
+
+            // -is -> -es
+            '(analys|ax|cris|test|thes)is$': '$1es',
+
+            // -e exceptions
+            '(alias|status|bus)$': '$1es',
+            '(shoe|slave)$': '$1s',
+            '(corpse)$': '$1s',
+            '(drive|dive|hive|olive|tive)$': '$1s',
+
+            // -x -> -xes
+            '([ftw]ax)$': '$1es',
+
+            // -ouse -> -ice
+            '([m|l])ouse$': '$1ice',
+
+            // -e -> -es
+            '(x|ch|ss|sh)$': '$1es',
+            'o$': 'oes',
+
+            // -ze -> -zes
+            '(quiz)$': '$1zes',
+
+            // -ox -> -oxen
+            '^(ox)$': '$1en',
+
+            // -person -> -people
+            '(p)erson$': '$1eople',
+
+            // Irregular singulars
+            '(m)an$': '$1en',
+            '(c)hild$': '$1hildren',
+            '(f)oot$': '$1eet',
+            '(m)ouse$': '$1ice',
+            '(t)ooth$': '$1eeth',
+            '(g)oose$': '$1eese',
+
+            // -news (unchanged)
+            '(n)ews$': '$1ews',
+
+            // -eau -> -eaus
+            'eau$': 'eaus',
+
+            // -sis -> -ses
+            '(^analy)sis$': '$1ses',
+            '((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)sis$': '$1$2ses',
+
+            // -ovie -> -ovies
+            '(m)ovie$': '$1ovies',
+
+            // -eries -> -eries (unchanged)
+            '(s)eries$': '$1eries',
+
+            // -us -> -uses
+            '([^a])us$': '$1uses',
+            'us$': 'uses',
+
+            // -status -> -statuses
+            '(s)tatus$': '$1tatuses',
+
+            // -campus -> -campuses
+            '(c)ampus$': '$1ampuses',
+
+            // General case (add -s)
+            '$': 's'
         };
 
-        /**
-         * List of words that change irregularly.
-         *
-         * @type { object }
-         */
+        // List of words that change irregularly.
         const irregular: { [key: string]: string } = {
-            'move': 'moves',
-            'foot': 'feet',
-            'goose': 'geese',
-            'sex': 'sexes',
+            // A
+            'abuse': 'abuses',
+            'alumna': 'alumnae',
+            'alumnus': 'alumni',
+            'analysis': 'analyses',
+            'appendix': 'appendices',
+            'atlas': 'atlases',
+            'avalanche': 'avalanches',
+            'axis': 'axes',
+            'axe': 'axes',
+
+            // B
+            'bacillus': 'bacilli',
+            'bacterium': 'bacteria',
+            'basis': 'bases',
+            'beau': 'beaux',
+            'beef': 'beefs',
+            'blouse': 'blouses',
+            'brother': 'brothers',
+            'brownie': 'brownies',
+            'bureau': 'bureaux',
+
+            // C
+            'cache': 'caches',
+            'cactus': 'cacti',
+            'cafe': 'cafes',
+            'calf': 'calves',
+            'canvas': 'canvases',
+            'cave': 'caves',
+            'chateau': 'chateaux',
             'child': 'children',
+            'cookie': 'cookies',
+            'corpus': 'corpuses',
+            'cow': 'cows',
+            'crisis': 'crises',
+            'criterion': 'criteria',
+            'curriculum': 'curricula',
+            'curve': 'curves',
+
+            // D
+            'datum': 'data',
+            'deer': 'deer',
+            'demo': 'demos',
+            'diagnosis': 'diagnoses',
+            'domino': 'dominoes',
+
+            // E
+            'echo': 'echoes',
+            'elf': 'elves',
+            'ellipsis': 'ellipses',
+            'emphasis': 'emphases',
+            'epoch': 'epochs',
+
+            // F
+            'fish': 'fish',
+            'focus': 'foci',
+            'foe': 'foes',
+            'foot': 'feet',
+            'formula': 'formulae',
+            'fungus': 'fungi',
+
+            // G
+            'ganglion': 'ganglions',
+            'gas': 'gases',
+            'genie': 'genies',
+            'genus': 'genera',
+            'goose': 'geese',
+            'graffito': 'graffiti',
+            'grave': 'graves',
+
+            // H
+            'half': 'halves',
+            'hippopotamus': 'hippopotami',
+            'hoax': 'hoaxes',
+            'hoof': 'hoofs',
             'human': 'humans',
+
+            // I
+            'iris': 'irises',
+
+            // K
+            'knife': 'knives',
+
+            // L
+            'larva': 'larvae',
+            'leaf': 'leaves',
+            'lens': 'lenses',
+            'life': 'lives',
+            'loaf': 'loaves',
+
+            // M
             'man': 'men',
-            'tooth': 'teeth',
+            'matrix': 'matrices',
+            'means': 'means',
+            'medium': 'media',
+            'memorandum': 'memoranda',
+            'money': 'monies',
+            'mongoose': 'mongooses',
+            'mouse': 'mice',
+            'motto': 'mottoes',
+            'move': 'moves',
+            'mythos': 'mythoi',
+
+            // N
+            'nebula': 'nebulae',
+            'neurosis': 'neuroses',
+            'niche': 'niches',
+            'niveau': 'niveaux',
+            'nucleus': 'nuclei',
+            'numen': 'numina',
+
+            // O
+            'oasis': 'oases',
+            'occiput': 'occiputs',
+            'octopus': 'octopuses',
+            'offspring': 'offspring',
+            'opus': 'opuses',
+            'ox': 'oxen',
+
+            // P
+            'parenthesis': 'parentheses', 'passerby': 'passersby',
+            'penis': 'penises',
             'person': 'people',
+            'phenomenon': 'phenomena',
+            'plateau': 'plateaux',
+
+            // R
+            'radius': 'radii',
+            'runner-up': 'runners-up',
+
+            // S
+            'safe': 'safes',
+            'save': 'saves',
+            'scarf': 'scarves',
+            'self': 'selves',
+            'series': 'series',
+            'sex': 'sexes',
+            'sheep': 'sheep',
+            'shelf': 'shelves',
+            'sieve': 'sieves',
+            'soliloquy': 'soliloquies',
+            'son-in-law': 'sons-in-law',
+            'species': 'species',
+            'stadium': 'stadiums',
+            'stimulus': 'stimuli',
+            'stratum': 'strata',
+            'swine': 'swine',
+            'syllabus': 'syllabi',
+            'synthesis': 'syntheses',
+
+            // T
+            'testis': 'testes',
+            'thesis': 'theses',
+            'thief': 'thieves',
+            'tooth': 'teeth',
+            'tornado': 'tornadoes',
+            'trilby': 'trilbys',
+            'turf': 'turfs',
+
+            // V
+            'valve': 'valves',
+            'volcano': 'volcanoes',
+
+            // W
+            'wave': 'waves',
+            'wife': 'wives',
+            'wolf': 'wolves',
+
+            // Z
+            'zombie': 'zombies'
         };
 
-        /**
-         * List of words that do not change.
-         *
-         * @type { string[] }
-         */
+        // List of words that do not change.
         const uncountable: string[] = [
-            'sheep',
-            'fish',
-            'feedback',
-            'deer',
-            'moose',
-            'series',
-            'species',
-            'money',
-            'rice',
-            'information',
-            'equipment',
-            'bison',
-            'cod',
-            'offspring',
-            'pike',
-            'salmon',
-            'shrimp',
-            'swine',
-            'trout',
+            // A
+            'advice',
             'aircraft',
+            'amoyese',
+            'art',
+            'audio',
+
+            // B
+            'baggage',
+            'bison',
+            'borghese',
+            'bream',
+            'breeches',
+            'britches',
+            'buffalo',
+            'butter',
+
+            // C
+            'cantus',
+            'carp',
+            'cattle',
+            'chassis',
+            'clippers',
+            'clothing',
+            'coal',
+            'cod',
+            'coitus',
+            'compensation',
+            'congoese',
+            'contretemps',
+            'coreopsis',
+            'corps',
+            'cotton',
+
+            // D
+            'data',
+            'debris',
+            'deer',
+            'diabetes',
+            'djinn',
+
+            // E
+            'education',
+            'eland',
+            'elk',
+            'emoji',
+            'equipment',
+            'evidence',
+
+            // F
+            'faroese',
+            'feedback',
+            'fish',
+            'flounder',
+            'flour',
+            'foochowese',
+            'food',
+            'furniture',
+
+            // G
+            'gallows',
+            'genevese',
+            'genoese',
+            'gilbertese',
+            'gold',
+
+            // H
+            'headquarters',
+            'herpes',
+            'hijinks',
+            'homework',
             'hovercraft',
+            'hottentotese',
+
+            // I
+            'impatience',
+            'information',
+            'innings',
+
+            // J
+            'jackanapes',
+            'jeans',
+            'jedi',
+
+            // K
+            'kin',
+            'kiplingese',
+            'knowledge',
+            'kongoese',
+
+            // L
+            'leather',
+            'love',
+            'lucchese',
+            'luggage',
+
+            // M
+            'mackerel',
+            'Maltese',
+            'management',
+            'metadata',
+            'mews',
+            'money',
+            'moose',
+            'mumps',
+            'music',
+
+            // N
+            'nankingese',
+            'news',
+            'nexus',
+            'niasese',
+            'nutrition',
+
+            // O
+            'oil',
+            'offspring',
+
+            // P
+            'patience',
+            'pekingese',
+            'piedmontese',
+            'pike',
+            'pincers',
+            'pistoiese',
+            'plankton',
+            'pliers',
+            'pokemon',
+            'police',
+            'polish',
+            'portuguese',
+            'proceedings',
+            'progress',
+
+            // Q
+            // (none yet)
+
+            // R
+            'rabies',
+            'rain',
+            'research',
+            'rhinoceros',
+            'rice',
+
+            // S
+            'salmon',
+            'sand',
+            'sarawakese',
+            'scissors',
+            'sea[- ]bass',
+            'series',
+            'shavese',
+            'shears',
+            'sheep',
+            'shrimp',
+            'siemens',
+            'silk',
+            'sms',
+            'soap',
+            'social media',
             'spacecraft',
+            'spam',
+            'species',
+            'staff',
             'sugar',
+            'swine',
+
+            // T
+            'talent',
+            'toothpaste',
+            'traffic',
+            'travel',
+            'trousers',
+            'trout',
             'tuna',
-            'you',
+
+            // U
+            'us',
+
+            // V
+            'vermontese',
+            'vinegar',
+
+            // W
+            'weather',
+            'wenchowese',
+            'wheat',
+            'whiting',
+            'wildebeest',
             'wood',
+            'wool',
+
+            // Y
+            'yengeese',
+            'you'
         ];
 
         if (uncountable.indexOf(value.toLowerCase()) >= 0) {
-            return value;
+            return matchCase(value, value);
         }
 
         for (const word in irregular) {
             const pattern: RegExp = new RegExp(`${word}$`, 'i');
 
             if (pattern.test(value)) {
-                value = value.replace(pattern, (irregular[word] as string));
-
-                return isCapital ? this.ucfirst(value) : value;
+                return matchCase(value.replace(pattern, (irregular[word] as string)), value);
             }
         }
 
@@ -957,13 +1352,11 @@ class Str {
             const pattern: RegExp = new RegExp(word, 'i');
 
             if (pattern.test(value)) {
-                value = value.replace(pattern, (plural[word] as string));
-
-                return isCapital ? this.ucfirst(value) : value;
+                return matchCase(value.replace(pattern, (plural[word] as string)), value);
             }
         }
 
-        return isCapital ? this.ucfirst(value) : value;
+        return matchCase(value, value);
     }
 
     /**
@@ -980,6 +1373,18 @@ class Str {
         const lastWord: string = (parts.pop() as string);
 
         return parts.join('') + this.ucfirst(this.plural(lastWord, count));
+    }
+
+    /**
+     * Pluralize the last word of an English, Pascal case string.
+     *
+     * @param { string } value
+     * @param { number | array } count
+     *
+     * @return { string }
+     */
+    static pluralPascal(value: string, count: number | number[] = 2): string {
+        return this.pluralStudly(value, count);
     }
 
     /**
@@ -1393,104 +1798,493 @@ class Str {
      * @return { string }
      */
     static singular(value: string): string {
-        const isCapital: boolean = /[A-Z]/.test(value.charAt(0));
-
-        /**
-         * List of rules for singular words.
-         *
-         * @type { object }
-         */
+        // List of rules for singular words.
         const singular: { [key: string]: string } = {
-            '(quiz)zes$': '$1',
+            // Special cases
+            '^(.*)(menu)s$': '$1$2',
+            '^tights$': 'tights',
+            '^shorts$': 'shorts',
+            '^glasses$': 'glasses',
+            '^pants$': 'pants',
+
+            // -us -> -i (second declension nouns)
+            '(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|viri?)i$': '$1us',
+            '(vir)i$': '$1us',
+
+            // -a -> -um/on (neuter nouns)
+            '([ti])a$': '$1um',
+            '([ti])a(?<!regatta)$': '$1um',
+            '(tax)a$': '$1on',
+            '(c)riteria$': '$1riterion',
+
+            // -ices -> -ex/ix
             '(matr)ices$': '$1ix',
             '(vert|ind)ices$': '$1ex',
-            '^(ox)en$': '$1',
-            '(alias)es$': '$1',
-            '(octop|vir)i$': '$1us',
-            '(cris|ax|test)es$': '$1is',
-            '(shoe)s$': '$1',
-            '(o)es$': '$1',
-            '(bus)es$': '$1',
-            '([m|l])ice$': '$1ouse',
-            '(x|ch|ss|sh)es$': '$1',
-            '(m)ovies$': '$1ovie',
-            '(s)eries$': '$1eries',
+
+            // -oes -> -o
+            '(buffal|her|potat|tomat|volcan)oes$': '$1o',
+
+            // -ouses -> -ouse
+            '(h|bl)ouses$': '$1ouse',
+            'ouses$': 'ouse',
+
+            // -ies -> -y
             '([^aeiouy]|qu)ies$': '$1y',
+
+            // -ves -> -f/fe
             '([lr])ves$': '$1f',
-            '(tive)s$': '$1',
-            '(hive)s$': '$1',
-            '(li|wi|kni)ves$': '$1fe',
+            '([^fo])ves$': '$1fe',
             '(shea|loa|lea|thie)ves$': '$1f',
+            '(li|wi|kni)ves$': '$1fe',
+
+            // -es -> -is
+            '(analys|ax|cris|test|thes)es$': '$1is',
+            '(cris|ax|test)es$': '$1is',
+
+            // -es exceptions
+            '(alias|status|bus)es$': '$1',
+            '(shoe|slave)s$': '$1',
+            '(corpse)s$': '$1',
+            '(drive|dive|hive|olive|tive)s$': '$1',
+
+            // -xes
+            '([ftw]ax)es': '$1',
+
+            // -ices -> -ouse
+            '([m|l])ice$': '$1ouse',
+
+            // -es -> -e
+            '(o)es$': '$1',
+            '(x|ch|ss|sh)es$': '$1',
+
+            // -zes -> -ze
+            '(quiz)zes$': '$1',
+
+            // -en -> - (oxen -> ox)
+            '^(ox)en$': '$1',
+
+            // -people -> -person
+            '(p)eople$': '$1erson',
+
+            // Irregular plurals
+            '(m)en$': '$1an',
+            '(c)hildren$': '$1hild',
+            '(f)eet$': '$1oot',
+            '(m)ice$': '$1ouse',
+            '(t)eeth$': '$1ooth',
+            '(g)eese$': '$1oose',
+
+            // -news
+            '(n)ews$': '$1ews',
+
+            // -eau
+            'eaus$': 'eau',
+
+            // -ses -> -sis
             '(^analy)ses$': '$1sis',
             '((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$': '$1$2sis',
-            '([ti])a$': '$1um',
-            '(n)ews$': '$1ews',
-            '(h|bl)ouses$': '$1ouse',
-            '(corpse)s$': '$1',
+
+            // -movies
+            '(m)ovies$': '$1ovie',
+
+            // -series
+            '(s)eries$': '$1eries',
+
+            // -us
+            '([^a])uses$': '$1us',
             '(us)es$': '$1',
-            's$': '',
+
+            // -status
+            '(s)tatus(es)?$': '$1tatus',
+
+            // -campus
+            '(c)ampus$': '$1ampus',
+
+            // General case
+            's$': ''
         };
 
-        /**
-         * List of words that change irregularly.
-         *
-         * @type { object }
-         */
+        // List of words that change irregularly.
         const irregular: { [key: string]: string } = {
-            'move': 'moves',
-            'foot': 'feet',
-            'goose': 'geese',
-            'sex': 'sexes',
-            'child': 'children',
-            'man': 'men',
-            'tooth': 'teeth',
-            'person': 'people',
+            // A
+            'abuses': 'abuse',
+            'alumnae': 'alumna',
+            'alumni': 'alumnus',
+            'analyses': 'analysis',
+            'appendices': 'appendix',
+            'atlases': 'atlas',
+            'avalanches': 'avalanche',
+            'axes': 'axis',  // Also covers 'axe'
+
+            // B
+            'bacilli': 'bacillus',
+            'bacteria': 'bacterium',
+            'bases': 'basis',
+            'beaux': 'beau',
+            'beefs': 'beef',
+            'blouses': 'blouse',
+            'brothers': 'brother',
+            'brownies': 'brownie',
+            'bureaux': 'bureau',
+
+            // C
+            'caches': 'cache',
+            'cacti': 'cactus',
+            'cafes': 'cafe',
+            'calves': 'calf',
+            'canvases': 'canvas',
+            'caves': 'cave',
+            'chateaux': 'chateau',
+            'children': 'child',
+            'cookies': 'cookie',
+            'corpuses': 'corpus',
+            'cows': 'cow',
+            'crises': 'crisis',
+            'criteria': 'criterion',
+            'curricula': 'curriculum',
+            'curves': 'curve',
+
+            // D
+            'deer': 'deer',
+            'demos': 'demo',
+            'diagnoses': 'diagnosis',
+            'dominoes': 'domino',
+
+            // E
+            'echoes': 'echo',
+            'elves': 'elf',
+            'ellipses': 'ellipsis',
+            'emphases': 'emphasis',
+            'epochs': 'epoch',
+
+            // F
+            'fish': 'fish',
+            'foci': 'focus',
+            'foes': 'foe',
+            'feet': 'foot',
+            'formulae': 'formula',
+            'fungi': 'fungus',
+
+            // G
+            'ganglions': 'ganglion',
+            'gases': 'gas',
+            'genies': 'genie',
+            'genera': 'genus',
+            'geese': 'goose',
+            'graffiti': 'graffito',
+            'graves': 'grave',
+
+            // H
+            'halves': 'half',
+            'hippopotami': 'hippopotamus',
+            'hoaxes': 'hoax',
+            'hoofs': 'hoof',  // Also acceptable: 'hooves'
+            'humans': 'human',
+
+            // I
+            'irises': 'iris',
+
+            // K
+            'knives': 'knife',
+
+            // L
+            'larvae': 'larva',
+            'leaves': 'leaf',
+            'lenses': 'lens',
+            'lives': 'life',
+            'loaves': 'loaf',
+
+            // M
+            'men': 'man',
+            'matrices': 'matrix',
+            'means': 'means',
+            'media': 'medium',
+            'memoranda': 'memorandum',
+            'monies': 'money',
+            'mongooses': 'mongoose',
+            'mice': 'mouse',
+            'mottoes': 'motto',
+            'moves': 'move',
+            'mythoi': 'mythos',
+
+            // N
+            'nebulae': 'nebula',
+            'neuroses': 'neurosis',
+            'niches': 'niche',
+            'niveaux': 'niveau',
+            'nuclei': 'nucleus',
+            'numina': 'numen',
+
+            // O
+            'oases': 'oasis',
+            'occiputs': 'occiput',
+            'octopuses': 'octopus',
+            'offspring': 'offspring',
+            'opuses': 'opus',
+            'oxen': 'ox',
+
+            // P
+            'parentheses': 'parenthesis',
+            'passersby': 'passerby',
+            'penises': 'penis',
+            'people': 'person',
+            'phenomena': 'phenomenon',
+            'plateaux': 'plateau',
+
+            // R
+            'radii': 'radius',
+            'runners-up': 'runner-up',
+
+            // S
+            'safes': 'safe',
+            'saves': 'save',
+            'scarves': 'scarf',
+            'selves': 'self',
+            'series': 'series',
+            'sexes': 'sex',
+            'sheep': 'sheep',
+            'shelves': 'shelf',
+            'sieves': 'sieve',
+            'soliloquies': 'soliloquy',
+            'sons-in-law': 'son-in-law',
+            'species': 'species',
+            'stadiums': 'stadium',
+            'stimuli': 'stimulus',
+            'strata': 'stratum',
+            'swine': 'swine',
+            'syllabi': 'syllabus',
+            'syntheses': 'synthesis',
+
+            // T
+            'testes': 'testis',
+            'theses': 'thesis',
+            'thieves': 'thief',
+            'teeth': 'tooth',
+            'tornadoes': 'tornado',
+            'trilbys': 'trilby',
+            'turfs': 'turf',  // Also acceptable: 'turves'
+
+            // V
+            'valves': 'valve',
+            'volcanoes': 'volcano',
+
+            // W
+            'waves': 'wave',
+            'wives': 'wife',
+            'wolves': 'wolf',
+
+            // Z
+            'zombies': 'zombie'
         };
 
-        /**
-         * List of words that do not change.
-         *
-         * @type { String[] }
-         */
+        // List of words that do not change.
         const uncountable: string[] = [
-            'sheep',
-            'fish',
-            'deer',
-            'moose',
-            'series',
-            'species',
-            'money',
-            'rice',
-            'information',
-            'equipment',
-            'bison',
-            'cod',
-            'offspring',
-            'pike',
-            'salmon',
-            'shrimp',
-            'swine',
-            'trout',
+            // A
+            'advice',
             'aircraft',
+            'amoyese',
+            'art',
+            'audio',
+
+            // B
+            'baggage',
+            'bison',
+            'borghese',
+            'bream',
+            'breeches',
+            'britches',
+            'buffalo',
+            'butter',
+
+            // C
+            'cantus',
+            'carp',
+            'cattle',
+            'chassis',
+            'clippers',
+            'clothing',
+            'coal',
+            'cod',
+            'coitus',
+            'compensation',
+            'congoese',
+            'contretemps',
+            'coreopsis',
+            'corps',
+            'cotton',
+
+            // D
+            'data',
+            'debris',
+            'deer',
+            'diabetes',
+            'djinn',
+
+            // E
+            'education',
+            'eland',
+            'elk',
+            'emoji',
+            'equipment',
+            'evidence',
+
+            // F
+            'faroese',
+            'feedback',
+            'fish',
+            'flounder',
+            'flour',
+            'foochowese',
+            'food',
+            'furniture',
+
+            // G
+            'gallows',
+            'genevese',
+            'genoese',
+            'gilbertese',
+            'gold',
+
+            // H
+            'headquarters',
+            'herpes',
+            'hijinks',
+            'homework',
             'hovercraft',
+            'hottentotese',
+
+            // I
+            'impatience',
+            'information',
+            'innings',
+
+            // J
+            'jackanapes',
+            'jeans',
+            'jedi',
+
+            // K
+            'kin',
+            'kiplingese',
+            'knowledge',
+            'kongoese',
+
+            // L
+            'leather',
+            'love',
+            'lucchese',
+            'luggage',
+
+            // M
+            'mackerel',
+            'Maltese',
+            'management',
+            'metadata',
+            'mews',
+            'money',
+            'moose',
+            'mumps',
+            'music',
+
+            // N
+            'nankingese',
+            'news',
+            'nexus',
+            'niasese',
+            'nutrition',
+
+            // O
+            'oil',
+            'offspring',
+
+            // P
+            'patience',
+            'pekingese',
+            'piedmontese',
+            'pike',
+            'pincers',
+            'pistoiese',
+            'plankton',
+            'pliers',
+            'pokemon',
+            'police',
+            'polish',
+            'portuguese',
+            'proceedings',
+            'progress',
+
+            // Q
+            // (none yet)
+
+            // R
+            'rabies',
+            'rain',
+            'research',
+            'rhinoceros',
+            'rice',
+
+            // S
+            'salmon',
+            'sand',
+            'sarawakese',
+            'scissors',
+            'sea[- ]bass',
+            'series',
+            'shavese',
+            'shears',
+            'sheep',
+            'shrimp',
+            'siemens',
+            'silk',
+            'sms',
+            'soap',
+            'social media',
             'spacecraft',
+            'spam',
+            'species',
+            'staff',
             'sugar',
+            'swine',
+
+            // T
+            'talent',
+            'toothpaste',
+            'traffic',
+            'travel',
+            'trousers',
+            'trout',
             'tuna',
-            'you',
+
+            // U
+            'us',
+
+            // V
+            'vermontese',
+            'vinegar',
+
+            // W
+            'weather',
+            'wenchowese',
+            'wheat',
+            'whiting',
+            'wildebeest',
             'wood',
+            'wool',
+
+            // Y
+            'yengeese',
+            'you'
         ];
 
         if (uncountable.indexOf(value.toLowerCase()) >= 0) {
-            return value;
+            return matchCase(value, value);
         }
 
         for (const word in irregular) {
-            const pattern: RegExp = new RegExp(`${irregular[word]}$`, 'i');
+            const pattern: RegExp = new RegExp(`${word}$`, 'i');
 
             if (pattern.test(value)) {
-                value = value.replace(pattern, word);
-
-                return isCapital ? this.ucfirst(value) : value;
+                return matchCase(value.replace(pattern, (irregular[word] as string)), value);
             }
         }
 
@@ -1498,13 +2292,11 @@ class Str {
             const pattern: RegExp = new RegExp(word, 'i');
 
             if (pattern.test(value)) {
-                value = value.replace(pattern, (singular[word] as string));
-
-                return isCapital ? this.ucfirst(value) : value;
+                return matchCase(value.replace(pattern, (singular[word] as string)), value);
             }
         }
 
-        return isCapital ? this.ucfirst(value) : value;
+        return matchCase(value, value);
     }
 
     /**
@@ -1516,7 +2308,7 @@ class Str {
      *
      * @return { string }
      */
-    static slug(title: string, separator: string = '-', dictionary: { [key: string]: string } = {'@': 'at'}): string {
+    static slug(title: string, separator: string = '-', dictionary: { [key: string]: string } = { '@': 'at' }): string {
         let flip: string = separator === '-' ? '_' : '-';
 
         title = title.replace('![' + preg_quote(flip) + ']+!u', separator);
@@ -1678,6 +2470,17 @@ class Str {
         const studlyWords: string[] = words.map((word: string) => this.ucfirst(word));
 
         return studlyWords.join('');
+    }
+
+    /**
+     * Convert a value to Pascal case.
+     *
+     * @param { string } value
+     *
+     * @return { string }
+     */
+    static pascal(value: string): string {
+        return this.studly(value);
     }
 
     /**
@@ -2285,7 +3088,7 @@ class Stringable {
      *
      * @return { string | null }
      */
-    excerpt(phrase: string = '', options: object = {}): string | null {
+    excerpt(phrase: string = '', options: ExcerptOptions = {}): string | null {
         return Str.excerpt(this._value, phrase, options);
     }
 
@@ -2610,6 +3413,17 @@ class Stringable {
     }
 
     /**
+     * Pluralize the last word of an English, Pascal case string.
+     *
+     * @param { number } count
+     *
+     * @return { this }
+     */
+    pluralPascal(count: number = 2): Stringable {
+        return new Stringable(Str.pluralPascal(this._value, count));
+    }
+
+    /**
      * Find the multibyte safe position of the first occurrence of the given substring.
      *
      * @param { string } needle
@@ -2833,7 +3647,7 @@ class Stringable {
      *
      * @return { this }
      */
-    slug(separator: string = '-', dictionary: { [key: string]: string } = {'@': 'at'}): Stringable {
+    slug(separator: string = '-', dictionary: { [key: string]: string } = { '@': 'at' }): Stringable {
         return new Stringable(Str.slug(this._value, separator, dictionary));
     }
 
@@ -2866,6 +3680,15 @@ class Stringable {
      */
     studly(): Stringable {
         return new Stringable(Str.studly(this._value));
+    }
+
+    /**
+     * Convert a value to Pascal case.
+     *
+     * @return { this }
+     */
+    pascal(): Stringable {
+        return new Stringable(Str.pascal(this._value));
     }
 
     /**
@@ -3455,7 +4278,7 @@ class Stringable {
 
                 // A textual representation of a day, three letters (e.g., Mon through Sun)
                 case 'D':
-                    date += now.toLocaleString('en-US', {weekday: 'short'});
+                    date += now.toLocaleString('en-US', { weekday: 'short' });
 
                     break;
 
@@ -3467,7 +4290,7 @@ class Stringable {
 
                 // A full textual representation of the day of the week (e.g., Sunday through Saturday)
                 case 'l':
-                    date += now.toLocaleString('en-US', {weekday: 'long'});
+                    date += now.toLocaleString('en-US', { weekday: 'long' });
 
                     break;
 
@@ -3525,7 +4348,7 @@ class Stringable {
                 }
                 // A full textual representation of a month, such as January or March (e.g., January through December)
                 case 'F':
-                    date += now.toLocaleString('en-US', {month: 'long'});
+                    date += now.toLocaleString('en-US', { month: 'long' });
 
                     break;
 
@@ -3539,7 +4362,7 @@ class Stringable {
                 }
                 // A short textual representation of a month, three letters (e.g., Jan through Dec)
                 case 'M':
-                    date += now.toLocaleString('en-US', {month: 'short'});
+                    date += now.toLocaleString('en-US', { month: 'short' });
 
                     break;
 
@@ -3667,7 +4490,7 @@ class Stringable {
 
                 // Timezone identifier (e.g., UTC, GMT, Atlantic/Azores)
                 case 'e': {
-                    date += Intl.DateTimeFormat('en-us', {timeZone: tz ?? undefined}).resolvedOptions().timeZone;
+                    date += Intl.DateTimeFormat('en-us', { timeZone: tz ?? undefined }).resolvedOptions().timeZone;
 
                     break;
                 }
@@ -3936,6 +4759,31 @@ function preg_quote(string: string, delimiter: string | null = null): string {
  */
 function ucwords(string: string, separators: string = ' \t\r\n\f\v'): string {
     return string.split(separators).map((word: string) => word[0]?.toUpperCase() + word.substring(1)).join(' ');
+}
+
+/**
+ * Attempt to match the case on two strings.
+ *
+ * @param { string} value
+ * @param { string } comparison
+ *
+ * @return { string }
+ */
+function matchCase(value: string, comparison: string): string {
+    const cases: ((str: string) => string)[] = [
+        str => str.toLowerCase(),
+        str => str.toUpperCase(),
+        str => str.charAt(0).toUpperCase() + str.slice(1),
+        str => str.replace(/\b\w/g, char => char.toUpperCase())
+    ];
+
+    for (const matcher of cases) {
+        if (matcher(comparison) === comparison) {
+            return matcher(value);
+        }
+    }
+
+    return value;
 }
 
 if (typeof exports != 'undefined') {
