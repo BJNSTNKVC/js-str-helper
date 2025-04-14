@@ -7,14 +7,14 @@ type HtmlStringType = HTMLElement | Node | string;
 type ExcerptOptions = { radius?: number, omission?: string }
 
 enum Mode {
-    MB_CASE_UPPER = 0,
-    MB_CASE_LOWER = 1,
-    MB_CASE_TITLE = 2,
-    MB_CASE_FOLD = 3,
+    MB_CASE_UPPER        = 0,
+    MB_CASE_LOWER        = 1,
+    MB_CASE_TITLE        = 2,
+    MB_CASE_FOLD         = 3,
     MB_CASE_UPPER_SIMPLE = 4,
     MB_CASE_LOWER_SIMPLE = 5,
     MB_CASE_TITLE_SIMPLE = 6,
-    MB_CASE_FOLD_SIMPLE = 7
+    MB_CASE_FOLD_SIMPLE  = 7
 }
 
 class Str {
@@ -863,22 +863,22 @@ class Str {
         const plural: { [key: string]: string } = {
             // Special cases (unchanged plurals)
             '^(.*)menu$': '$1menus',
-            '^tights$': 'tights',
-            '^shorts$': 'shorts',
-            '^glasses$': 'glasses',
-            '^pants$': 'pants',
+            '^tights$'  : 'tights',
+            '^shorts$'  : 'shorts',
+            '^glasses$' : 'glasses',
+            '^pants$'   : 'pants',
 
             // -us -> -i (second declension nouns)
             '(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|vir)us$': '$1i',
-            '(vir)us$': '$1i',
+            '(vir)us$'                                                           : '$1i',
 
             // -um/on -> -a (neuter nouns)
-            '([ti])um$': '$1a',
-            '(tax)on$': '$1a',
+            '([ti])um$'   : '$1a',
+            '(tax)on$'    : '$1a',
             '(criteri)on$': '$1a',
 
             // -ix/ex -> -ices
-            '(matr)ix$': '$1ices',
+            '(matr)ix$'    : '$1ices',
             '(vert|ind)ex$': '$1ices',
 
             // -o -> -oes
@@ -886,24 +886,24 @@ class Str {
 
             // -ouse -> -ouses
             '(h|bl)ouse$': '$1ouses',
-            'ouse$': 'ouses',
+            'ouse$'      : 'ouses',
 
             // -y -> -ies
             '([^aeiouy]|qu)y$': '$1ies',
 
             // -f/fe -> -ves
-            '([lr])f$': '$1ves',
-            '([^fo])fe$': '$1ves',
+            '([lr])f$'             : '$1ves',
+            '([^fo])fe$'           : '$1ves',
             '(shea|loa|lea|thie)f$': '$1ves',
-            '(li|wi|kni)fe$': '$1ves',
+            '(li|wi|kni)fe$'       : '$1ves',
 
             // -is -> -es
             '(analys|ax|cris|test|thes)is$': '$1es',
 
             // -e exceptions
-            '(alias|status|bus)$': '$1es',
-            '(shoe|slave)$': '$1s',
-            '(corpse)$': '$1s',
+            '(alias|status|bus)$'          : '$1es',
+            '(shoe|slave)$'                : '$1s',
+            '(corpse)$'                    : '$1s',
             '(drive|dive|hive|olive|tive)$': '$1s',
 
             // -x -> -xes
@@ -914,7 +914,7 @@ class Str {
 
             // -e -> -es
             '(x|ch|ss|sh)$': '$1es',
-            'o$': 'oes',
+            'o$'           : 'oes',
 
             // -ze -> -zes
             '(quiz)$': '$1zes',
@@ -926,9 +926,9 @@ class Str {
             '(p)erson$': '$1eople',
 
             // Irregular singulars
-            '(m)an$': '$1en',
+            '(m)an$'  : '$1en',
             '(c)hild$': '$1hildren',
-            '(f)oot$': '$1eet',
+            '(f)oot$' : '$1eet',
             '(m)ouse$': '$1ice',
             '(t)ooth$': '$1eeth',
             '(g)oose$': '$1eese',
@@ -940,7 +940,7 @@ class Str {
             'eau$': 'eaus',
 
             // -sis -> -ses
-            '(^analy)sis$': '$1ses',
+            '(^analy)sis$'                                                 : '$1ses',
             '((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)sis$': '$1$2ses',
 
             // -ovie -> -ovies
@@ -951,7 +951,7 @@ class Str {
 
             // -us -> -uses
             '([^a])us$': '$1uses',
-            'us$': 'uses',
+            'us$'      : 'uses',
 
             // -status -> -statuses
             '(s)tatus$': '$1tatuses',
@@ -966,81 +966,81 @@ class Str {
         // List of words that change irregularly.
         const irregular: { [key: string]: string } = {
             // A
-            'abuse': 'abuses',
-            'alumna': 'alumnae',
-            'alumnus': 'alumni',
-            'analysis': 'analyses',
-            'appendix': 'appendices',
-            'atlas': 'atlases',
+            'abuse'    : 'abuses',
+            'alumna'   : 'alumnae',
+            'alumnus'  : 'alumni',
+            'analysis' : 'analyses',
+            'appendix' : 'appendices',
+            'atlas'    : 'atlases',
             'avalanche': 'avalanches',
-            'axis': 'axes',
-            'axe': 'axes',
+            'axis'     : 'axes',
+            'axe'      : 'axes',
 
             // B
-            'bacillus': 'bacilli',
+            'bacillus' : 'bacilli',
             'bacterium': 'bacteria',
-            'basis': 'bases',
-            'beau': 'beaux',
-            'beef': 'beefs',
-            'blouse': 'blouses',
-            'brother': 'brothers',
-            'brownie': 'brownies',
-            'bureau': 'bureaux',
+            'basis'    : 'bases',
+            'beau'     : 'beaux',
+            'beef'     : 'beefs',
+            'blouse'   : 'blouses',
+            'brother'  : 'brothers',
+            'brownie'  : 'brownies',
+            'bureau'   : 'bureaux',
 
             // C
-            'cache': 'caches',
-            'cactus': 'cacti',
-            'cafe': 'cafes',
-            'calf': 'calves',
-            'canvas': 'canvases',
-            'cave': 'caves',
-            'chateau': 'chateaux',
-            'child': 'children',
-            'cookie': 'cookies',
-            'corpus': 'corpuses',
-            'cow': 'cows',
-            'crisis': 'crises',
-            'criterion': 'criteria',
+            'cache'     : 'caches',
+            'cactus'    : 'cacti',
+            'cafe'      : 'cafes',
+            'calf'      : 'calves',
+            'canvas'    : 'canvases',
+            'cave'      : 'caves',
+            'chateau'   : 'chateaux',
+            'child'     : 'children',
+            'cookie'    : 'cookies',
+            'corpus'    : 'corpuses',
+            'cow'       : 'cows',
+            'crisis'    : 'crises',
+            'criterion' : 'criteria',
             'curriculum': 'curricula',
-            'curve': 'curves',
+            'curve'     : 'curves',
 
             // D
-            'datum': 'data',
-            'deer': 'deer',
-            'demo': 'demos',
+            'datum'    : 'data',
+            'deer'     : 'deer',
+            'demo'     : 'demos',
             'diagnosis': 'diagnoses',
-            'domino': 'dominoes',
+            'domino'   : 'dominoes',
 
             // E
-            'echo': 'echoes',
-            'elf': 'elves',
+            'echo'    : 'echoes',
+            'elf'     : 'elves',
             'ellipsis': 'ellipses',
             'emphasis': 'emphases',
-            'epoch': 'epochs',
+            'epoch'   : 'epochs',
 
             // F
-            'fish': 'fish',
-            'focus': 'foci',
-            'foe': 'foes',
-            'foot': 'feet',
+            'fish'   : 'fish',
+            'focus'  : 'foci',
+            'foe'    : 'foes',
+            'foot'   : 'feet',
             'formula': 'formulae',
-            'fungus': 'fungi',
+            'fungus' : 'fungi',
 
             // G
             'ganglion': 'ganglions',
-            'gas': 'gases',
-            'genie': 'genies',
-            'genus': 'genera',
-            'goose': 'geese',
+            'gas'     : 'gases',
+            'genie'   : 'genies',
+            'genus'   : 'genera',
+            'goose'   : 'geese',
             'graffito': 'graffiti',
-            'grave': 'graves',
+            'grave'   : 'graves',
 
             // H
-            'half': 'halves',
+            'half'        : 'halves',
             'hippopotamus': 'hippopotami',
-            'hoax': 'hoaxes',
-            'hoof': 'hoofs',
-            'human': 'humans',
+            'hoax'        : 'hoaxes',
+            'hoof'        : 'hoofs',
+            'human'       : 'humans',
 
             // I
             'iris': 'irises',
@@ -1050,82 +1050,82 @@ class Str {
 
             // L
             'larva': 'larvae',
-            'leaf': 'leaves',
-            'lens': 'lenses',
-            'life': 'lives',
-            'loaf': 'loaves',
+            'leaf' : 'leaves',
+            'lens' : 'lenses',
+            'life' : 'lives',
+            'loaf' : 'loaves',
 
             // M
-            'man': 'men',
-            'matrix': 'matrices',
-            'means': 'means',
-            'medium': 'media',
+            'man'       : 'men',
+            'matrix'    : 'matrices',
+            'means'     : 'means',
+            'medium'    : 'media',
             'memorandum': 'memoranda',
-            'money': 'monies',
-            'mongoose': 'mongooses',
-            'mouse': 'mice',
-            'motto': 'mottoes',
-            'move': 'moves',
-            'mythos': 'mythoi',
+            'money'     : 'monies',
+            'mongoose'  : 'mongooses',
+            'mouse'     : 'mice',
+            'motto'     : 'mottoes',
+            'move'      : 'moves',
+            'mythos'    : 'mythoi',
 
             // N
-            'nebula': 'nebulae',
+            'nebula'  : 'nebulae',
             'neurosis': 'neuroses',
-            'niche': 'niches',
-            'niveau': 'niveaux',
-            'nucleus': 'nuclei',
-            'numen': 'numina',
+            'niche'   : 'niches',
+            'niveau'  : 'niveaux',
+            'nucleus' : 'nuclei',
+            'numen'   : 'numina',
 
             // O
-            'oasis': 'oases',
-            'occiput': 'occiputs',
-            'octopus': 'octopuses',
+            'oasis'    : 'oases',
+            'occiput'  : 'occiputs',
+            'octopus'  : 'octopuses',
             'offspring': 'offspring',
-            'opus': 'opuses',
-            'ox': 'oxen',
+            'opus'     : 'opuses',
+            'ox'       : 'oxen',
 
             // P
             'parenthesis': 'parentheses', 'passerby': 'passersby',
-            'penis': 'penises',
-            'person': 'people',
-            'phenomenon': 'phenomena',
-            'plateau': 'plateaux',
+            'penis'      : 'penises',
+            'person'     : 'people',
+            'phenomenon' : 'phenomena',
+            'plateau'    : 'plateaux',
 
             // R
-            'radius': 'radii',
+            'radius'   : 'radii',
             'runner-up': 'runners-up',
 
             // S
-            'safe': 'safes',
-            'save': 'saves',
-            'scarf': 'scarves',
-            'self': 'selves',
-            'series': 'series',
-            'sex': 'sexes',
-            'sheep': 'sheep',
-            'shelf': 'shelves',
-            'sieve': 'sieves',
-            'soliloquy': 'soliloquies',
+            'safe'      : 'safes',
+            'save'      : 'saves',
+            'scarf'     : 'scarves',
+            'self'      : 'selves',
+            'series'    : 'series',
+            'sex'       : 'sexes',
+            'sheep'     : 'sheep',
+            'shelf'     : 'shelves',
+            'sieve'     : 'sieves',
+            'soliloquy' : 'soliloquies',
             'son-in-law': 'sons-in-law',
-            'species': 'species',
-            'stadium': 'stadiums',
-            'stimulus': 'stimuli',
-            'stratum': 'strata',
-            'swine': 'swine',
-            'syllabus': 'syllabi',
-            'synthesis': 'syntheses',
+            'species'   : 'species',
+            'stadium'   : 'stadiums',
+            'stimulus'  : 'stimuli',
+            'stratum'   : 'strata',
+            'swine'     : 'swine',
+            'syllabus'  : 'syllabi',
+            'synthesis' : 'syntheses',
 
             // T
-            'testis': 'testes',
-            'thesis': 'theses',
-            'thief': 'thieves',
-            'tooth': 'teeth',
+            'testis' : 'testes',
+            'thesis' : 'theses',
+            'thief'  : 'thieves',
+            'tooth'  : 'teeth',
             'tornado': 'tornadoes',
-            'trilby': 'trilbys',
-            'turf': 'turfs',
+            'trilby' : 'trilbys',
+            'turf'   : 'turfs',
 
             // V
-            'valve': 'valves',
+            'valve'  : 'valves',
             'volcano': 'volcanoes',
 
             // W
@@ -1802,23 +1802,23 @@ class Str {
         const singular: { [key: string]: string } = {
             // Special cases
             '^(.*)(menu)s$': '$1$2',
-            '^tights$': 'tights',
-            '^shorts$': 'shorts',
-            '^glasses$': 'glasses',
-            '^pants$': 'pants',
+            '^tights$'     : 'tights',
+            '^shorts$'     : 'shorts',
+            '^glasses$'    : 'glasses',
+            '^pants$'      : 'pants',
 
             // -us -> -i (second declension nouns)
             '(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|viri?)i$': '$1us',
-            '(vir)i$': '$1us',
+            '(vir)i$'                                                             : '$1us',
 
             // -a -> -um/on (neuter nouns)
-            '([ti])a$': '$1um',
+            '([ti])a$'            : '$1um',
             '([ti])a(?<!regatta)$': '$1um',
-            '(tax)a$': '$1on',
-            '(c)riteria$': '$1riterion',
+            '(tax)a$'             : '$1on',
+            '(c)riteria$'         : '$1riterion',
 
             // -ices -> -ex/ix
-            '(matr)ices$': '$1ix',
+            '(matr)ices$'    : '$1ix',
             '(vert|ind)ices$': '$1ex',
 
             // -oes -> -o
@@ -1826,25 +1826,25 @@ class Str {
 
             // -ouses -> -ouse
             '(h|bl)ouses$': '$1ouse',
-            'ouses$': 'ouse',
+            'ouses$'      : 'ouse',
 
             // -ies -> -y
             '([^aeiouy]|qu)ies$': '$1y',
 
             // -ves -> -f/fe
-            '([lr])ves$': '$1f',
-            '([^fo])ves$': '$1fe',
+            '([lr])ves$'             : '$1f',
+            '([^fo])ves$'            : '$1fe',
             '(shea|loa|lea|thie)ves$': '$1f',
-            '(li|wi|kni)ves$': '$1fe',
+            '(li|wi|kni)ves$'        : '$1fe',
 
             // -es -> -is
             '(analys|ax|cris|test|thes)es$': '$1is',
-            '(cris|ax|test)es$': '$1is',
+            '(cris|ax|test)es$'            : '$1is',
 
             // -es exceptions
-            '(alias|status|bus)es$': '$1',
-            '(shoe|slave)s$': '$1',
-            '(corpse)s$': '$1',
+            '(alias|status|bus)es$'         : '$1',
+            '(shoe|slave)s$'                : '$1',
+            '(corpse)s$'                    : '$1',
             '(drive|dive|hive|olive|tive)s$': '$1',
 
             // -xes
@@ -1854,7 +1854,7 @@ class Str {
             '([m|l])ice$': '$1ouse',
 
             // -es -> -e
-            '(o)es$': '$1',
+            '(o)es$'         : '$1',
             '(x|ch|ss|sh)es$': '$1',
 
             // -zes -> -ze
@@ -1867,12 +1867,12 @@ class Str {
             '(p)eople$': '$1erson',
 
             // Irregular plurals
-            '(m)en$': '$1an',
+            '(m)en$'     : '$1an',
             '(c)hildren$': '$1hild',
-            '(f)eet$': '$1oot',
-            '(m)ice$': '$1ouse',
-            '(t)eeth$': '$1ooth',
-            '(g)eese$': '$1oose',
+            '(f)eet$'    : '$1oot',
+            '(m)ice$'    : '$1ouse',
+            '(t)eeth$'   : '$1ooth',
+            '(g)eese$'   : '$1oose',
 
             // -news
             '(n)ews$': '$1ews',
@@ -1881,7 +1881,7 @@ class Str {
             'eaus$': 'eau',
 
             // -ses -> -sis
-            '(^analy)ses$': '$1sis',
+            '(^analy)ses$'                                                 : '$1sis',
             '((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$': '$1$2sis',
 
             // -movies
@@ -1892,7 +1892,7 @@ class Str {
 
             // -us
             '([^a])uses$': '$1us',
-            '(us)es$': '$1',
+            '(us)es$'    : '$1',
 
             // -status
             '(s)tatus(es)?$': '$1tatus',
@@ -1907,79 +1907,79 @@ class Str {
         // List of words that change irregularly.
         const irregular: { [key: string]: string } = {
             // A
-            'abuses': 'abuse',
-            'alumnae': 'alumna',
-            'alumni': 'alumnus',
-            'analyses': 'analysis',
+            'abuses'    : 'abuse',
+            'alumnae'   : 'alumna',
+            'alumni'    : 'alumnus',
+            'analyses'  : 'analysis',
             'appendices': 'appendix',
-            'atlases': 'atlas',
+            'atlases'   : 'atlas',
             'avalanches': 'avalanche',
-            'axes': 'axis',  // Also covers 'axe'
+            'axes'      : 'axis',  // Also covers 'axe'
 
             // B
-            'bacilli': 'bacillus',
+            'bacilli' : 'bacillus',
             'bacteria': 'bacterium',
-            'bases': 'basis',
-            'beaux': 'beau',
-            'beefs': 'beef',
-            'blouses': 'blouse',
+            'bases'   : 'basis',
+            'beaux'   : 'beau',
+            'beefs'   : 'beef',
+            'blouses' : 'blouse',
             'brothers': 'brother',
             'brownies': 'brownie',
-            'bureaux': 'bureau',
+            'bureaux' : 'bureau',
 
             // C
-            'caches': 'cache',
-            'cacti': 'cactus',
-            'cafes': 'cafe',
-            'calves': 'calf',
-            'canvases': 'canvas',
-            'caves': 'cave',
-            'chateaux': 'chateau',
-            'children': 'child',
-            'cookies': 'cookie',
-            'corpuses': 'corpus',
-            'cows': 'cow',
-            'crises': 'crisis',
-            'criteria': 'criterion',
+            'caches'   : 'cache',
+            'cacti'    : 'cactus',
+            'cafes'    : 'cafe',
+            'calves'   : 'calf',
+            'canvases' : 'canvas',
+            'caves'    : 'cave',
+            'chateaux' : 'chateau',
+            'children' : 'child',
+            'cookies'  : 'cookie',
+            'corpuses' : 'corpus',
+            'cows'     : 'cow',
+            'crises'   : 'crisis',
+            'criteria' : 'criterion',
             'curricula': 'curriculum',
-            'curves': 'curve',
+            'curves'   : 'curve',
 
             // D
-            'deer': 'deer',
-            'demos': 'demo',
+            'deer'     : 'deer',
+            'demos'    : 'demo',
             'diagnoses': 'diagnosis',
-            'dominoes': 'domino',
+            'dominoes' : 'domino',
 
             // E
-            'echoes': 'echo',
-            'elves': 'elf',
+            'echoes'  : 'echo',
+            'elves'   : 'elf',
             'ellipses': 'ellipsis',
             'emphases': 'emphasis',
-            'epochs': 'epoch',
+            'epochs'  : 'epoch',
 
             // F
-            'fish': 'fish',
-            'foci': 'focus',
-            'foes': 'foe',
-            'feet': 'foot',
+            'fish'    : 'fish',
+            'foci'    : 'focus',
+            'foes'    : 'foe',
+            'feet'    : 'foot',
             'formulae': 'formula',
-            'fungi': 'fungus',
+            'fungi'   : 'fungus',
 
             // G
             'ganglions': 'ganglion',
-            'gases': 'gas',
-            'genies': 'genie',
-            'genera': 'genus',
-            'geese': 'goose',
-            'graffiti': 'graffito',
-            'graves': 'grave',
+            'gases'    : 'gas',
+            'genies'   : 'genie',
+            'genera'   : 'genus',
+            'geese'    : 'goose',
+            'graffiti' : 'graffito',
+            'graves'   : 'grave',
 
             // H
-            'halves': 'half',
+            'halves'     : 'half',
             'hippopotami': 'hippopotamus',
-            'hoaxes': 'hoax',
-            'hoofs': 'hoof',  // Also acceptable: 'hooves'
-            'humans': 'human',
+            'hoaxes'     : 'hoax',
+            'hoofs'      : 'hoof',  // Also acceptable: 'hooves'
+            'humans'     : 'human',
 
             // I
             'irises': 'iris',
@@ -1991,86 +1991,86 @@ class Str {
             'larvae': 'larva',
             'leaves': 'leaf',
             'lenses': 'lens',
-            'lives': 'life',
+            'lives' : 'life',
             'loaves': 'loaf',
 
             // M
-            'men': 'man',
-            'matrices': 'matrix',
-            'means': 'means',
-            'media': 'medium',
+            'men'      : 'man',
+            'matrices' : 'matrix',
+            'means'    : 'means',
+            'media'    : 'medium',
             'memoranda': 'memorandum',
-            'monies': 'money',
+            'monies'   : 'money',
             'mongooses': 'mongoose',
-            'mice': 'mouse',
-            'mottoes': 'motto',
-            'moves': 'move',
-            'mythoi': 'mythos',
+            'mice'     : 'mouse',
+            'mottoes'  : 'motto',
+            'moves'    : 'move',
+            'mythoi'   : 'mythos',
 
             // N
-            'nebulae': 'nebula',
+            'nebulae' : 'nebula',
             'neuroses': 'neurosis',
-            'niches': 'niche',
-            'niveaux': 'niveau',
-            'nuclei': 'nucleus',
-            'numina': 'numen',
+            'niches'  : 'niche',
+            'niveaux' : 'niveau',
+            'nuclei'  : 'nucleus',
+            'numina'  : 'numen',
 
             // O
-            'oases': 'oasis',
-            'occiputs': 'occiput',
+            'oases'    : 'oasis',
+            'occiputs' : 'occiput',
             'octopuses': 'octopus',
             'offspring': 'offspring',
-            'opuses': 'opus',
-            'oxen': 'ox',
+            'opuses'   : 'opus',
+            'oxen'     : 'ox',
 
             // P
             'parentheses': 'parenthesis',
-            'passersby': 'passerby',
-            'penises': 'penis',
-            'people': 'person',
-            'phenomena': 'phenomenon',
-            'plateaux': 'plateau',
+            'passersby'  : 'passerby',
+            'penises'    : 'penis',
+            'people'     : 'person',
+            'phenomena'  : 'phenomenon',
+            'plateaux'   : 'plateau',
 
             // R
-            'radii': 'radius',
+            'radii'     : 'radius',
             'runners-up': 'runner-up',
 
             // S
-            'safes': 'safe',
-            'saves': 'save',
-            'scarves': 'scarf',
-            'selves': 'self',
-            'series': 'series',
-            'sexes': 'sex',
-            'sheep': 'sheep',
-            'shelves': 'shelf',
-            'sieves': 'sieve',
+            'safes'      : 'safe',
+            'saves'      : 'save',
+            'scarves'    : 'scarf',
+            'selves'     : 'self',
+            'series'     : 'series',
+            'sexes'      : 'sex',
+            'sheep'      : 'sheep',
+            'shelves'    : 'shelf',
+            'sieves'     : 'sieve',
             'soliloquies': 'soliloquy',
             'sons-in-law': 'son-in-law',
-            'species': 'species',
-            'stadiums': 'stadium',
-            'stimuli': 'stimulus',
-            'strata': 'stratum',
-            'swine': 'swine',
-            'syllabi': 'syllabus',
-            'syntheses': 'synthesis',
+            'species'    : 'species',
+            'stadiums'   : 'stadium',
+            'stimuli'    : 'stimulus',
+            'strata'     : 'stratum',
+            'swine'      : 'swine',
+            'syllabi'    : 'syllabus',
+            'syntheses'  : 'synthesis',
 
             // T
-            'testes': 'testis',
-            'theses': 'thesis',
-            'thieves': 'thief',
-            'teeth': 'tooth',
+            'testes'   : 'testis',
+            'theses'   : 'thesis',
+            'thieves'  : 'thief',
+            'teeth'    : 'tooth',
             'tornadoes': 'tornado',
-            'trilbys': 'trilby',
-            'turfs': 'turf',  // Also acceptable: 'turves'
+            'trilbys'  : 'trilby',
+            'turfs'    : 'turf',  // Also acceptable: 'turves'
 
             // V
-            'valves': 'valve',
+            'valves'   : 'valve',
             'volcanoes': 'volcano',
 
             // W
-            'waves': 'wave',
-            'wives': 'wife',
+            'waves' : 'wave',
+            'wives' : 'wife',
             'wolves': 'wolf',
 
             // Z
@@ -2678,6 +2678,63 @@ class Str {
 
             return (character === 'x' ? randomChar : (randomChar & 0x3 | 0x8)).toString(16);
         });
+    }
+
+    /**
+     * Generate a UUID (version 7).
+     *
+     * @return { string }
+     */
+    static uuid7(time: Date | null = null): string {
+        const values = new Uint32Array(3);
+
+        crypto.getRandomValues(values);
+
+        const timestamp: number = time ? time.getTime() : Date.now();
+
+        if (timestamp < 0 || timestamp > 281474976710655) {
+            throw new RangeError('Timestamp must be a 48-bit positive integer');
+        }
+
+        const [r1, r2, r3] = values;
+
+        const randomA: number = (r1 as number) & 0xfff;
+        const randomBHi: number = (r2 as number) & 0x3fffffff;
+        const randomBLo: number = r3 as number;
+
+        const bytes = new Uint8Array(16);
+
+        bytes[0] = timestamp / 2 ** 40;
+        bytes[1] = timestamp / 2 ** 32;
+        bytes[2] = timestamp / 2 ** 24;
+        bytes[3] = timestamp / 2 ** 16;
+        bytes[4] = timestamp / 2 ** 8;
+        bytes[5] = timestamp;
+        bytes[6] = 0x70 | (randomA >>> 8);
+        bytes[7] = randomA;
+        bytes[8] = 0x80 | (randomBHi >>> 24);
+        bytes[9] = randomBHi >>> 16;
+        bytes[10] = randomBHi >>> 8;
+        bytes[11] = randomBHi;
+        bytes[12] = randomBLo >>> 24;
+        bytes[13] = randomBLo >>> 16;
+        bytes[14] = randomBLo >>> 8;
+        bytes[15] = randomBLo;
+
+        const digits = '0123456789abcdef';
+
+        let result: string = '';
+
+        for (let i = 0; i < 16; i++) {
+            result += digits.charAt(bytes[i]! >>> 4);
+            result += digits.charAt(bytes[i]! & 0xf);
+
+            if (i === 3 || i === 5 || i === 7 || i === 9) {
+                result += '-';
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -4232,13 +4289,13 @@ class Stringable {
 
         if (format === null) {
             return new Date(this._value).toLocaleDateString('en-us', {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric',
-                hour12: false,
+                year    : 'numeric',
+                month   : 'numeric',
+                day     : 'numeric',
+                hour    : 'numeric',
+                minute  : 'numeric',
+                second  : 'numeric',
+                hour12  : false,
                 timeZone: tz ?? undefined,
             });
         }
@@ -4246,15 +4303,15 @@ class Stringable {
         let date: string = '';
 
         const now: Date = new Date(new Date(this._value).toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
+            year                  : 'numeric',
+            month                 : 'numeric',
+            day                   : 'numeric',
+            hour                  : 'numeric',
+            minute                : 'numeric',
+            second                : 'numeric',
             fractionalSecondDigits: 3,
-            hour12: false,
-            timeZone: tz ?? undefined,
+            hour12                : false,
+            timeZone              : tz ?? undefined,
         }));
 
         const month: number = now.getMonth();
@@ -4303,9 +4360,9 @@ class Stringable {
                 // English ordinal suffix for the day of the month, 2 characters (e.g., st, nd, rd or th)
                 case 'S': {
                     let suffix: { [key: number]: string } = {
-                        1: 'st',
-                        2: 'nd',
-                        3: 'rd',
+                        1 : 'st',
+                        2 : 'nd',
+                        3 : 'rd',
                         21: 'st',
                         22: 'nd',
                         23: 'rd',
@@ -4508,7 +4565,7 @@ class Stringable {
                 case 'O': {
                     const timeZoneData: string = now.toLocaleDateString('en-us', {
                         timeZoneName: 'longOffset',
-                        timeZone: tz ?? undefined,
+                        timeZone    : tz ?? undefined,
                     })
                         .split(', ')
                         .pop()!
@@ -4523,7 +4580,7 @@ class Stringable {
                 case 'P': {
                     const timeZoneData: string = now.toLocaleDateString('en-us', {
                         timeZoneName: 'longOffset',
-                        timeZone: tz ?? undefined,
+                        timeZone    : tz ?? undefined,
                     })
                         .split(', ')
                         .pop()!
@@ -4538,7 +4595,7 @@ class Stringable {
                 case 'p': {
                     const timeZoneData: string = now.toLocaleDateString('en-us', {
                         timeZoneName: 'longOffset',
-                        timeZone: tz ?? undefined,
+                        timeZone    : tz ?? undefined,
                     })
                         .split(', ')
                         .pop()!
@@ -4553,7 +4610,7 @@ class Stringable {
                 case 'T': {
                     const timeZoneData: string = now.toLocaleDateString('en-us', {
                         timeZoneName: 'short',
-                        timeZone: tz ?? undefined,
+                        timeZone    : tz ?? undefined,
                     })
                         .split(', ')
                         .pop()!
@@ -4570,7 +4627,7 @@ class Stringable {
                 case 'Z': {
                     const timezone: string = now.toLocaleDateString('en-us', {
                         timeZoneName: 'longOffset',
-                        timeZone: tz ?? undefined
+                        timeZone    : tz ?? undefined
                     });
                     const symbol: RegExpMatchArray | null = timezone.match(/[+-]/);
                     const data: string[] = timezone.split(/[+-]/);
