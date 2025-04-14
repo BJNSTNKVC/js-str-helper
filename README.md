@@ -1,6 +1,6 @@
 # Str
 
-JavaScript equivalent of [Laravel Str](https://laravel.com/docs/10.x/strings) helper.
+JavaScript equivalent of [Laravel Str](https://laravel.com/docs/12.x/strings) helper.
 
 ## Installation & setup
 
@@ -1197,7 +1197,25 @@ The `Str.uuid` method generates a UUID (version 4):
 ```js
 Str.uuid();
 
-// '39923a8e-d504-42b5-894f-55e79e6632dd '
+// '39923a8e-d504-42b5-894f-55e79e6632dd'
+```
+
+#### Str.uuid7()
+
+The `Str.uuid` method generates a UUID (version 7):
+
+```js
+Str.uuid7();
+
+// '019634be-509d-74ac-b2f2-69ac01a6ac00'
+```
+
+A `Date` may be passed as an optional parameter which will be used to generate the ordered UUID:
+
+```js
+Str.uuid7(new Date('2023-01-01T00:00:00'));
+
+// '01856a69-d980-72e7-a125-96b2aff45909'
 ```
 
 #### Str.wordCount()

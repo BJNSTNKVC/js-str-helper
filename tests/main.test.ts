@@ -181,7 +181,7 @@ describe('Strings', () => {
         });
 
         test('allows definition of custom omission strings', () => {
-            expect(Str.excerpt('This is my name', 'name', { 'radius'  : 3, 'omission': '(...) ' })).toEqual('(...) my name');
+            expect(Str.excerpt('This is my name', 'name', { 'radius': 3, 'omission': '(...) ' })).toEqual('(...) my name');
         });
     });
 
@@ -884,6 +884,69 @@ describe('Strings', () => {
     describe('Str.uuid', () => {
         test('generates a UUID (version 4)', () => {
             expect(Str.uuid()).toMatch(/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/);
+        });
+    });
+
+    describe('Str.uuid7', () => {
+        test('generates a UUID (version 7)', () => {
+            expect(Str.uuid7()).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+        });
+
+        test('uses current time when no timestamp provided', () => {
+            const before: number = Date.now();
+            const uuid: string = Str.uuid7();
+            const after: Number = Date.now();
+
+            const time: number = parseInt(uuid.slice(0, 8) + uuid.slice(9, 13), 16);
+
+            expect(time).toBeGreaterThanOrEqual(before);
+            expect(time).toBeLessThanOrEqual(after);
+        });
+
+        test('accepts custom timestamp', () => {
+            expect(Str.uuid7(new Date('2023-01-01T00:00:00Z')).startsWith('01856aa0-c800')).toBeTruthy();
+        });
+
+        test('handles minimum timestamp correctly', () => {
+            expect(Str.uuid7(new Date(0)).startsWith('00000000-0000-7')).toBeTruthy();
+        });
+
+        test('handles maximum 48-bit timestamp correctly', () => {
+            expect(Str.uuid7(new Date(281474976710655)).startsWith('ffffffff-ffff-7')).toBeTruthy();
+        });
+
+        test('throws error for invalid timestamps', () => {
+            expect(() => Str.uuid7(new Date(-1))).toThrow(RangeError);
+            expect(() => Str.uuid7(new Date(281474976710655 + 1))).toThrow(RangeError);
+        });
+
+        test('contains correct version and variant bits', () => {
+            const parts: string[] = Str.uuid7().split('-');
+
+            expect(parts[2][0]).toBe('7');
+            expect(['8', '9', 'a', 'b']).toContain(parts[3][0]);
+        });
+
+        test('has correct byte structure', () => {
+            const uuid: string = Str.uuid7();
+            const bytes: string = uuid.replace(/-/g, '');
+
+            const byte6: number = parseInt(bytes.substring(12, 14), 16);
+            const byte8: number = parseInt(bytes.substring(16, 18), 16);
+
+            expect((byte6 & 0xf0) >> 4).toBe(7);
+            expect((byte8 & 0xc0) >> 6).toBe(2);
+        });
+
+        test('generates unique values', () => {
+            const uuids = new Set<string>();
+            const count = 1000;
+
+            for (let i = 0; i < count; i++) {
+                uuids.add(Str.uuid7());
+            }
+
+            expect(uuids.size).toBe(count);
         });
     });
 
