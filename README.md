@@ -3076,6 +3076,30 @@ Str.of('Laravel').toInteger();
 // 0
 ```
 
+You can specify the base (2-36) for conversion. When base is 0, it automatically detects hexadecimal (0x prefix) and octal (0 prefix) numbers:
+
+```js
+Str.of('077').toInteger();
+
+// 63
+
+Str.of('1010').toInteger(2);
+// 10
+
+Str.of('42').toInteger(8);
+
+// 34
+
+Str.of('0xFF').toInteger(16);
+
+// 255
+
+Str.of('Z').toInteger(36);
+
+// 35
+
+```
+
 In case the underlying string value is not a number, method will return 0.
 
 #### toFloat

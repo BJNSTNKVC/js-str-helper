@@ -2060,11 +2060,40 @@ describe('Fluent Strings', () => {
 
     describe('toInteger', () => {
         test('returns the underlying string value as an integer', () => {
-            expect(Str.of('1').toInteger()).toEqual(1);
+            expect(Str.of('42').toInteger()).toEqual(42);
+            expect(Str.of('-13').toInteger()).toEqual(-13);
         });
 
         test('returns 0 if the underlying string value is not a number', () => {
             expect(Str.of('Laravel').toInteger()).toEqual(0);
+            expect(Str.of('').toInteger()).toEqual(0);
+            expect(Str.of('  ').toInteger()).toEqual(0);
+        });
+
+        test('handles different base values', () => {
+            expect(Str.of('077').toInteger(0)).toEqual(63);
+            expect(Str.of('1010').toInteger(2)).toEqual(10);
+            expect(Str.of('42').toInteger(8)).toEqual(34);
+            expect(Str.of('0xFF').toInteger(16)).toEqual(255);
+            expect(Str.of('Z').toInteger(36)).toEqual(35);
+        });
+
+        test('handles very large numbers', () => {
+            expect(Str.of('9007199254740991').toInteger()).toEqual(Number.MAX_SAFE_INTEGER);
+        });
+
+        test('handles partial number strings', () => {
+            expect(Str.of('123abc').toInteger()).toEqual(123);
+            expect(Str.of('abc123').toInteger()).toEqual(0);
+        });
+
+        test('handles numeric separators', () => {
+            expect(Str.of('1_000').toInteger()).toEqual(1);
+        });
+
+        test('handles edge values', () => {
+            expect(Str.of('Infinity').toInteger()).toEqual(0);
+            expect(Str.of('NaN').toInteger()).toEqual(0);
         });
     });
 
