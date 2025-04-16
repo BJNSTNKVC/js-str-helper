@@ -4242,10 +4242,20 @@ class Stringable {
     /**
      * Get the underlying string value as an integer.
      *
+     * @param { number } base
+     *
      * @return { number }
      */
-    toInteger(): number {
-        return !isNaN(parseInt(this._value)) ? parseInt(this._value) : 0;
+    toInteger(base: number = 10): number {
+        const radix: RegExpMatchArray | null = this._value.match(/^\s*0(x?)/i);
+
+        if (radix) {
+            base = radix[1] ? 16 : 8;
+        }
+
+        const value: number = parseInt(this._value, base);
+
+        return isNaN(value) || !isFinite(value) ? 0 : value;
     }
 
     /**
@@ -4760,7 +4770,7 @@ class HtmlString {
  *
  * @return Stringable
  */
-const str = function (string: string = ''): Stringable {
+const str: (string: string) => Stringable = function (string: string = ''): Stringable {
     return Str.of(string);
 };
 
