@@ -4247,12 +4247,6 @@ class Stringable {
      * @return { number }
      */
     toInteger(base: number = 10): number {
-        const radix: RegExpMatchArray | null = this._value.match(/^\s*0(x?)/i);
-
-        if (radix) {
-            base = radix[1] ? 16 : 8;
-        }
-
         const value: number = parseInt(this._value, base);
 
         return isNaN(value) || !isFinite(value) ? 0 : value;
