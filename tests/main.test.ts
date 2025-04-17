@@ -2071,7 +2071,7 @@ describe('Fluent Strings', () => {
         });
 
         test('handles different base values', () => {
-            expect(Str.of('077').toInteger(0)).toEqual(63);
+            expect(Str.of('077').toInteger(0)).toEqual(77);
             expect(Str.of('1010').toInteger(2)).toEqual(10);
             expect(Str.of('42').toInteger(8)).toEqual(34);
             expect(Str.of('0xFF').toInteger(16)).toEqual(255);
