@@ -2003,9 +2003,13 @@ describe('Fluent Strings', () => {
     });
 
     describe('toHtmlString', () => {
-        // test('converts the string instance to an instance of HTMLElement', () => {
-        //     expect(Str.of('<input type="text" placeholder="Hello">').toHtmlString()).toBeInstanceOf(HTMLInputElement);
-        // });
+        test('converts the string instance to an instance of HTMLElement', () => {
+            const input: HTMLInputElement = Str.of('<input type="text" placeholder="Hello">').toHtmlString();
+
+            expect(input).toBeInstanceOf(HTMLInputElement);
+            expect(input.type).toEqual('text');
+            expect(input.placeholder).toEqual('Hello');
+        });
 
         test('returns a string If no valid HTML is provided', () => {
             expect(Str.of('Hello').toHtmlString()).toEqual('Hello');
